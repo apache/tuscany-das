@@ -55,6 +55,7 @@
    <xsd:complexType name="Parameter">     
       <xsd:attribute name="columnType" type="xsd:string"/>
       <xsd:attribute name="direction" type="xsd:string"/>
+      <xsd:attribute name="index" type="xsd:int"/>
    </xsd:complexType>
    <xsd:complexType name="Relationship">
       <xsd:sequence>
@@ -101,7 +102,7 @@
       <xsd:attribute name="primaryKey" type="xsd:boolean"/>
       <xsd:attribute name="generated" type="xsd:boolean"/>
       <xsd:attribute name="collision" type="xsd:boolean"/>
-      <xsd:attribute name="managed" type="xsd:boolean"/>
+      <xsd:attribute name="managed" type="xsd:boolean" default="true"/>
    </xsd:complexType>
    <xsd:complexType name="ResultDescriptor">
       <xsd:attribute name="columnName" type="xsd:string"/>

@@ -124,7 +124,7 @@ public class TableWrapper {
         Iterator i = table.getColumn().iterator();
         while (i.hasNext()) {
             Column c = (Column) i.next();
-            if (c.isManaged()) {
+            if (c.isCollision() && c.isManaged()) {
                 return c.getPropertyName() == null ? c.getColumnName() : c.getPropertyName();
             }
         }
@@ -136,7 +136,7 @@ public class TableWrapper {
         Iterator i = table.getColumn().iterator();
         while (i.hasNext()) {
             Column c = (Column) i.next();
-            if (c.isManaged()) {
+            if (c.isCollision() && c.isManaged()) {
                 return c;
             }
         }
