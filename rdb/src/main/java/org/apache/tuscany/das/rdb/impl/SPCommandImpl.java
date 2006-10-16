@@ -37,7 +37,7 @@ public class SPCommandImpl extends ReadCommandImpl {
     public SPCommandImpl(String sqlString, MappingWrapper config, List params) {
         super(sqlString, config, null);
         Iterator i = params.iterator();
-        for (int idx = 1; i.hasNext(); idx++) {
+        while (i.hasNext()) {
             Parameter p = (Parameter) i.next();
 
             int index = p.getColumnType().lastIndexOf('.');
@@ -52,7 +52,7 @@ public class SPCommandImpl extends ReadCommandImpl {
             } else if ("INOUT".equalsIgnoreCase(p.getDirection())) {
                 direction = ParameterImpl.IN_OUT;
             }
-            parameters.findOrCreateParameterWithIndex(idx, direction, sdoType);
+            parameters.findOrCreateParameterWithIndex(p.getIndex(), direction, sdoType);
         }
 
     }
