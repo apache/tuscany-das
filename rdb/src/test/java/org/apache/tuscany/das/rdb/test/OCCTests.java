@@ -18,12 +18,15 @@
  */
 package org.apache.tuscany.das.rdb.test;
 
+import java.sql.SQLException;
+
 import org.apache.tuscany.das.rdb.Command;
 import org.apache.tuscany.das.rdb.ConfigHelper;
 import org.apache.tuscany.das.rdb.DAS;
 import org.apache.tuscany.das.rdb.config.Config;
 import org.apache.tuscany.das.rdb.config.ConfigFactory;
 import org.apache.tuscany.das.rdb.test.data.BookData;
+import org.apache.tuscany.das.rdb.test.data.CustomerData;
 import org.apache.tuscany.das.rdb.test.framework.DasTest;
 
 import commonj.sdo.DataObject;
@@ -33,9 +36,37 @@ public class OCCTests extends DasTest {
         super.setUp();
 
         new BookData(getAutoConnection()).refresh();
+        new CustomerData(getAutoConnection()).refresh();
     }
 
-    public void testSimpleOCC() throws Exception {
+    public void testAutomaticOCC() throws SQLException {
+        DAS das = DAS.FACTORY.createDAS(getConnection());
+        // Read customer with particular ID
+        Command select = das.createCommand("Select * from CUSTOMER where ID = 1");
+        DataObject root = select.executeQuery();
+
+        // Explicitly update the DB to force a collision
+        Command update = das.createCommand("update CUSTOMER set LASTNAME = 'Smith' where ID = 1");
+        update.execute();
+        
+        DataObject customer = root.getDataObject("CUSTOMER[1]");
+
+        // Modify customer
+        customer.set("LASTNAME", "Pavick");
+
+        // Build apply changes command
+        try {
+            das.applyChanges(root);
+            fail("An OCCException should be thrown");
+        } catch (RuntimeException ex) {
+            if (!ex.getMessage().equals("An update collision occurred")) {
+                throw ex;
+            }
+        }
+      
+    }
+    
+    public void testSimpleOCC() throws SQLException  {
 
         DAS das = DAS.FACTORY.createDAS(getConfig("BooksConfig.xml"), getConnection());
         // Read a book instance
@@ -61,7 +92,7 @@ public class OCCTests extends DasTest {
         }
     }
 
-    public void testManagedOCC() throws Exception {
+    public void testManagedOCC() throws SQLException  {
         DAS das = DAS.FACTORY.createDAS(getConfig("ManagedBooksConfig.xml"), getConnection());
         Command select = das.getCommand("select book 1");
         DataObject root = select.executeQuery();
@@ -76,7 +107,7 @@ public class OCCTests extends DasTest {
         assertEquals(occValue + 1, book.getInt("OCC"));
     }
 
-    public void testManagedOCCFailure() throws Exception {
+    public void testManagedOCCFailure() throws SQLException  {
         DAS das = DAS.FACTORY.createDAS(getConfig("ManagedBooksConfig.xml"), getConnection());
         // Read a book instance
         Command select = das.getCommand("select book 1");
@@ -105,7 +136,7 @@ public class OCCTests extends DasTest {
         }
     }
 
-    public void testProvidedConfig() throws Exception {
+    public void testProvidedConfig() throws SQLException  {
         // Create config programmatically
         Config config = ConfigFactory.INSTANCE.createConfig();
         ConfigHelper helper = new ConfigHelper(config);
