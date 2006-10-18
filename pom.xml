@@ -28,7 +28,7 @@
     <artifactId>tuscany-das</artifactId>
     <packaging>pom</packaging>
     <name>Tuscany DAS</name>
-    <version>1.0-incubator-M2-SNAPSHOT</version>
+    <version>1.0-incubator-M2</version>
 
     <modules>
         <module>rdb</module>
@@ -68,7 +68,7 @@
             <dependency>
                 <groupId>org.apache.tuscany.sdo</groupId>
                 <artifactId>tuscany-sdo-impl</artifactId>
-                <version>1.0-incubator-M2-SNAPSHOT</version>
+                <version>1.0-incubator-M2</version>
                 <scope>compile</scope>
             </dependency>
 
