@@ -18,6 +18,7 @@
  */
 package org.apache.tuscany.das.rdb.test;
 
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -63,20 +64,15 @@ public class ConverterTests extends DasTest {
     }
 
     /**
-     * This tests the use of an arbitrary converter. The column 
-     * converted is a VARCAHAR. ResultSetShape is used to specify 
-     * that the property will be a
+     * This tests the use of an arbitrary converter. The column converted is a VARCAHAR. ResultSetShape is used to specify that the property will be a
      * SDODataTypes.DATE.
      * 
-     * So this example uses a converter that transforms a string column 
-     * into a date property and conversely, a date property back to a string for the
+     * So this example uses a converter that transforms a string column into a date property and conversely, a date property back to a string for the
      * underlying column.
      * 
-     * The converter returns 1957.09.27 if the column value is "Williams" 
-     * and 1966.12.20 if the value is "Pavick"
+     * The converter returns 1957.09.27 if the column value is "Williams" and 1966.12.20 if the value is "Pavick"
      * 
-     * On write, the converter returns "Pavick" if the property value is 
-     * 1966.12.20 and "Williams" if the property value is 1957.09.27
+     * On write, the converter returns "Pavick" if the property value is 1966.12.20 and "Williams" if the property value is 1957.09.27
      * 
      */
     public void testArbitraryConverter() throws Exception {
@@ -110,8 +106,8 @@ public class ConverterTests extends DasTest {
 
         // Build the select command to read a specific customer and related
         // orders
-        Command select = das.createCommand("SELECT * FROM CUSTOMER LEFT JOIN ANORDER "
-                + "ON CUSTOMER.ID = ANORDER.CUSTOMER_ID where CUSTOMER.ID = ?");
+        Command select = das
+                .createCommand("SELECT * FROM CUSTOMER LEFT JOIN ANORDER " + "ON CUSTOMER.ID = ANORDER.CUSTOMER_ID where CUSTOMER.ID = ?");
 
         // Parameterize the command
         select.setParameter(1, Integer.valueOf(1));
@@ -152,6 +148,73 @@ public class ConverterTests extends DasTest {
             assertEquals("java.lang.ClassNotFoundException: not.a.valid.class", ex.getMessage());
         }
 
+    }
+
+    /**
+     * This tests the use of a converter that does not produce a new "type". Instead it 
+     * modifies the original value before storing to the database.  In this exampe, the
+     * converter restores the original value on read.
+     * 
+     * This is illustrated by obfuscating the lastname value before it is stored to the database and 
+     * deobfuscating on read.
+     * 
+     */
+    public void testConverter3() throws Exception {
+        DAS das = DAS.FACTORY.createDAS(getConfig("CustomerConfigWithConverter2.xml"), getConnection());
+
+        // Create and initialize command to read customers
+        Command read = das.getCommand("getFirstCustomer");
+
+        // Read
+        DataObject root = read.executeQuery();
+        
+        //Modify
+        root.setString("CUSTOMER[1]/LASTNAME", "Some new name");
+       
+        das.applyChanges(root);
+
+        // Read
+        root = read.executeQuery();
+
+        // Verify that I can read back the deobfuscated value
+        assertEquals("Some new name", root.getString("CUSTOMER[1]/LASTNAME"));
+        
+        //Now read directly without applying the converter to ensure that the value was obfuscated 
+        //in the database.
+        DAS das2 = DAS.FACTORY.createDAS(getConnection());
+        Command directRead = das2.createCommand("select * from CUSTOMER where ID = 1");
+        root = directRead.executeQuery();
+
+        assertEquals("Fbzr arj anzr", root.getString("CUSTOMER[1]/LASTNAME"));
+        assertEquals(obfuscate("Some new name"), root.getString("CUSTOMER[1]/LASTNAME"));
+
+    }
+
+    // Utilities
+    
+    private String obfuscate (String original) throws Exception {
+        return toRot13(original);
+    }
+ 
+    private String deobfuscate (String obfuscated) throws Exception {
+        return toRot13(obfuscated);
+    }    
+    
+    //A simple, reversible, obfuscation algorithm using a ROT13 implementation
+    private String toRot13(String original) throws Exception {
+
+        int abyte = 0;
+        byte[] buffer = original.getBytes("ISO-8859-1");
+
+        for (int i = 0; i < buffer.length; i++) {
+            abyte = buffer[i];
+            int cap = abyte & 32;
+            abyte &= ~cap;
+            abyte = ((abyte >= 'A') && (abyte <= 'Z') ? ((abyte - 'A' + 13) % 26 + 'A') : abyte) | cap;
+            buffer[i] = (byte) abyte;
+        }
+        
+        return new String(buffer, "ISO-8859-1");
     }
 
 }
