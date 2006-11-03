@@ -38,8 +38,7 @@ public class ResultSetTypeMap {
         // Empty Constructor
     }
 
-    /**
-     * These mappings taken primarily from "JDBC API and Tutorial and Reference" by Fisher, Ellis and Bruce.
+    /**    
      * 
      * @param type
      * @param isNullable
