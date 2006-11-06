@@ -17,8 +17,7 @@
   specific language governing permissions and limitations
   under the License.
  -->
-<Config xsi:noNamespaceSchemaLocation="http:///org.apache.tuscany.das.rdb/config.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-
+<Config xmlns="http:///org.apache.tuscany.das.rdb/config.xsd"> 
 	
   <Command name="getFirstCustomer" SQL="Select * from CUSTOMER where ID = 1" kind="Select"/>
 

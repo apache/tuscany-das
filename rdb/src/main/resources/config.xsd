@@ -20,7 +20,10 @@
 <xsd:schema
    xmlns:config="http:///org.apache.tuscany.das.rdb/config.xsd"
    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-   targetNamespace="http:///org.apache.tuscany.das.rdb/config.xsd">
+   targetNamespace="http:///org.apache.tuscany.das.rdb/config.xsd"
+   elementFormDefault="qualified">
+
+   <xsd:element name="Config" type="config:Config"/> 
 
    <xsd:complexType name="Config">
       <xsd:sequence>

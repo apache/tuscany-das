@@ -17,7 +17,7 @@
   specific language governing permissions and limitations
   under the License.
  -->
-<Config xsi:noNamespaceSchemaLocation="http:///org.apache.tuscany.das.rdb/config.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Config xmlns="http:///org.apache.tuscany.das.rdb/config.xsd"> 
   	
   <Command name="readEngineParts" kind="Select" SQL="SELECT P1.*, P2.*, P3.* FROM PART AS P1 
   				LEFT JOIN PART AS P2 ON P1.ID = P2.PARENT_ID 

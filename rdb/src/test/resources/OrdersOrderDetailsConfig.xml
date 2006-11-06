@@ -17,7 +17,7 @@
   specific language governing permissions and limitations
   under the License.
  -->
-<Config xsi:noNamespaceSchemaLocation="http:///org.apache.tuscany.das.rdb/config.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Config xmlns="http:///org.apache.tuscany.das.rdb/config.xsd"> 
 	
 	<Table tableName="ORDERDETAILS">
         <Column columnName="ORDERID" primaryKey="true"/>
