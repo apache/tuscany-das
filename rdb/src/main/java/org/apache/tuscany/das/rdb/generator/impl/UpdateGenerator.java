@@ -60,7 +60,7 @@ public final class UpdateGenerator extends BaseGenerator {
         statement.append(" set ");
 
         ChangeSummary summary = changedObject.getDataGraph().getChangeSummary();
-        List changedFields = getChangedFields(mapping, summary, changedObject);
+        List changedFields = getChangedFields(mapping, summary, changedObject, tableWrapper);
         Iterator i = changedFields.iterator();
       
         int idx = 1;
@@ -161,7 +161,7 @@ public final class UpdateGenerator extends BaseGenerator {
 
 
 
-    private List getChangedFields(MappingWrapper mapping, ChangeSummary summary, DataObject obj) {
+    private List getChangedFields(MappingWrapper config, ChangeSummary summary, DataObject obj, TableWrapper tw) {
         List changes = new ArrayList();
         Iterator i = summary.getOldValues(obj).iterator();
         while (i.hasNext()) {
@@ -172,13 +172,14 @@ public final class UpdateGenerator extends BaseGenerator {
             } else {
                 Property ref = setting.getProperty();
                 if (!ref.isMany()) {
-                    RelationshipWrapper r = new RelationshipWrapper(mapping.getRelationshipByReference(ref));
+                    RelationshipWrapper r = new RelationshipWrapper(config.getRelationshipByReference(ref));
 
                     Iterator keys = r.getForeignKeys().iterator();
                     while (keys.hasNext()) {
                         String key = (String) keys.next();
-                        Property p = obj.getType().getProperty(key);
-                        changes.add(p);
+                        String keyProperty = config.getColumnPropertyName(tw.getTableName(), key);
+                        Property keyProp = obj.getType().getProperty(keyProperty);
+                        changes.add(keyProp);
                     }
                 }
 

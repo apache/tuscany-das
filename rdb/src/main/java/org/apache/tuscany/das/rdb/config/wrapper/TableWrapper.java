@@ -37,6 +37,10 @@ public class TableWrapper {
     public String getTypeName() {
         return table.getTypeName() == null ? table.getTableName() : table.getTypeName();
     }
+    
+    public String getTableName() {
+        return table.getTableName();
+    }
 
     public Collection getPrimaryKeyNames() {
         List pkNames = new ArrayList();

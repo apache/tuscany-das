@@ -52,7 +52,7 @@ public final class InsertGenerator extends BaseGenerator {
         StringBuffer statement = new StringBuffer("insert into ");
         statement.append(t.getTableName());
 
-        Iterator i = getAttributeProperties(changedObject, config).iterator();
+        Iterator i = getAttributeProperties(changedObject, config, table).iterator();
 
         List attributes = new ArrayList();
         List generatedKeys = new ArrayList();
@@ -110,7 +110,7 @@ public final class InsertGenerator extends BaseGenerator {
 
     }
 
-    private List getAttributeProperties(DataObject obj, MappingWrapper config) {
+    private List getAttributeProperties(DataObject obj, MappingWrapper config, TableWrapper tw) {
         List fields = new ArrayList();
         Iterator i = obj.getType().getProperties().iterator();
         while (i.hasNext()) {
@@ -123,12 +123,13 @@ public final class InsertGenerator extends BaseGenerator {
                 if (obj.isSet(p)) {
                     Relationship relationship = config.getRelationshipByReference(p);
                     if ((p.getOpposite() != null && p.getOpposite().isMany()) 
-                            || (hasState(config, relationship, obj))) {
+                            || (hasState(tw, relationship, obj))) {
                         RelationshipWrapper r = new RelationshipWrapper(relationship);
                         Iterator keys = r.getForeignKeys().iterator();
                         while (keys.hasNext()) {
                             String key = (String) keys.next();
-                            Property keyProp = obj.getType().getProperty(key);
+                            String keyProperty = config.getColumnPropertyName(tw.getTableName(), key);
+                            Property keyProp = obj.getType().getProperty(keyProperty);
                             fields.add(keyProp);
                         }
                     }
@@ -141,13 +142,12 @@ public final class InsertGenerator extends BaseGenerator {
 
     }
 
-    private boolean hasState(MappingWrapper config, Relationship rel, DataObject changedObject) {
+    private boolean hasState(TableWrapper tw, Relationship rel, DataObject changedObject) {
 
         if (!rel.isMany()) {
-            Table t = config.getTableByTypeName(changedObject.getType().getName());
-            TableWrapper tw = new TableWrapper(t);
+                   
             RelationshipWrapper rw = new RelationshipWrapper(rel);
-            if ((rel.getForeignKeyTable().equals(t.getTableName())) 
+            if ((rel.getForeignKeyTable().equals(tw.getTableName())) 
                     && (Collections.disjoint(tw.getPrimaryKeyProperties(), rw.getForeignKeys()))) {
                 return true;
             }
