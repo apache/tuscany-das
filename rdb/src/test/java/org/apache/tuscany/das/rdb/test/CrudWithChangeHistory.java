@@ -187,6 +187,30 @@ public class CrudWithChangeHistory extends DasTest {
     }
 
     /**
+     * Builds on previous but: 1. Uses a named command
+     */
+    public void testReadModifyApply4() throws Exception {
+        DAS das = DAS.FACTORY.createDAS(getConfig("CustomerConfig.xml"), getConnection());
+        // Read customer with particular ID
+        Command select = das.getCommand("getCustomer");
+        select.setParameter(1, 1);
+        DataObject root = select.executeQuery();
+
+        DataObject customer = (DataObject) root.get("CUSTOMER[1]");
+
+        // Modify customer
+        customer.set("LASTNAME", "Pavick");
+
+        // Build apply changes command
+        das.applyChanges(root);
+
+        // Verify the change
+        root = select.executeQuery();
+        assertEquals("Pavick", root.getDataObject("CUSTOMER[1]").getString("LASTNAME"));
+
+    }
+    
+    /**
      * Test ability to handle multiple changes to the graph including Creates/Updates/Deletes Employs generated CUD
      */
     public void testReadModifyDeleteInsertApply() throws Exception {
