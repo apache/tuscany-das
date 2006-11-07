@@ -165,7 +165,7 @@
                         </fileset>
                         <chainedmapper>
                                 <flattenmapper/>
-                                <globmapper from="*-1.0-incubator-M2-SNAPSHOT.war" to="*.war"/>
+                                <globmapper from="*-1.0-incubator-SNAPSHOT.war" to="*.war"/>
                         </chainedmapper>
                 </copy>
 
