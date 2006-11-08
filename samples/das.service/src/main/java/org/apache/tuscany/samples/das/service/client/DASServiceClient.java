@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,23 +15,24 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
--->
-<project>
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.apache.tuscany.das</groupId>
-        <artifactId>tuscany-das</artifactId>
-        <version>1.0-incubator-SNAPSHOT</version>
-    </parent>
-    
-    <groupId>org.apache.tuscany.das.samples</groupId>
-    <artifactId>tuscany-samples-das</artifactId>
-    <packaging>pom</packaging>
-    <name>Tuscany DAS Samples</name>
+ */
+package org.apache.tuscany.samples.das.service.client;
 
-    <modules>
-        <module>companyweb</module>
-        <module>das.service</module>
-        <module>das.service.client</module>
-    </modules>
-</project>
+import org.apache.tuscany.samples.das.service.DASService;
+import org.osoa.sca.annotations.Reference;
+
+/**
+ *
+ * @author lresende
+ *
+ */
+public class DASServiceClient {
+
+    @Reference DASService das;
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
+
+    }
+}
