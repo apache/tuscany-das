@@ -71,7 +71,7 @@ public final class InsertGenerator extends BaseGenerator {
         while (attrs.hasNext()) {
             String name = (String) attrs.next();
             statement.append("");
-            statement.append(name);
+            statement.append(config.getColumnByPropertyName(t, name).getColumnName());
             if (attrs.hasNext()) {
                 statement.append(", ");
             } else {
