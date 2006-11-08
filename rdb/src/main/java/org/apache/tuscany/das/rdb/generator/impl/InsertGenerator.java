@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.tuscany.das.rdb.config.Column;
 import org.apache.tuscany.das.rdb.config.Relationship;
 import org.apache.tuscany.das.rdb.config.Table;
 import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
@@ -71,7 +72,8 @@ public final class InsertGenerator extends BaseGenerator {
         while (attrs.hasNext()) {
             String name = (String) attrs.next();
             statement.append("");
-            statement.append(config.getColumnByPropertyName(t, name).getColumnName());
+            Column c = config.getColumnByPropertyName(t, name);
+            statement.append(c == null ? name : c.getColumnName());
             if (attrs.hasNext()) {
                 statement.append(", ");
             } else {
