@@ -21,11 +21,6 @@ package org.apache.tuscany.samples.das.service.client;
 import org.apache.tuscany.samples.das.service.DASService;
 import org.osoa.sca.annotations.Reference;
 
-/**
- *
- * @author lresende
- *
- */
 public class DASServiceClient {
 
     @Reference DASService das;
