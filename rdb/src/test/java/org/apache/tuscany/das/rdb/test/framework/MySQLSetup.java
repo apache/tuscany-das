@@ -56,6 +56,9 @@ public class MySQLSetup extends DatabaseSetup {
         String createGetNamedCompany = " CREATE PROCEDURE `dastest`.`GETNAMEDCOMPANY` (theName VARCHAR(100)) "
                 + " SELECT * FROM COMPANY WHERE NAME = theName";
 
+        String createCustomersAndOrders = "CREATE PROCEDURE `dastest`.`GETALLCUSTOMERSANDORDERS` () " 
+                + " BEGIN SELECT * FROM CUSTOMER; SELECT * FROM ANORDER; END;";
+        
         System.out.println("Creating procedures");
         try {
 
@@ -64,6 +67,7 @@ public class MySQLSetup extends DatabaseSetup {
             s.execute(createGetNamedCompany);
             s.execute(createGetCustomerAndOrders);
             s.execute(createGetNamedCustomers);
+            s.execute(createCustomersAndOrders);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -80,10 +84,10 @@ public class MySQLSetup extends DatabaseSetup {
                 + "SN VARCHAR(10), MANAGER SMALLINT, DEPARTMENTID INT)";
     }
 
-    protected String getCreateDepartment() {
-        return "CREATE TABLE DEPARTMENT (ID INT PRIMARY KEY NOT NULL AUTO_INCREMENT, NAME VARCHAR(30), " 
-                + "LOCATION VARCHAR(30), NUMBER VARCHAR(10), COMPANYID INT, EOTM INT)";
-    }
+//    protected String getCreateDepartment() {
+//        return "CREATE TABLE DEPARTMENT (ID INT PRIMARY KEY NOT NULL AUTO_INCREMENT, NAME VARCHAR(30), " 
+//                + "LOCATION VARCHAR(30), DEPNUMBER VARCHAR(10), COMPANYID INT, EOTM INT)";
+//    }
 
     protected String getCreateTypeTest() {
         return "CREATE TABLE TYPETEST (ID INT PRIMARY KEY NOT NULL, ATIMESTAMP DATETIME, ADECIMAL DECIMAL(9,2), " 
@@ -93,6 +97,9 @@ public class MySQLSetup extends DatabaseSetup {
     protected String getCreateServerStatus() {
         return "CREATE TABLE CONMGT.SERVERSTATUS (STATUSID INT PRIMARY KEY NOT NULL AUTO_INCREMENT, " 
                 + "MANAGEDSERVERID INTEGER NOT NULL, TIMESTAMP TIMESTAMP NOT NULL)";
+    }
+    protected String getGeneratedKeyClause() {
+        return "AUTO_INCREMENT";
     }
 
 }

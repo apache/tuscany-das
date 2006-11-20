@@ -109,7 +109,7 @@ public abstract class TestData {
     protected static Date getDate(String timeStamp) {
 
         try {
-            return DATE_FORMAT.parse("1966-12-20 00:00:00.0");
+            return DATE_FORMAT.parse(timeStamp);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
