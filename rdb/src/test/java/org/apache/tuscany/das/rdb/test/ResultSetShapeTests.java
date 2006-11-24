@@ -82,12 +82,7 @@ public class ResultSetShapeTests extends DasTest {
         DataObject root = readCustomers.executeQuery();
 
         // Verify
-        try {
-            assertEquals(5, root.getList("invalidProperty").size());
-            fail("Should fail since there will be no feature named invalidProperty");
-        } catch (IllegalArgumentException e) {
-            // OK
-        }
+        assertNull(root.getList("invalidProperty"));
 
     }
 
