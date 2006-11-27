@@ -70,7 +70,10 @@ public class ResultMetadata {
         Map impliedRelationships = new HashMap();
         for (int i = 1; i <= resultSetShape.getColumnCount(); i++) {
             String tableName = resultSetShape.getTableName(i);
-
+            if (( tableName == null ) || ( tableName.equals(""))) {
+                throw new RuntimeException("Unable to obtain table information from JDBC. DAS configuration must specify ResultDescriptors");
+            }
+            
             String typeName = configWrapper.getTableTypeName(tableName);
             String columnName = resultSetShape.getColumnName(i);
 

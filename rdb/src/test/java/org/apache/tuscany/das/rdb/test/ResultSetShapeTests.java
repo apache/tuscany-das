@@ -79,10 +79,12 @@ public class ResultSetShapeTests extends DasTest {
         Command readCustomers = das.createCommand(sqlString);     
 
         // Read
-        DataObject root = readCustomers.executeQuery();
-
-        // Verify
-        assertNull(root.getList("invalidProperty"));
+        try {
+          readCustomers.executeQuery();
+          fail("exception not thrown");
+        } catch (RuntimeException ex) {
+            assertEquals("Unable to obtain table information from JDBC. DAS configuration must specify ResultDescriptors", ex.getMessage());
+        }
 
     }
 
