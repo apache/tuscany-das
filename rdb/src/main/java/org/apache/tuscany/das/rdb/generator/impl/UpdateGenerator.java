@@ -19,6 +19,7 @@
 package org.apache.tuscany.das.rdb.generator.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -60,7 +61,7 @@ public final class UpdateGenerator extends BaseGenerator {
         statement.append(" set ");
 
         ChangeSummary summary = changedObject.getDataGraph().getChangeSummary();
-        List changedFields = getChangedFields(mapping, summary, changedObject, tableWrapper);
+        HashSet changedFields = getChangedFields(mapping, summary, changedObject, tableWrapper);
         Iterator i = changedFields.iterator();
       
         int idx = 1;
@@ -161,14 +162,17 @@ public final class UpdateGenerator extends BaseGenerator {
 
 
 
-    private List getChangedFields(MappingWrapper config, ChangeSummary summary, DataObject obj, TableWrapper tw) {
-        List changes = new ArrayList();
+    private HashSet getChangedFields(MappingWrapper config, ChangeSummary summary, DataObject obj, TableWrapper tw) {
+        HashSet changes = new HashSet();
+        
         Iterator i = summary.getOldValues(obj).iterator();
         while (i.hasNext()) {
             ChangeSummary.Setting setting = (ChangeSummary.Setting) i.next();
             
             if (setting.getProperty().getType().isDataType()) {
-                changes.add(setting.getProperty());
+               if ( changes.add(setting.getProperty()) == false ) {
+                   throw new RuntimeException("Foreign key properties should not be set when the corresponding relationship has changed");
+               }
             } else {
                 Property ref = setting.getProperty();
                 if (!ref.isMany()) {
@@ -179,7 +183,9 @@ public final class UpdateGenerator extends BaseGenerator {
                         String key = (String) keys.next();
                         String keyProperty = config.getColumnPropertyName(tw.getTableName(), key);
                         Property keyProp = obj.getType().getProperty(keyProperty);
-                        changes.add(keyProp);
+                        if (changes.add(keyProp) == false) {
+                            throw new RuntimeException("Foreign key properties should not be set when the corresponding relationship has changed");
+                        }
                     }
                 }
 

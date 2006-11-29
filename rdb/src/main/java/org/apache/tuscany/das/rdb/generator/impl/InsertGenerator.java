@@ -20,6 +20,7 @@ package org.apache.tuscany.das.rdb.generator.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -112,14 +113,16 @@ public final class InsertGenerator extends BaseGenerator {
 
     }
 
-    private List getAttributeProperties(DataObject obj, MappingWrapper config, TableWrapper tw) {
-        List fields = new ArrayList();
+    private HashSet getAttributeProperties(DataObject obj, MappingWrapper config, TableWrapper tw) {
+        HashSet fields = new HashSet();
         Iterator i = obj.getType().getProperties().iterator();
         while (i.hasNext()) {
             Property p = (Property) i.next();
             if (p.getType().isDataType()) {
                 if (obj.isSet(p)) {
-                    fields.add(p);
+                    if (fields.add(p) == false) {
+                        throw new RuntimeException("Foreign key properties should not be set when the corrsponding relationship has changed");
+                    }
                 }
             } else {
                 if (obj.isSet(p)) {
@@ -132,7 +135,9 @@ public final class InsertGenerator extends BaseGenerator {
                             String key = (String) keys.next();
                             String keyProperty = config.getColumnPropertyName(tw.getTableName(), key);
                             Property keyProp = obj.getType().getProperty(keyProperty);
-                            fields.add(keyProp);
+                            if (fields.add(keyProp) == false) {
+                                throw new RuntimeException("Foreign key properties should not be set when the corresponding relationship has changed");
+                            }
                         }
                     }
 

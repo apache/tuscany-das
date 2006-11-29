@@ -23,6 +23,8 @@ package org.apache.tuscany.das.rdb.test;
  * 
  */
 
+import java.sql.SQLException;
+
 import org.apache.tuscany.das.rdb.Command;
 import org.apache.tuscany.das.rdb.DAS;
 import org.apache.tuscany.das.rdb.test.data.CustomerData;
@@ -110,4 +112,60 @@ public class RelationshipTests extends DasTest {
 
     }
 
+    
+    public void testFKBehavior() throws SQLException {
+
+        DAS das = DAS.FACTORY.createDAS(getConfig("basicCustomerOrderMapping.xml"), getConnection());
+        // Read some customers and related orders
+        Command select = das
+                .createCommand("SELECT * FROM CUSTOMER LEFT JOIN ANORDER ON CUSTOMER.ID = ANORDER.CUSTOMER_ID");
+
+        DataObject root = select.executeQuery();
+
+        DataObject cust1 = root.getDataObject("CUSTOMER[1]");
+        DataObject cust2 = root.getDataObject("CUSTOMER[2]");
+
+        // Save IDs
+        Integer cust1ID = (Integer) cust1.get("ID");
+        
+        // Move an order to cust1 from cust2
+        DataObject order = (DataObject) cust2.getList("orders").get(0);
+        cust1.getList("orders").add(order);
+        order.setInt("CUSTOMER_ID", cust1ID);
+       
+        try {
+            das.applyChanges(root);
+            fail("An exception should be thrown");
+        } catch (RuntimeException ex) {
+            assertEquals("Foreign key properties should not be set when the corresponding relationship has changed", ex.getMessage());
+        }
+
+    }
+    
+    public void testFKBehavior2() throws SQLException {
+        DAS das = DAS.FACTORY.createDAS(getConfig("basicCustomerOrderMapping.xml"), getConnection());
+        // Read some customers and related orders
+        Command select = das
+                .createCommand("SELECT * FROM CUSTOMER LEFT JOIN ANORDER ON CUSTOMER.ID = ANORDER.CUSTOMER_ID");
+
+        DataObject root = select.executeQuery();
+
+        DataObject cust1 = root.getDataObject("CUSTOMER[1]");     
+
+        // Save IDs
+        Integer cust1ID = (Integer) cust1.get("ID");
+        
+        // Move an order to cust1 from cust2
+        DataObject order = root.createDataObject("ANORDER");
+        order.setInt("ID", 500);
+        order.setInt("CUSTOMER_ID", cust1ID);
+        cust1.getList("orders").add(order);       
+       
+        try {
+            das.applyChanges(root);
+            fail("An exception should be thrown");
+        } catch (RuntimeException ex) {
+            assertEquals("Foreign key properties should not be set when the corresponding relationship has changed", ex.getMessage());
+        }
+    }
 }
