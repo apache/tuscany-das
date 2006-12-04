@@ -18,6 +18,7 @@
  */
 package org.apache.tuscany.das.rdb.test;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.tuscany.das.rdb.Command;
@@ -152,6 +153,32 @@ public class ProgrammaticConfigTests extends DasTest {
 
     }
 
+    public void testAddColumnWithPropertyName() throws SQLException {
+        String statement = "SELECT * FROM BOOK WHERE BOOK.BOOK_ID = ?";
+
+        // Create Table config programmatically
+        ConfigHelper helper = new ConfigHelper();
+        Table table = helper.addTable("BOOK", "Book");
+        helper.addPrimaryKey("Book.BOOK_ID");
+        helper.addColumn(table, "NAME", "bookName");
+        DAS das = DAS.FACTORY.createDAS(helper.getConfig(), getConnection());
+        Command select = das.createCommand(statement);
+        select.setParameter(1, Integer.valueOf(1));
+
+        DataObject root = select.executeQuery();
+
+        DataObject newBook = root.createDataObject("Book");        
+        newBook.setString("bookName", "Ant Colonies of the Old World");
+        newBook.setInt("BOOK_ID", 1001);
+        root.getList("Book").add(newBook);
+
+        das.applyChanges(root);
+
+        //Verify
+        select.setParameter(1, Integer.valueOf(1001));
+        root = select.executeQuery();
+        assertEquals("Ant Colonies of the Old World", root.getString("Book[1]/bookName"));
+    }
     /**
      * Simple unit test for ConnectionInfo
      * @throws Exception

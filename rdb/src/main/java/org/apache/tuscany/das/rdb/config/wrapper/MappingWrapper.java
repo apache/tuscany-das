@@ -262,6 +262,15 @@ public class MappingWrapper {
         return table;
     }
 
+    public Column addColumn(Table table, String name, String propertyName) {
+        Column column = ConfigFactory.INSTANCE.createColumn();
+        column.setColumnName(name);
+        column.setPropertyName(propertyName);
+        
+        table.getColumn().add(column);
+        return column;
+    }
+    
     private Table findOrCreateTable(String tableName) {
         Table table = getTable(tableName);
         if (table == null) {

@@ -18,6 +18,7 @@
  */
 package org.apache.tuscany.das.rdb;
 
+import org.apache.tuscany.das.rdb.config.Column;
 import org.apache.tuscany.das.rdb.config.Command;
 import org.apache.tuscany.das.rdb.config.Config;
 import org.apache.tuscany.das.rdb.config.ConfigFactory;
@@ -57,8 +58,12 @@ public class ConfigHelper {
         return configWrapper.addRelationship(parentName, childName);
     }
 
-    public Table addTable(String name, String propertyName) {
-        return configWrapper.addTable(name, propertyName);
+    public Table addTable(String name, String typeName) {
+        return configWrapper.addTable(name, typeName);
+    }
+    
+    public Column addColumn(Table table, String columnName, String propertyName) {
+        return configWrapper.addColumn(table, columnName, propertyName);
     }
 
     public void addUpdateStatement(Table table, String statement, String parameters) {
