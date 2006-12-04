@@ -16,7 +16,8 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
---><assembly>
+-->
+<assembly>
     <id>bin</id>
     <includeBaseDirectory>false</includeBaseDirectory>
     <formats>
@@ -27,6 +28,7 @@
     <fileSets>
         <!-- include legal and other files -->
         <fileSet>
+            <outputDirectory>tuscany-das-${das.version}</outputDirectory>
             <includes>
                 <include>*.txt</include>
                 <include>*.htm</include>
@@ -37,7 +39,7 @@
 
     <dependencySets>
         <dependencySet>
-            <outputDirectory>lib</outputDirectory>
+            <outputDirectory>tuscany-das-${das.version}/lib</outputDirectory>
             <includes>
                 <include>org.apache.tuscany.das:tuscany-das-rdb</include>
             </includes>
@@ -45,4 +47,3 @@
         </dependencySet>
     </dependencySets>
 </assembly>
-

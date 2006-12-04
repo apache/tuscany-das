@@ -28,6 +28,7 @@
     <fileSets>
         <!-- include legal and other files -->
         <fileSet>
+            <outputDirectory>tuscany-das-samples-${das.version}</outputDirectory>
             <includes>
                 <include>*.txt</include>
                 <include>*.htm</include>
@@ -51,7 +52,7 @@
 
         <fileSet>
          <directory>../../samples/companyweb/dastest</directory>
-         <outputDirectory>databases/dastest</outputDirectory>
+         <outputDirectory>tuscany-das-samples-${das.version}/databases/dastest</outputDirectory>
          <lineEnding>keep</lineEnding>
          <includes>
             <include>**/*.*</include>
@@ -65,7 +66,7 @@
     
     <dependencySets>
             <dependencySet>
-                <outputDirectory></outputDirectory>
+                <outputDirectory>tuscany-das-samples-${das.version}</outputDirectory>
                 <includes>
                     <include>org.apache.tuscany.das.samples:sample-companyweb</include>
                 </includes>

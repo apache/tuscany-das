@@ -30,6 +30,10 @@
     <name>Tuscany DAS</name>
     <version>1.0-incubator-SNAPSHOT</version>
 
+    <properties>
+        <das.version>1.0-incubator-SNAPSHOT</das.version>
+    </properties>
+    
     <modules>
         <module>rdb</module>
         <module>samples</module>
