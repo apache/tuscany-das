@@ -323,4 +323,13 @@ public class ProgrammaticConfigTests extends DasTest {
         assertEquals("ID NAME", widgets.getCreate().getParameters());
 
     }
+    
+    public void testAddInvalidPrimaryKey() throws Exception {
+        ConfigHelper helper = new ConfigHelper();
+        try {
+            helper.addPrimaryKey("PK");
+        } catch (RuntimeException ex) {
+            assertEquals ("Column PK must be qualified with a table name", ex.getMessage());
+        }
+    }
 }

@@ -30,8 +30,12 @@ public class QualifiedColumn {
     private final Logger logger = LoggerFactory.INSTANCE.getLogger(QualifiedColumn.class);
 
     public QualifiedColumn(String name) {
-        tableName = name.substring(0, name.indexOf('.'));
-        columnName = name.substring(name.indexOf('.') + 1);
+        int index = name.indexOf('.');
+        if ( index == -1 ) {
+            throw new RuntimeException("Column " + name + " must be qualified with a table name");
+        }
+        tableName = name.substring(0, index);
+        columnName = name.substring(index + 1);
 
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Table name:  " + tableName);
