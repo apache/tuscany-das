@@ -135,6 +135,8 @@ public final class InsertGenerator extends BaseGenerator {
                             String key = (String) keys.next();
                             String keyProperty = config.getColumnPropertyName(tw.getTableName(), key);
                             Property keyProp = obj.getType().getProperty(keyProperty);
+                            if ( keyProp == null ) 
+                                throw new RuntimeException("Invalid foreign key column: " + key);
                             if (fields.add(keyProp) == false) {
                                 throw new RuntimeException("Foreign key properties should not be set when the corresponding relationship has changed");
                             }

@@ -26,7 +26,9 @@ package org.apache.tuscany.das.rdb.test;
 import java.sql.SQLException;
 
 import org.apache.tuscany.das.rdb.Command;
+import org.apache.tuscany.das.rdb.ConfigHelper;
 import org.apache.tuscany.das.rdb.DAS;
+import org.apache.tuscany.das.rdb.config.Relationship;
 import org.apache.tuscany.das.rdb.test.data.CustomerData;
 import org.apache.tuscany.das.rdb.test.data.OrderData;
 import org.apache.tuscany.das.rdb.test.framework.DasTest;
@@ -168,4 +170,27 @@ public class RelationshipTests extends DasTest {
             assertEquals("Foreign key properties should not be set when the corresponding relationship has changed", ex.getMessage());
         }
     }
+    
+    public void testInvalidFKColumn() throws SQLException {
+        ConfigHelper helper = new ConfigHelper();
+        Relationship r = helper.addRelationship("CUSTOMER.ID", "ANORDER.CUSTOMER_ID_INVALID");
+        r.setName("orders");
+       
+
+        DAS das = DAS.FACTORY.createDAS(helper.getConfig(), getConnection());
+        Command select = das.createCommand("select * from CUSTOMER left join ANORDER "
+                + "ON CUSTOMER.ID = ANORDER.CUSTOMER_ID");
+
+        DataObject root = select.executeQuery();  
+        DataObject cust1 = root.getDataObject("CUSTOMER[1]");  
+        DataObject order = root.createDataObject("ANORDER");
+        order.setInt("ID", 500);
+        cust1.getList("orders").add(order);   
+        try {
+            das.applyChanges(root);
+        } catch (RuntimeException ex) {
+            assertEquals("Invalid foreign key column: CUSTOMER_ID_INVALID", ex.getMessage());
+        }
+    }
+    
 }
