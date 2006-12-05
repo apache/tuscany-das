@@ -54,17 +54,25 @@ public final class InsertGenerator extends BaseGenerator {
         StringBuffer statement = new StringBuffer("insert into ");
         statement.append(t.getTableName());
 
-        Iterator i = getAttributeProperties(changedObject, config, table).iterator();
+        HashSet changedProperties = getAttributeProperties(changedObject, config, table);
+        Iterator i;
+        if ( changedProperties.isEmpty() ) {
+            i = changedObject.getType().getProperties().iterator();
+        } else {
+            i = changedProperties.iterator();
+        }
 
         List attributes = new ArrayList();
         List generatedKeys = new ArrayList();
         while (i.hasNext()) {
             Property attr = (Property) i.next();
-            if (table.isGeneratedColumnProperty(attr.getName())) {
-                generatedKeys.add(attr.getName());
-            } else {
-                attributes.add(attr.getName());
-                parameters.add(changedObject.getType().getProperty(attr.getName()));
+            if ( attr.getType().isDataType()) {
+                if (table.isGeneratedColumnProperty(attr.getName())) {
+                 generatedKeys.add(attr.getName());
+             } else {
+                 attributes.add(attr.getName());
+                    parameters.add(changedObject.getType().getProperty(attr.getName()));
+             }
             }
         }
 

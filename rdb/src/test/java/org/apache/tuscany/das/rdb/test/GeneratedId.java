@@ -129,6 +129,26 @@ public class GeneratedId extends DasTest {
         }
 
     }
+    
+    /** 
+     * Test insert into row with generated ID and no attributes set 
+     */ 
+    public void testInsert5() throws Exception { 
+
+        DAS das = DAS.FACTORY.createDAS(getConfig("CompanyConfig.xml"), getConnection()); 
+        Command select = das.getCommand("all companies"); 
+        DataObject root = select.executeQuery(); 
+
+        root.createDataObject("COMPANY"); 
+
+        das.applyChanges(root); 
+
+        // Verify insert 
+        root = select.executeQuery(); 
+        assertEquals(4, root.getList("COMPANY").size()); 
+
+    } 
+
 
     // Test ability to propogate generated values back to owning data objects
     public void testPropagateIds() throws Exception {
