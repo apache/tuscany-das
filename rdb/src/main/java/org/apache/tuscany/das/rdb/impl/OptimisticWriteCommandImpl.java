@@ -21,6 +21,7 @@ package org.apache.tuscany.das.rdb.impl;
 import java.sql.SQLException;
 
 import org.apache.tuscany.das.rdb.config.Update;
+import org.apache.tuscany.das.rdb.exception.OptimisticConcurrencyException;
 
 public class OptimisticWriteCommandImpl extends UpdateCommandImpl {
 
@@ -40,7 +41,7 @@ public class OptimisticWriteCommandImpl extends UpdateCommandImpl {
             int rowsAffected = statement.executeUpdate(parameters);
             success = true;
             if (rowsAffected == 0) {
-                throw new RuntimeException("An update collision occurred");
+                throw new OptimisticConcurrencyException("An update collision occurred");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

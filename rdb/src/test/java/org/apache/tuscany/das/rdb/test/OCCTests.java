@@ -25,6 +25,7 @@ import org.apache.tuscany.das.rdb.ConfigHelper;
 import org.apache.tuscany.das.rdb.DAS;
 import org.apache.tuscany.das.rdb.config.Config;
 import org.apache.tuscany.das.rdb.config.ConfigFactory;
+import org.apache.tuscany.das.rdb.exception.OptimisticConcurrencyException;
 import org.apache.tuscany.das.rdb.test.data.BookData;
 import org.apache.tuscany.das.rdb.test.data.CustomerData;
 import org.apache.tuscany.das.rdb.test.framework.DasTest;
@@ -58,7 +59,7 @@ public class OCCTests extends DasTest {
         try {
             das.applyChanges(root);
             fail("An OCCException should be thrown");
-        } catch (RuntimeException ex) {
+        } catch (OptimisticConcurrencyException ex) {
             if (!ex.getMessage().equals("An update collision occurred")) {
                 throw ex;
             }
@@ -85,7 +86,7 @@ public class OCCTests extends DasTest {
         try {
             das.applyChanges(root);
             fail("An OCCException should be thrown");
-        } catch (RuntimeException ex) {
+        } catch (OptimisticConcurrencyException ex) {
             if (!ex.getMessage().equals("An update collision occurred")) {
                 throw ex;
             }
@@ -129,7 +130,7 @@ public class OCCTests extends DasTest {
         try {
             das.applyChanges(root);
             fail("An OCCException should be thrown");
-        } catch (RuntimeException ex) {
+        } catch (OptimisticConcurrencyException ex) {
             if (!ex.getMessage().equals("An update collision occurred")) {
                 throw ex;
             }
