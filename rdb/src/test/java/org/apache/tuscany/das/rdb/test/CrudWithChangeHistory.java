@@ -268,6 +268,33 @@ public class CrudWithChangeHistory extends DasTest {
 
     }
 
+    /**
+     * Read graph.  Add new DO and apply without seting any attributes.
+     * 
+     */
+/*    public void testReadInsertApply() throws Exception {
+
+        DAS das = DAS.FACTORY.createDAS(getConnection());
+        // Read some customers
+        Command select = das.createCommand("Select * from CUSTOMER");
+        DataObject root = select.executeQuery();
+        
+        //Remember count
+        int count = root.getList("CUSTOMER").size();
+
+        // Create a new customer
+        root.createDataObject("CUSTOMER");
+
+        // Build apply changes command
+        das.applyChanges(root);
+
+        // verify insert
+        root = select.executeQuery();
+        assertEquals(count + 1, root.getList("CUSTOMER").size());
+
+    }*/
+    
+    
     public void testReadModifyApplyWithAssumedID() throws Exception {
 
         DAS das = DAS.FACTORY.createDAS(getConnection());

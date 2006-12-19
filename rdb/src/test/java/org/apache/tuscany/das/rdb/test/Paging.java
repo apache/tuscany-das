@@ -96,5 +96,39 @@ public class Paging extends DasTest {
         assertEquals(1, customer1.getInt("ID"));
         assertEquals(2, customer2.getInt("ID"));
     }
+    
+    
+/*    public void testLightPager() throws SQLException {
+        
+        
+        // Build the command to page with
+        DAS das = DAS.FACTORY.createDAS(getConnection());
+        Command select = das.createCommand("select * from CUSTOMER order by ID");
+        
+        //Create the light Pager instance
+        Pager lp = Pager.FACTORY.createLightPager(2);
+
+        // Get the first page
+        DataObject root = pager.getPage(1);
+        DataObject customer1 = root.getDataObject("CUSTOMER[1]");
+        DataObject customer2 = root.getDataObject("CUSTOMER[2]");
+        assertEquals(1, customer1.getInt("ID"));
+        assertEquals(2, customer2.getInt("ID"));
+
+        // Get the second page
+        root = pager.getPage(2);
+        customer1 = root.getDataObject("CUSTOMER[1]");
+        customer2 = root.getDataObject("CUSTOMER[2]");
+        assertEquals(3, customer1.getInt("ID"));
+        assertEquals(4, customer2.getInt("ID"));
+
+        // Get the first page again
+        root = pager.getPage(1);
+        customer1 = root.getDataObject("CUSTOMER[1]");
+        customer2 = root.getDataObject("CUSTOMER[2]");
+        assertEquals(1, customer1.getInt("ID"));
+        assertEquals(2, customer2.getInt("ID"));
+    }*/
+    
 
 }
