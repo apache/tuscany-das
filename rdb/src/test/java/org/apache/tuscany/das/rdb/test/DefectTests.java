@@ -29,6 +29,7 @@ import java.util.Random;
 
 import org.apache.tuscany.das.rdb.Command;
 import org.apache.tuscany.das.rdb.DAS;
+import org.apache.tuscany.das.rdb.test.data.BookData;
 import org.apache.tuscany.das.rdb.test.data.CompanyData;
 import org.apache.tuscany.das.rdb.test.data.CompanyDeptData;
 import org.apache.tuscany.das.rdb.test.data.CustomerData;
@@ -40,6 +41,10 @@ import org.apache.tuscany.das.rdb.test.framework.DasTest;
 
 import commonj.sdo.DataObject;
 
+/**
+ *
+ *
+ */
 public class DefectTests extends DasTest {
 
     protected void setUp() throws Exception {
@@ -52,6 +57,7 @@ public class DefectTests extends DasTest {
         new EmployeeData(getAutoConnection()).refresh();
         new CompanyDeptData(getAutoConnection()).refresh();
         new DepEmpData(getAutoConnection()).refresh();
+        new BookData(getAutoConnection()).refresh();
 
     }
 
@@ -80,27 +86,30 @@ public class DefectTests extends DasTest {
 
     }
 
-    public void testUpdateChildThatHasGeneratedKey() throws Exception {
 
-        DAS das = DAS.FACTORY.createDAS(getConfig("CompanyConfig.xml"));
+    /**
+     * Test expected failure when applyChanges processes DO with no PK columns.  We
+     * should throw a better error than NPE
+     */
 
-        //Read a specific company based on the known ID
-        Command readCust = das.getCommand("all companies and departments");
-        DataObject root = readCust.executeQuery();
-        DataObject lastCustomer = root.getDataObject("COMPANY[3]");
-        Iterator i = lastCustomer.getList("departments").iterator();
-        Random generator = new Random();
-        int random = generator.nextInt(1000) + 1;
-        DataObject department;
-        while (i.hasNext()) {
-            department = (DataObject) i.next();
-            System.out.println("Modifying department: " + department.getString("NAME"));
-            department.setString("NAME", "Dept-" + random);
-            random = random + 1;
+    public void testReadUpdateWithNoPKColumns() throws Exception {
+        
+        DAS das = DAS.FACTORY.createDAS(getConfig("BooksConfig.xml"),getConnection());
+        // Read a book instance
+        Command select = das.createCommand("SELECT NAME, AUTHOR, QUANTITY, OCC FROM BOOK WHERE BOOK_ID = 1");
+        DataObject root = select.executeQuery();
+
+        DataObject book = root.getDataObject("BOOK[1]");
+        // Change a field to mark the instance 'dirty'
+        book.setInt("QUANTITY", 2);
+
+        try {
+            das.applyChanges(root);
+            fail("An exception should be thrown since the DO has no PK defined");
+        } catch (NullPointerException ex) {
+            fail("We should do better than an NPE");
         }
-
-        das.applyChanges(root);
-
     }
+    
 
 }
