@@ -51,6 +51,36 @@ public class ProgrammaticConfigTests extends DasTest {
     }
 
     /**
+     * Simple read with command created programaticaly using the ConfigHelper.
+     */
+    public void test0() throws Exception {
+        String commandName = "select book by id";
+        String commandSQL = "SELECT * FROM BOOK WHERE BOOK_ID =?";
+        // Create config programmatically
+        ConfigHelper helper = new ConfigHelper();
+        helper.addSelectCommand( commandName, commandSQL );
+        helper.addPrimaryKey("BOOK.BOOK_ID");
+        DAS das = DAS.FACTORY.createDAS(helper.getConfig(), getConnection());
+
+        // Read a book instance
+        Command select = das.getCommand("select book by id");
+        select.setParameter(1, Integer.valueOf(1));
+        DataObject root = select.executeQuery();
+        DataObject book = root.getDataObject("BOOK[1]");
+        // Change a field to mark the instance 'dirty'
+        book.setInt("QUANTITY", 2);
+
+        // Flush the change
+
+        das.applyChanges(root);
+
+        // Verify
+        root = select.executeQuery();
+        book = root.getDataObject("BOOK[1]");
+        assertEquals(2, book.getInt("QUANTITY"));
+    }
+
+    /**
      * Simple read followed by a write. This should fail since there is no
      * config associaed with the applychanges command
      */
@@ -100,12 +130,11 @@ public class ProgrammaticConfigTests extends DasTest {
     }
 
     /**
-     * Test ability to read a compound graph
+     * Test ability to read a compound graph (Read with Relationship)
      */
     public void test3() throws Exception {
 
-        String statement = "SELECT * FROM CUSTOMER LEFT JOIN ANORDER ON CUSTOMER.ID = ANORDER.CUSTOMER_ID "
-                + "WHERE CUSTOMER.ID = 1";
+        String statement = "SELECT * FROM CUSTOMER LEFT JOIN ANORDER ON CUSTOMER.ID = ANORDER.CUSTOMER_ID WHERE CUSTOMER.ID = 1";
 
         // Read some customers and related orders
         // Create relationship config programmatically
@@ -152,7 +181,10 @@ public class ProgrammaticConfigTests extends DasTest {
         assertEquals("Ant Colonies of the Old World", root.getString("Book[1]/NAME"));
 
     }
-
+    
+    /**
+     * 
+     */
     public void testAddColumnWithPropertyName() throws SQLException {
         String statement = "SELECT * FROM BOOK WHERE BOOK.BOOK_ID = ?";
 
@@ -223,6 +255,7 @@ public class ProgrammaticConfigTests extends DasTest {
         assertEquals("get all customers", cmd.getName());
         assertEquals("select * from customers", cmd.getSQL());
     }
+        
 
     /**
      * Simple unit test for adding an update command
