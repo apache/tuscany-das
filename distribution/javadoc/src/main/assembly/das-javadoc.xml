@@ -37,6 +37,7 @@
         </fileSet>
         
         <!-- include javadocs -->
+        <!-- this will silient fail and generate empty distribution if javadoc is not available -->
 	<fileSet>
 	   <directory>../../rdb/target/apidocs</directory>
 	   <outputDirectory>doc</outputDirectory>
