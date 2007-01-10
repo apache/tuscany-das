@@ -39,6 +39,7 @@
         <module>samples</module>
         <module>distribution/binary</module>
         <module>distribution/samples</module>
+        <module>distribution/javadoc</module>
     </modules>
 
     <!-- definition of repositories where the parent pom can be found -->
