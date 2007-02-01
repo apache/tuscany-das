@@ -50,6 +50,7 @@ import org.apache.tuscany.das.rdb.test.SerializationTests;
 import org.apache.tuscany.das.rdb.test.SimplestCrud;
 import org.apache.tuscany.das.rdb.test.StoredProcs;
 import org.apache.tuscany.das.rdb.test.TopDown;
+import org.apache.tuscany.das.rdb.test.TransactionTests;
 import org.apache.tuscany.das.rdb.test.TypeTests;
 import org.apache.tuscany.das.rdb.test.typed.SimplestStaticCrud;
 
@@ -101,7 +102,9 @@ public final class AllCommonTests {
         suite.addTest(new TestSuite(ImpliedRelationshipTests.class));
 
         suite.addTest(new TestSuite(KennelTests.class));
-
+        
+//        suite.addTest(new TestSuite(TransactionTests.class));
+    
         //$JUnit-END$
         return suite;
     }
