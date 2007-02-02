@@ -70,7 +70,7 @@ public abstract class ChangeOperation {
             parm.setValue(dObject.get(parm.getName()));
         }
 
-        writeCommand.execute();
+        writeCommand.basicExecute();
 
         if (isInsert && (propagatedID != null)) {
             if (this.logger.isDebugEnabled()) {

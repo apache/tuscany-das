@@ -103,7 +103,7 @@ public final class AllCommonTests {
 
         suite.addTest(new TestSuite(KennelTests.class));
         
-//        suite.addTest(new TestSuite(TransactionTests.class));
+        suite.addTest(new TestSuite(TransactionTests.class));
     
         //$JUnit-END$
         return suite;

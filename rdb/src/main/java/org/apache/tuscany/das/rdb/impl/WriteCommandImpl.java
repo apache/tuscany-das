@@ -27,7 +27,6 @@ import commonj.sdo.DataObject;
 
 public abstract class WriteCommandImpl extends CommandImpl {
 
-
     public WriteCommandImpl(String sqlString) {
         super(sqlString);
     }
@@ -36,10 +35,8 @@ public abstract class WriteCommandImpl extends CommandImpl {
 
         boolean success = false;
         try {
-            statement.executeUpdate(parameters);
+            basicExecute();
             success = true;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         } finally {
             if (success) {
                 statement.getConnection().cleanUp();
@@ -48,6 +45,14 @@ public abstract class WriteCommandImpl extends CommandImpl {
             }
         }
 
+    }
+
+    public void basicExecute() {
+        try {
+            statement.executeUpdate(parameters);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public DataObject executeQuery() {
@@ -79,7 +84,5 @@ public abstract class WriteCommandImpl extends CommandImpl {
             addParameter(p);
         }
     }
-
-
 
 }

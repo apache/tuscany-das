@@ -34,24 +34,15 @@ public class OptimisticWriteCommandImpl extends UpdateCommandImpl {
         addParameters(update.getParameters());
     }
 
-    public void execute() {
-
-        boolean success = false;
+    public void basicExecute() {
         try {
             int rowsAffected = statement.executeUpdate(parameters);
-            success = true;
             if (rowsAffected == 0) {
                 throw new OptimisticConcurrencyException("An update collision occurred");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (success) {
-                statement.getConnection().cleanUp();
-            } else {
-                statement.getConnection().errorCleanUp();
-            }
         }
-
     }
+
 }
