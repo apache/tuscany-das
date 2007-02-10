@@ -466,7 +466,7 @@ public class MappingWrapper {
         ConnectionInfo info = ConfigFactory.INSTANCE.createConnectionInfo();
         info.setDataSource(dataSourceName);
         info.setManagedtx(managedtx);
-        info.setUseDriveManager(useDriverManager);
+        info.setUseDriverManager(useDriverManager);
         
         ConnectionProperties connectionProperties = ConfigFactory.INSTANCE.createConnectionProperties(); 
         connectionProperties.setDriverClass(driverClass);

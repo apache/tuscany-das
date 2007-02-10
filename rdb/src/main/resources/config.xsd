@@ -52,7 +52,7 @@
       </xsd:sequence>
       <xsd:attribute name="dataSource" type="xsd:string"/>
       <xsd:attribute name="managedtx" type="xsd:boolean" default="true"/>
-      <xsd:attribute name="useDriveManager" type="xsd:boolean" default="false"/>
+      <xsd:attribute name="useDriverManager" type="xsd:boolean" default="false"/>
    </xsd:complexType>
    
    

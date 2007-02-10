@@ -245,13 +245,13 @@ public class ProgrammaticConfigTests extends DasTest {
      */
     public void testConnectionInfoDriverManager() throws Exception {
         ConfigHelper helper = new ConfigHelper();
-        helper.addConnectionInfo("jdbc/adatasource", false, true);
+        helper.addConnectionInfo("jdbc/adatasource", false, false);
 
         Config config = helper.getConfig();
         ConnectionInfo info = config.getConnectionInfo();
         assertEquals(info.getDataSource(), "jdbc/adatasource");
         assertEquals(info.isManagedtx(), false);
-        assertEquals(info.isUseDriveManager(), true);
+        assertEquals(info.isUseDriverManager(), false);
     }    
     
     /**
@@ -266,6 +266,7 @@ public class ProgrammaticConfigTests extends DasTest {
         ConnectionInfo info = config.getConnectionInfo();
         assertEquals(info.getDataSource(), "jdbc/adatasource");
         assertEquals(info.isManagedtx(), false);
+        assertEquals(info.isUseDriverManager(), true);
         assertEquals(info.getConnectionProperties().getDriverClass(), "jdbc:derby:target/dastest");
         assertEquals(info.getConnectionProperties().getUserName(), "user");
         assertEquals(info.getConnectionProperties().getPassword(), "password");

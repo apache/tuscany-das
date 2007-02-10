@@ -152,8 +152,8 @@ public class DASImpl implements DAS {
         }
 
         ConnectionInfo connectionInfo = configWrapper.getConfig().getConnectionInfo();
-        if(connectionInfo.isUseDriveManager()){
-            initializeDriveManagerConnection(connectionInfo);
+        if(connectionInfo.isUseDriverManager()){
+            initializeDriverManagerConnection(connectionInfo);
         }else{
             initializeDatasourceConnection(connectionInfo);
         }
@@ -193,7 +193,7 @@ public class DASImpl implements DAS {
      * Initialize a DB connection on a J2SE environment
      * For more info, see http://java.sun.com/j2se/1.3/docs/guide/jdbc/getstart/drivermanager.html
      */
-    private void initializeDriveManagerConnection(ConnectionInfo connectionInfo) {
+    private void initializeDriverManagerConnection(ConnectionInfo connectionInfo) {
 
         Connection connection = null;
         
