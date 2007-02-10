@@ -19,7 +19,10 @@
 package org.apache.tuscany.das.rdb.impl;
 
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,7 +37,9 @@ import org.apache.tuscany.das.rdb.Command;
 import org.apache.tuscany.das.rdb.DAS;
 import org.apache.tuscany.das.rdb.config.Config;
 import org.apache.tuscany.das.rdb.config.ConfigFactory;
+import org.apache.tuscany.das.rdb.config.ConnectionInfo;
 import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
+import org.apache.tuscany.das.rdb.exception.DataSourceInitializationException;
 import org.apache.tuscany.das.rdb.util.ConfigUtil;
 
 import commonj.sdo.DataObject;
@@ -71,8 +76,7 @@ public class DASImpl implements DAS {
                 (org.apache.tuscany.das.rdb.config.Command) i.next();
             String kind = commandConfig.getKind();
             if (kind.equalsIgnoreCase("select")) {
-                commands
-                        .put(commandConfig.getName(), new ReadCommandImpl(commandConfig.getSQL(), 
+                commands.put(commandConfig.getName(), new ReadCommandImpl(commandConfig.getSQL(), 
                                 configWrapper, commandConfig.getResultDescriptor()));
             } else if (kind.equalsIgnoreCase("update")) {
                 commands.put(commandConfig.getName(), new UpdateCommandImpl(commandConfig.getSQL()));
@@ -139,7 +143,7 @@ public class DASImpl implements DAS {
         }
         return connection;
     }
-
+    
     private void initializeConnection() {
         Config config = configWrapper.getConfig();
         if (config == null || config.getConnectionInfo() == null 
@@ -147,6 +151,19 @@ public class DASImpl implements DAS {
             throw new RuntimeException("No connection has been provided and no data source has been specified");
         }
 
+        ConnectionInfo connectionInfo = configWrapper.getConfig().getConnectionInfo();
+        if(connectionInfo.isUseDriveManager()){
+            initializeDriveManagerConnection(connectionInfo);
+        }else{
+            initializeDatasourceConnection(connectionInfo);
+        }
+
+    }
+
+    /**
+     * Initializes a DB connection on a managed environmet (e.g inside Tomcat)
+     */
+    private void initializeDatasourceConnection(ConnectionInfo connectionInfo){
         Connection connection = null;
 
         InitialContext ctx;
@@ -156,7 +173,7 @@ public class DASImpl implements DAS {
             throw new RuntimeException(e);
         }
         try {
-            DataSource ds = (DataSource) ctx.lookup(configWrapper.getConfig().getConnectionInfo().getDataSource());
+            DataSource ds = (DataSource) ctx.lookup(connectionInfo.getDataSource());
             try {
                 connection = ds.getConnection();
                 if (connection == null) {
@@ -170,9 +187,58 @@ public class DASImpl implements DAS {
         } catch (NamingException e) {
             throw new RuntimeException(e);
         }
+    }
+    
+    /**
+     * Initialize a DB connection on a J2SE environment
+     * For more info, see http://java.sun.com/j2se/1.3/docs/guide/jdbc/getstart/drivermanager.html
+     */
+    private void initializeDriveManagerConnection(ConnectionInfo connectionInfo) {
+
+        Connection connection = null;
+        
+        if (connectionInfo.getConnectionProperties() == null) {
+            throw new DataSourceInitializationException("No existing context and no connection properties");
+        }
+
+        if (connectionInfo.getConnectionProperties().getDriverClass() == null) {
+            throw new DataSourceInitializationException("No jdbc driver class specified!");
+        }
+
+        try {
+            //initialize driver and register it with DriverManager
+            Class.forName(connectionInfo.getConnectionProperties().getDriverClass());
+            
+            //prepare to initialize connection
+            String databaseUrl = connectionInfo.getDataSource();
+            String userName = connectionInfo.getConnectionProperties().getUserName();
+            String userPassword = connectionInfo.getConnectionProperties().getPassword();
+            int loginTimeout = connectionInfo.getConnectionProperties().getLoginTimeout();
+            
+            DriverManager.setLoginTimeout(loginTimeout);
+            if( (userName == null || userName.length() ==0) && (userPassword == null || userPassword.length()==0) ){
+                //no username or password suplied
+                connection = DriverManager.getConnection(databaseUrl);
+            }else{
+                connection = DriverManager.getConnection(databaseUrl, userName, userPassword);
+            }
+            
+            if(connection == null){
+                throw new DataSourceInitializationException("Error initializing connection : null");
+            }
+            
+            connection.setAutoCommit(false);
+            setConnection(connection);
+                
+            
+        }catch(ClassNotFoundException cnf){
+            throw new DataSourceInitializationException("JDBC Driver '" + connectionInfo.getConnectionProperties().getDriverClass() + "' not found", cnf);
+        }catch(SQLException sqle){
+            throw new DataSourceInitializationException(sqle.getMessage(), sqle);
+        }
 
     }
-
+    
     public void releaseResources() {
 
         if (managingConnections()) {

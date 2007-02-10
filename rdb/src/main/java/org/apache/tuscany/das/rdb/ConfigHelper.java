@@ -78,13 +78,23 @@ public class ConfigHelper {
         configWrapper.addDeleteStatement(table, statement, parameters);
     }
 
-    public void addConnectionInfo(String dataSourceName, boolean managedtx) {
-        configWrapper.addConnectionInfo(dataSourceName, managedtx);
+    //JIRA-948 support for driver manager connection
+    public void addConnectionInfo(String dataSourceName) {
+        configWrapper.addConnectionInfo(dataSourceName, true, false, null, null, null, -1 );
     }
 
-    public void addConnectionInfo(String dataSourceName) {
-        configWrapper.addConnectionInfo(dataSourceName, true);
+    public void addConnectionInfo(String dataSourceName, boolean managedtx) {
+        configWrapper.addConnectionInfo(dataSourceName, managedtx, false, null, null, null, -1 );
     }
+
+    public void addConnectionInfo(String dataSourceName, boolean managedtx, boolean useDriverManager) {
+        configWrapper.addConnectionInfo(dataSourceName, managedtx, useDriverManager, null, null, null, -1 );
+    }
+
+    public void addConnectionInfo(String dataSourceName, boolean managedtx, boolean useDriverManager, String driverClass, String user, String password, int loginTimeout) {
+        configWrapper.addConnectionInfo(dataSourceName, managedtx, useDriverManager, driverClass, user, password, loginTimeout);
+    }
+    //JIRA-948 end
 
     public void setDataObjectModel(String dataObjectModel) {
         configWrapper.getConfig().setDataObjectModel(dataObjectModel);

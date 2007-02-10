@@ -32,6 +32,7 @@ import org.apache.tuscany.das.rdb.config.Command;
 import org.apache.tuscany.das.rdb.config.Config;
 import org.apache.tuscany.das.rdb.config.ConfigFactory;
 import org.apache.tuscany.das.rdb.config.ConnectionInfo;
+import org.apache.tuscany.das.rdb.config.ConnectionProperties;
 import org.apache.tuscany.das.rdb.config.Create;
 import org.apache.tuscany.das.rdb.config.Delete;
 import org.apache.tuscany.das.rdb.config.KeyPair;
@@ -460,12 +461,24 @@ public class MappingWrapper {
 
     }
 
-    public void addConnectionInfo(String dataSourceName, boolean managedtx) {
+    //JIRA-948 support for driver manager connection
+    public void addConnectionInfo(String dataSourceName, boolean managedtx, boolean useDriverManager, String driverClass, String user, String password, int loginTimeout) {
         ConnectionInfo info = ConfigFactory.INSTANCE.createConnectionInfo();
         info.setDataSource(dataSourceName);
         info.setManagedtx(managedtx);
+        info.setUseDriveManager(useDriverManager);
+        
+        ConnectionProperties connectionProperties = ConfigFactory.INSTANCE.createConnectionProperties(); 
+        connectionProperties.setDriverClass(driverClass);
+                 
+        connectionProperties.setUserName(user);
+        connectionProperties.setPassword(password);
+        connectionProperties.setLoginTimeout(loginTimeout);            
+
+        info.setConnectionProperties(connectionProperties);
         config.setConnectionInfo(info);
     }
+    //JIRA-948 end
 
     public Command addCommand(String name, String sql, String kind) {
         Command cmd = ConfigFactory.INSTANCE.createCommand();

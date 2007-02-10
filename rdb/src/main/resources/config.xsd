@@ -39,11 +39,23 @@
       <xsd:attribute name="dataObjectModel" type="xsd:string"/>
    </xsd:complexType>
 
+   <xsd:complexType name="ConnectionProperties">
+      <xsd:attribute name="driverClass" type="xsd:string"/>
+      <xsd:attribute name="userName" type="xsd:string" default=""/>
+      <xsd:attribute name="password" type="xsd:string" default=""/>
+      <xsd:attribute name="loginTimeout" type="xsd:int" default="0"/>      
+   </xsd:complexType>
+   
    <xsd:complexType name="ConnectionInfo">
+      <xsd:sequence>
+        <xsd:element  maxOccurs="1" minOccurs="0" name="ConnectionProperties" type="config:ConnectionProperties"/>
+      </xsd:sequence>
       <xsd:attribute name="dataSource" type="xsd:string"/>
       <xsd:attribute name="managedtx" type="xsd:boolean" default="true"/>
+      <xsd:attribute name="useDriveManager" type="xsd:boolean" default="false"/>
    </xsd:complexType>
-
+   
+   
    <xsd:complexType name="Command">
       <xsd:sequence>
          <xsd:element  maxOccurs="unbounded" minOccurs="0" name="Parameter"

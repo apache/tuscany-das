@@ -240,6 +240,39 @@ public class ProgrammaticConfigTests extends DasTest {
     }
 
     /**
+     * Simple unit test for ConnectionInfo using DriverManager
+     * @throws Exception
+     */
+    public void testConnectionInfoDriverManager() throws Exception {
+        ConfigHelper helper = new ConfigHelper();
+        helper.addConnectionInfo("jdbc/adatasource", false, true);
+
+        Config config = helper.getConfig();
+        ConnectionInfo info = config.getConnectionInfo();
+        assertEquals(info.getDataSource(), "jdbc/adatasource");
+        assertEquals(info.isManagedtx(), false);
+        assertEquals(info.isUseDriveManager(), true);
+    }    
+    
+    /**
+     * Simple unit test for ConnectionInfo using DriverManager
+     * @throws Exception
+     */
+    public void testConnectionInfoDriverManager2() throws Exception {
+        ConfigHelper helper = new ConfigHelper();
+        helper.addConnectionInfo("jdbc/adatasource", false, true, "jdbc:derby:target/dastest", "user", "password", 600);
+
+        Config config = helper.getConfig();
+        ConnectionInfo info = config.getConnectionInfo();
+        assertEquals(info.getDataSource(), "jdbc/adatasource");
+        assertEquals(info.isManagedtx(), false);
+        assertEquals(info.getConnectionProperties().getDriverClass(), "jdbc:derby:target/dastest");
+        assertEquals(info.getConnectionProperties().getUserName(), "user");
+        assertEquals(info.getConnectionProperties().getPassword(), "password");
+        assertEquals(info.getConnectionProperties().getLoginTimeout(), 600);
+    }  
+    
+    /**
      * Simple unit test for adding a select command
      * @throws Exception
      */
