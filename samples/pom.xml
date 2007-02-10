@@ -32,5 +32,6 @@
 
     <modules>
         <module>companyweb</module>
+        <module>customer</module>
     </modules>
 </project>
