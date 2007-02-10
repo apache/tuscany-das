@@ -20,7 +20,7 @@
  <Config xmlns="http:///org.apache.tuscany.das.rdb/config.xsd"> 
     
     <!--Uncomment below for derby test-->
-	<ConnectionInfo dataSource="jdbc:derby:target/dastest; create = true" useDriveManager="true">
+	<ConnectionInfo dataSource="jdbc:derby:target/dastest; create = true" useDriverManager="true">
 		<ConnectionProperties
 			driverClass="org.apache.derby.jdbc.EmbeddedDriver"
 			loginTimeout="600000"/>
