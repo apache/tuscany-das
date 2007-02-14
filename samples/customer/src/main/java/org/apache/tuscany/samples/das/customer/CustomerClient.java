@@ -103,7 +103,7 @@ public class CustomerClient {
 		}
 	
 		//get connection info from config
-		dbURL = config.getConnectionInfo().getDataSource();
+		dbURL = config.getConnectionInfo().getConnectionProperties().getDatabaseURL();
 		user = config.getConnectionInfo().getConnectionProperties().getUserName();
 		password = config.getConnectionInfo().getConnectionProperties().getPassword();
 		
