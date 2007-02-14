@@ -462,15 +462,20 @@ public class MappingWrapper {
     }
 
     //JIRA-948 support for driver manager connection
-    public void addConnectionInfo(String dataSourceName, boolean managedtx, boolean useDriverManager, String driverClass, String user, String password, int loginTimeout) {
+    public void addConnectionInfo(String dataSourceName, boolean managedtx){
         ConnectionInfo info = ConfigFactory.INSTANCE.createConnectionInfo();
         info.setDataSource(dataSourceName);
         info.setManagedtx(managedtx);
-        info.setUseDriverManager(useDriverManager);
+
+        config.setConnectionInfo(info);
+    }
+    
+    public void addConnectionInfo(String driverClass, String connectionURL, String user, String password, int loginTimeout) {
+        ConnectionInfo info = ConfigFactory.INSTANCE.createConnectionInfo();
         
         ConnectionProperties connectionProperties = ConfigFactory.INSTANCE.createConnectionProperties(); 
         connectionProperties.setDriverClass(driverClass);
-                 
+        connectionProperties.setDatabaseURL(connectionURL);
         connectionProperties.setUserName(user);
         connectionProperties.setPassword(password);
         connectionProperties.setLoginTimeout(loginTimeout);            

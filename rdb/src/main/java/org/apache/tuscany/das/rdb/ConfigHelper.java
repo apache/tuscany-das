@@ -80,19 +80,15 @@ public class ConfigHelper {
 
     //JIRA-948 support for driver manager connection
     public void addConnectionInfo(String dataSourceName) {
-        configWrapper.addConnectionInfo(dataSourceName, true, false, null, null, null, -1 );
+        configWrapper.addConnectionInfo(dataSourceName, true);
     }
 
     public void addConnectionInfo(String dataSourceName, boolean managedtx) {
-        configWrapper.addConnectionInfo(dataSourceName, managedtx, false, null, null, null, -1 );
+        configWrapper.addConnectionInfo(dataSourceName, managedtx);
     }
 
-    public void addConnectionInfo(String dataSourceName, boolean managedtx, boolean useDriverManager) {
-        configWrapper.addConnectionInfo(dataSourceName, managedtx, useDriverManager, null, null, null, -1 );
-    }
-
-    public void addConnectionInfo(String dataSourceName, boolean managedtx, boolean useDriverManager, String driverClass, String user, String password, int loginTimeout) {
-        configWrapper.addConnectionInfo(dataSourceName, managedtx, useDriverManager, driverClass, user, password, loginTimeout);
+    public void addConnectionInfo(String driverClass, String databaseURL, String user, String password, int loginTimeout) {
+        configWrapper.addConnectionInfo(driverClass, databaseURL, user, password, loginTimeout);
     }
     //JIRA-948 end
 

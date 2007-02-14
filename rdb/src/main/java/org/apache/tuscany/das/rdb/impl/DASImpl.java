@@ -76,8 +76,7 @@ public class DASImpl implements DAS {
                 (org.apache.tuscany.das.rdb.config.Command) i.next();
             String kind = commandConfig.getKind();
             if (kind.equalsIgnoreCase("select")) {
-                commands.put(commandConfig.getName(), new ReadCommandImpl(commandConfig.getSQL(), 
-                                configWrapper, commandConfig.getResultDescriptor()));
+                commands.put(commandConfig.getName(), new ReadCommandImpl(commandConfig.getSQL(), configWrapper, commandConfig.getResultDescriptor()));
             } else if (kind.equalsIgnoreCase("update")) {
                 commands.put(commandConfig.getName(), new UpdateCommandImpl(commandConfig.getSQL()));
             } else if (kind.equalsIgnoreCase("insert")) {
@@ -85,8 +84,7 @@ public class DASImpl implements DAS {
             } else if (kind.equalsIgnoreCase("delete")) {
                 commands.put(commandConfig.getName(), new DeleteCommandImpl(commandConfig.getSQL()));
             } else if (kind.equalsIgnoreCase("procedure")) {
-                commands.put(commandConfig.getName(), new SPCommandImpl(commandConfig.getSQL(), 
-                        configWrapper, commandConfig.getParameter()));
+                commands.put(commandConfig.getName(), new SPCommandImpl(commandConfig.getSQL(), configWrapper, commandConfig.getParameter()));
             } else {
                 throw new RuntimeException("Invalid kind of command: " + kind);
             }
@@ -146,13 +144,17 @@ public class DASImpl implements DAS {
     
     private void initializeConnection() {
         Config config = configWrapper.getConfig();
-        if (config == null || config.getConnectionInfo() == null 
-                || config.getConnectionInfo().getDataSource() == null) {
+        if (config == null || config.getConnectionInfo() == null || 
+            (config.getConnectionInfo().getDataSource() == null && config.getConnectionInfo().getConnectionProperties() == null)) {
             throw new RuntimeException("No connection has been provided and no data source has been specified");
         }
 
+        if(config.getConnectionInfo().getDataSource() != null && config.getConnectionInfo().getConnectionProperties() != null){
+            throw new RuntimeException("Use either dataSource or ConnectionProperties. Can't use both !");
+        }
+        
         ConnectionInfo connectionInfo = configWrapper.getConfig().getConnectionInfo();
-        if(connectionInfo.isUseDriverManager()){
+        if(config.getConnectionInfo().getConnectionProperties() != null){
             initializeDriverManagerConnection(connectionInfo);
         }else{
             initializeDatasourceConnection(connectionInfo);
@@ -210,7 +212,7 @@ public class DASImpl implements DAS {
             Class.forName(connectionInfo.getConnectionProperties().getDriverClass());
             
             //prepare to initialize connection
-            String databaseUrl = connectionInfo.getDataSource();
+            String databaseUrl = connectionInfo.getConnectionProperties().getDatabaseURL();
             String userName = connectionInfo.getConnectionProperties().getUserName();
             String userPassword = connectionInfo.getConnectionProperties().getPassword();
             int loginTimeout = connectionInfo.getConnectionProperties().getLoginTimeout();

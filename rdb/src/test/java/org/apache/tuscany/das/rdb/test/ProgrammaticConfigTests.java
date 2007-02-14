@@ -238,36 +238,19 @@ public class ProgrammaticConfigTests extends DasTest {
         assertEquals(info.getDataSource(), "jdbc/adatasource");
         assertEquals(info.isManagedtx(), false);
     }
-
+    
     /**
      * Simple unit test for ConnectionInfo using DriverManager
      * @throws Exception
      */
     public void testConnectionInfoDriverManager() throws Exception {
         ConfigHelper helper = new ConfigHelper();
-        helper.addConnectionInfo("jdbc/adatasource", false, false);
+        helper.addConnectionInfo("org.apache.derby.jdbc.EmbeddedDriver","jdbc:derby:target/dastest", "user", "password", 600);
 
         Config config = helper.getConfig();
         ConnectionInfo info = config.getConnectionInfo();
-        assertEquals(info.getDataSource(), "jdbc/adatasource");
-        assertEquals(info.isManagedtx(), false);
-        assertEquals(info.isUseDriverManager(), false);
-    }    
-    
-    /**
-     * Simple unit test for ConnectionInfo using DriverManager
-     * @throws Exception
-     */
-    public void testConnectionInfoDriverManager2() throws Exception {
-        ConfigHelper helper = new ConfigHelper();
-        helper.addConnectionInfo("jdbc/adatasource", false, true, "jdbc:derby:target/dastest", "user", "password", 600);
-
-        Config config = helper.getConfig();
-        ConnectionInfo info = config.getConnectionInfo();
-        assertEquals(info.getDataSource(), "jdbc/adatasource");
-        assertEquals(info.isManagedtx(), false);
-        assertEquals(info.isUseDriverManager(), true);
-        assertEquals(info.getConnectionProperties().getDriverClass(), "jdbc:derby:target/dastest");
+        assertEquals(info.getConnectionProperties().getDriverClass(), "org.apache.derby.jdbc.EmbeddedDriver");
+        assertEquals(info.getConnectionProperties().getDatabaseURL(), "jdbc:derby:target/dastest");
         assertEquals(info.getConnectionProperties().getUserName(), "user");
         assertEquals(info.getConnectionProperties().getPassword(), "password");
         assertEquals(info.getConnectionProperties().getLoginTimeout(), 600);

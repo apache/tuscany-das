@@ -41,6 +41,7 @@
 
    <xsd:complexType name="ConnectionProperties">
       <xsd:attribute name="driverClass" type="xsd:string"/>
+      <xsd:attribute name="databaseURL" type="xsd:string"/>
       <xsd:attribute name="userName" type="xsd:string" default=""/>
       <xsd:attribute name="password" type="xsd:string" default=""/>
       <xsd:attribute name="loginTimeout" type="xsd:int" default="0"/>      
@@ -52,7 +53,6 @@
       </xsd:sequence>
       <xsd:attribute name="dataSource" type="xsd:string"/>
       <xsd:attribute name="managedtx" type="xsd:boolean" default="true"/>
-      <xsd:attribute name="useDriverManager" type="xsd:boolean" default="false"/>
    </xsd:complexType>
    
    
