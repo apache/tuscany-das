@@ -5,7 +5,7 @@ Specification-Vendor: Apache Software Foundation
 Implementation-Vendor: Apache Software Foundation
 Implementation-Vendor-Id: org.apache
 Implementation-Title: tuscany-das-rdb
-Implementation-Version: incubating-M1
+Implementation-Version: incubating-M3
 Bundle-ManifestVersion: 2
 Bundle-Name: Tuscany DAS for Relational Databases
 Bundle-SymbolicName: org.apache.tuscany.das.rdb
