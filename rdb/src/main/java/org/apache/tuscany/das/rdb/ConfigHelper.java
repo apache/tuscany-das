@@ -18,6 +18,8 @@
  */
 package org.apache.tuscany.das.rdb;
 
+import java.util.Vector;
+
 import org.apache.tuscany.das.rdb.config.Column;
 import org.apache.tuscany.das.rdb.config.Command;
 import org.apache.tuscany.das.rdb.config.Config;
@@ -56,6 +58,10 @@ public class ConfigHelper {
 
     public Relationship addRelationship(String parentName, String childName) {
         return configWrapper.addRelationship(parentName, childName);
+    }
+    
+    public Relationship addRelationship(Vector parentNames, Vector childNames) {
+        return configWrapper.addRelationship(parentNames, childNames);
     }
 
     public Table addTable(String name, String typeName) {

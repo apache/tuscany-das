@@ -127,15 +127,14 @@ public class DatabaseSetup extends TestSetup {
 
     private void dropTables() {
 
-        // System.out.println("Dropping tables");
-
         String[] statements = {
             "DROP TABLE CUSTOMER", "DROP TABLE ANORDER", "DROP TABLE ORDERDETAILS", 
-            "DROP TABLE ITEM", "DROP TABLE COMPANY", "DROP TABLE EMPLOYEE",
-            "DROP TABLE DEPARTMENT", "DROP TABLE BOOK", "DROP TABLE PART", 
-            "DROP TABLE TYPETEST", "DROP TABLE CITIES", "DROP TABLE STATES",
-            "DROP TABLE conmgt.SERVERSTATUS", "DROP TABLE DOG", "DROP TABLE OWNER", 
-            "DROP TABLE KENNEL", "DROP TABLE VISIT"
+            "DROP TABLE ORDERDETAILSDESC", "DROP TABLE ITEM", "DROP TABLE COMPANY", 
+            "DROP TABLE EMPLOYEE", "DROP TABLE DEPARTMENT", "DROP TABLE BOOK", 
+            "DROP TABLE PART", "DROP TABLE TYPETEST", "DROP TABLE CITIES", 
+            "DROP TABLE STATES", "DROP TABLE conmgt.SERVERSTATUS", 
+            "DROP TABLE DOG", "DROP TABLE OWNER", "DROP TABLE KENNEL", 
+            "DROP TABLE VISIT"
         };
 
         for (int i = 0; i < statements.length; i++) {
@@ -215,6 +214,7 @@ public class DatabaseSetup extends TestSetup {
             s.execute(getCreateOwner());
             s.execute(getCreateKennel());
             s.execute(getCreateVisit());
+            s.execute(getCreateOrderDetailsDesc());//JIRA-841
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -368,6 +368,11 @@ public class DatabaseSetup extends TestSetup {
                 + "PRIMARY KEY(ID))";
     }
 
+    protected String getCreateOrderDetailsDesc() {
+        return "CREATE TABLE ORDERDETAILSDESC ("+ getIntegerColumn("ID") + " NOT NULL, " + getIntegerColumn("ORDERID") + " NOT NULL, " 
+            + getIntegerColumn("PRODUCTID")
+                + " NOT NULL,"+ getStringColumn("DESCR", 20)+", PRIMARY KEY (ID))";
+    }    
     // /////////////////
 
     protected String getForeignKeyConstraint(String pkTable, String pkColumn, String foreignKey) {

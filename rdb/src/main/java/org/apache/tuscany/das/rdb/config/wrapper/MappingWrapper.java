@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.apache.tuscany.das.rdb.config.Column;
@@ -160,7 +161,72 @@ public class MappingWrapper {
         return r;
 
     }
+    
+    public Relationship addRelationship(Vector parentNames, Vector childNames) {
+        //create vector for each
+        if(parentNames.size() != childNames.size()){
+            throw new RuntimeException("Can not for relationship for multiple keys, different sizes");
+        }
+        
+        Vector parentColumns = new Vector();
+        Vector childColumns = new Vector();
+        
+        for(int i=0; i<parentNames.size(); i++){
+            QualifiedColumn parent = new QualifiedColumn((String)parentNames.get(i));
+            QualifiedColumn child = new QualifiedColumn((String)childNames.get(i));
+            
+            parentColumns.add(parent);
+            childColumns.add(child);
+        }
 
+        //all parent columns should be from same table and schema
+        //all child columns should be from same table and schema
+        checkTableNames(parentColumns);
+        //checkSchemaNames(parentColumns);
+        
+        checkTableNames(childColumns);
+        //checkSchemaNames(childColumns);
+        
+        Relationship r = FACTORY.createRelationship();
+
+        r.setName(((QualifiedColumn)childColumns.get(0)).getTableName());
+        r.setPrimaryKeyTable(((QualifiedColumn)parentColumns.get(0)).getTableName());
+        r.setForeignKeyTable(((QualifiedColumn)childColumns.get(0)).getTableName());
+
+
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("Created relationship from " + r.getPrimaryKeyTable() 
+                    + " to " + r.getForeignKeyTable() + " named " + r.getName());
+        }
+
+        KeyPair pair = null;
+        
+        for(int i=0; i<parentColumns.size(); i++){
+            pair = FACTORY.createKeyPair();
+            pair.setPrimaryKeyColumn(((QualifiedColumn)parentColumns.get(i)).getColumnName());
+            pair.setForeignKeyColumn(((QualifiedColumn)childColumns.get(i)).getColumnName());
+            r.getKeyPair().add(pair);
+        }
+        
+        r.setMany(true);
+        config.getRelationship().add(r);
+
+        return r;
+    }    
+    
+    public void checkTableNames(Vector columns){
+        String expectedTableName = ((QualifiedColumn)columns.get(0)).getTableName();        
+
+        for(int i=0; i<columns.size(); i++){
+            QualifiedColumn currColumn = (QualifiedColumn)columns.get(i);
+            String currTableName = currColumn.getTableName();
+            
+            if(!currTableName.equals(expectedTableName)){
+                throw new RuntimeException("Columns in one side of relationship can not be from different tables");
+            }           
+        }       
+    }
+    
     public void addPrimaryKey(String columnName) {
         addPrimaryKey(Collections.singletonList(columnName));
     }

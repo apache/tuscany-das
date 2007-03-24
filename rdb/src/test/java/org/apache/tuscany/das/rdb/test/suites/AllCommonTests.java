@@ -27,6 +27,7 @@ import org.apache.tuscany.das.rdb.test.CUDGeneration;
 import org.apache.tuscany.das.rdb.test.CommandGroupTests;
 import org.apache.tuscany.das.rdb.test.CompanyTests;
 import org.apache.tuscany.das.rdb.test.CompoundKeyTests;
+import org.apache.tuscany.das.rdb.test.CompoundKeyRelationshipTests;
 import org.apache.tuscany.das.rdb.test.ConverterTests;
 import org.apache.tuscany.das.rdb.test.CorrectedDefectTests;
 import org.apache.tuscany.das.rdb.test.CrudWithChangeHistory;
@@ -77,6 +78,7 @@ public final class AllCommonTests {
 
         suite.addTest(new TestSuite(GraphMergeTests.class));
         suite.addTest(new TestSuite(CompoundKeyTests.class));
+        suite.addTest(new TestSuite(CompoundKeyRelationshipTests.class));
         suite.addTest(new TestSuite(RelationshipTests.class));
         suite.addTest(new TestSuite(GeneratedCommandTests.class));
 
