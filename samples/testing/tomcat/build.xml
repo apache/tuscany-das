@@ -22,7 +22,7 @@
         <property file="${user.home}/tuscany/build.properties" />
         <property file="${user.home}/build.properties" />
 
-        <property name="tuscany.acceptance.tomcat.version" value='5.5.17' />
+        <property name="tuscany.acceptance.tomcat.version" value='6.0.10' />
         <condition property="tuscany.acceptance.tomcat.zipped" value='apache-tomcat-${tuscany.acceptance.tomcat.version}.zip'>
             <os family="windows"/>
         </condition>
@@ -38,6 +38,12 @@
 
         <property name="tuscany.acceptance.target.dir" value='target' />
         <property name="tuscany.acceptance.tc.dir" value='${tuscany.acceptance.target.dir}/apache-tomcat-${tuscany.acceptance.tomcat.version}' />
+        <condition property="tuscany.acceptance.tc.bin.dir" value="${tuscany.acceptance.tc.dir}/lib">
+            <contains string="${tuscany.acceptance.tomcat.version}" substring="6."/>
+        </condition>
+        <condition property="tuscany.acceptance.tc.bin.dir" value="${tuscany.acceptance.tc.dir}/common/lib">
+            <contains string="${tuscany.acceptance.tomcat.version}" substring="5."/>
+        </condition>
 
 
 <!-- KJW define property for the complete path of apache dir -->
@@ -138,7 +144,7 @@
         <target name="tuscany.tomcat.fixup" depends='tuscany.tomcat.fixserverconfig' description='Fix up tomcat for tuscany.'>
                 <mkdir dir="${tuscany.acceptance.target.dir}" />
 
-                <copy todir="${tuscany.acceptance.tc.dir}/common/lib" flatten='true'>
+                <copy todir="${tuscany.acceptance.tc.bin.dir}" flatten='true'>
                         <fileset dir="${tuscany.maven.repos.dir}">
                                 <patternset refid="tuscany.acceptance.emf.dependencies" />
                         </fileset>
@@ -275,7 +281,7 @@
                                 <fileset dir="${tuscany.acceptance.tc.dir}/server/lib">
                                         <include name="*.jar" />
                                 </fileset>
-                                <fileset dir="${tuscany.acceptance.tc.dir}/common/lib">
+                                <fileset dir="${tuscany.acceptance.tc.bin.dir}">
                                         <include name="*.jar" />
                                 </fileset>
                                 <fileset dir="${tuscany.acceptance.tc.dir}/bin">
