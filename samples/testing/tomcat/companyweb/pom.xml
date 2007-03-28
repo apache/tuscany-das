@@ -26,7 +26,7 @@
     
     <modelVersion>4.0.0</modelVersion>
     <artifactId>tuscany-samples-das-testing-tomcatcompanyweb</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
     <name>Tuscany Testing DAS Sample - Companyweb</name>
     <description>Testing Tomcat DAS end user test</description>
 
