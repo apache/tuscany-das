@@ -35,7 +35,7 @@
       <useDefaultExcludes>true</useDefaultExcludes>
     </fileSet>
     <fileSet>
-      <directory>../../rdb/src</directory>
+      <directory>../../</directory>
       <outputDirectory>src</outputDirectory>
       <useDefaultExcludes>true</useDefaultExcludes>
 
@@ -43,6 +43,9 @@
       <includes>
          <include>**/*.*</include>
       </includes>
+      <excludes>
+         <exclude>**/target/**</exclude>
+      </excludes>
       <fileMode>644</fileMode>
     </fileSet>
   </fileSets>
