@@ -18,12 +18,13 @@
  * under the License.
 -->
 <project>
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.apache.tuscany.das</groupId>
         <artifactId>tuscany-das</artifactId>
-        <version>1.0-incubator-SNAPSHOT</version>
+        <version>1.0-incubating-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
+
     <artifactId>tuscany-das-rdb</artifactId>
     <name>Tuscany DAS for Relational Databases</name>
 

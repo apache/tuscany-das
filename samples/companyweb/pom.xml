@@ -18,15 +18,14 @@
  * under the License.
 -->
 <project>
-
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.apache.tuscany.das.samples</groupId>
-        <artifactId>tuscany-samples-das</artifactId>
-        <version>1.0-incubator-SNAPSHOT</version>
+        <artifactId>tuscany-das-samples</artifactId>
+        <version>1.0-incubating-SNAPSHOT</version>
     </parent>
 
-    <modelVersion>4.0.0</modelVersion>
-    <artifactId>sample-companyweb</artifactId>
+    <artifactId>tuscany-das-sample-companyweb</artifactId>
     <packaging>war</packaging>
     <name>Tuscany DAS Company Sample</name>
     <description>Sample use of RDB DAS in a Web application</description>

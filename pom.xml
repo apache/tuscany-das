@@ -22,16 +22,17 @@
     <parent>
         <groupId>org.apache.tuscany</groupId>
         <artifactId>parent</artifactId>
-        <version>2-incubator-SNAPSHOT</version>
+        <version>2-incubating-SNAPSHOT</version>
     </parent>
     <groupId>org.apache.tuscany.das</groupId>
     <artifactId>tuscany-das</artifactId>
+    <version>1.0-incubating-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Tuscany DAS</name>
-    <version>1.0-incubator-SNAPSHOT</version>
 
     <properties>
-        <das.version>1.0-incubator-SNAPSHOT</das.version>
+        <das.version>1.0-incubating-SNAPSHOT</das.version>
+        <sdo.version>1.0-incubator-SNAPSHOT</sdo.version>
     </properties>
     
     <modules>

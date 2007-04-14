@@ -18,18 +18,16 @@
  * under the License.
 -->
 <project>
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.apache.tuscany.das.samples</groupId>
-        <artifactId>tuscany-samples-das</artifactId>
-        <version>1.0-incubator-SNAPSHOT</version>
+        <artifactId>tuscany-das-samples</artifactId>
+        <version>1.0-incubating-SNAPSHOT</version>
     </parent>
-    
-    
-    <modelVersion>4.0.0</modelVersion>
-    <artifactId>tuscany-samples-das-testing-tomcat</artifactId>
+
+    <artifactId>tuscany-das-samples-testing-tomcat</artifactId>
     <packaging>pom</packaging>
     <name>Tuscany Testing in Tomcat</name>
-
 
     <modules>
         <module>companyweb</module>

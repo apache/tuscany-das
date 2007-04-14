@@ -68,7 +68,7 @@
             <dependencySet>
                 <outputDirectory>tuscany-das-samples-${das.version}</outputDirectory>
                 <includes>
-                    <include>org.apache.tuscany.das.samples:sample-companyweb</include>
+                    <include>org.apache.tuscany.das.samples:tuscany-das-sample-companyweb</include>
                 </includes>
                 <fileMode>644</fileMode>
             </dependencySet>

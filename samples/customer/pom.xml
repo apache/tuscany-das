@@ -18,15 +18,14 @@
  * under the License.
 -->
 <project>
-
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.apache.tuscany.das.samples</groupId>
-        <artifactId>tuscany-samples-das</artifactId>
-        <version>1.0-incubator-SNAPSHOT</version>
+        <artifactId>tuscany-das-samples</artifactId>
+        <version>1.0-incubating-SNAPSHOT</version>
     </parent>
 
-    <modelVersion>4.0.0</modelVersion>
-    <artifactId>sample-customer-j2se</artifactId>
+    <artifactId>tuscany-das-sample-customer-j2se</artifactId>
     <packaging>jar</packaging>
     <name>Tuscany DAS J2SE Customer Sample</name>
     <description>Sample use of RDB DAS in a J2SE application</description>
@@ -35,7 +34,7 @@
         <dependency>
             <groupId>org.apache.tuscany.das</groupId>
             <artifactId>tuscany-das-rdb</artifactId>
-            <version>${pom.version}</version>
+            <version>${das.version}</version>
             <scope>compile</scope>
         </dependency>
         
