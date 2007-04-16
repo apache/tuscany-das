@@ -32,7 +32,7 @@
 
     <properties>
         <das.version>1.0-incubating-SNAPSHOT</das.version>
-        <sdo.version>1.0-incubator-SNAPSHOT</sdo.version>
+        <sdo.version>1.0-incubating-SNAPSHOT</sdo.version>
     </properties>
     
     <modules>
@@ -74,7 +74,7 @@
             <dependency>
                 <groupId>org.apache.tuscany.sdo</groupId>
                 <artifactId>tuscany-sdo-impl</artifactId>
-                <version>1.0-incubator-SNAPSHOT</version>
+                <version>${sdo.version}</version>
                 <scope>compile</scope>
             </dependency>
 
