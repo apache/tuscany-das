@@ -29,7 +29,12 @@ import org.apache.tuscany.das.rdb.Command;
 import org.apache.tuscany.das.rdb.ConfigHelper;
 import org.apache.tuscany.das.rdb.DAS;
 import org.apache.tuscany.das.rdb.config.Relationship;
+import org.apache.tuscany.das.rdb.test.data.CompanyData;
+import org.apache.tuscany.das.rdb.test.data.CompanyEmpData;
 import org.apache.tuscany.das.rdb.test.data.CustomerData;
+import org.apache.tuscany.das.rdb.test.data.DepEmpData;
+import org.apache.tuscany.das.rdb.test.data.DepartmentData;
+import org.apache.tuscany.das.rdb.test.data.EmployeeData;
 import org.apache.tuscany.das.rdb.test.data.OrderData;
 import org.apache.tuscany.das.rdb.test.framework.DasTest;
 
@@ -43,6 +48,11 @@ public class RelationshipTests extends DasTest {
         new CustomerData(getAutoConnection()).refresh();
         new OrderData(getAutoConnection()).refresh();
 
+        new CompanyData(getAutoConnection()).refresh();
+        new EmployeeData(getAutoConnection()).refresh();
+        new DepartmentData(getAutoConnection()).refresh();
+        new CompanyEmpData(getAutoConnection()).refresh();
+        new DepEmpData(getAutoConnection()).refresh();
     }
 
     protected void tearDown() throws Exception {
@@ -80,7 +90,7 @@ public class RelationshipTests extends DasTest {
                 .createCommand("SELECT * FROM CUSTOMER LEFT JOIN ANORDER ON CUSTOMER.ID = ANORDER.CUSTOMER_ID");
 
         DataObject root = select.executeQuery();
-
+        
         DataObject cust1 = root.getDataObject("CUSTOMER[1]");
         DataObject cust2 = root.getDataObject("CUSTOMER[2]");
 
@@ -113,7 +123,40 @@ public class RelationshipTests extends DasTest {
         assertEquals(cust2OrderCount.intValue() - 1, root.getList("CUSTOMER[1]/orders").size());
 
     }
+    
+    /**
+     * This scenario uses union to simmulate full outer join
+     * The resulted graph will have departments without employees, and employees without departments
+     * And this testcase will modify the relationship between these entities and assign the employees to the department
+     * 
+     * @throws Exception
+     */
+    public void testSimulateFullOuterJoinRelationshipModification() throws Exception {
 
+        DAS das = DAS.FACTORY.createDAS(getConfig("companyMappingWithResultDescriptor.xml"), getConnection());
+        // Read some customers and related orders
+         
+        Command select = das.getCommand("testFullOuterJoinRelationship");
+        DataObject root = select.executeQuery();
+
+        DataObject department = root.getDataObject("DEPARTMENT[ID='6']"); //department with no employees
+        
+        DataObject emp1 = root.getDataObject("EMPLOYEE[ID='12']"); //employee not assgned to department
+        DataObject emp2 = root.getDataObject("EMPLOYEE[ID='15']"); //employee not assgned to department
+        
+        department.getList("employees").add(emp1);
+        department.getList("employees").add(emp2);
+
+        das.applyChanges(root);
+        
+        //verify cust1 relationship updates
+        select = das.getCommand("testEmployeesFromDepartment");
+        select.setParameter(1, 6);
+        
+        root = select.executeQuery();
+        assertEquals(2, root.getDataObject("DEPARTMENT[ID='6']").getList("employees").size());
+
+    }
     
     public void testFKBehavior() throws SQLException {
 

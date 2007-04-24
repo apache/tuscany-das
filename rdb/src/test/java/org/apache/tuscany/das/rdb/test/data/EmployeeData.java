@@ -29,7 +29,9 @@ public class EmployeeData extends TestDataWithExplicitColumns {
 
     private static Object[][] employeeData = {{"John Jones", "E0001", Boolean.valueOf(false)}, 
         {"Mary Smith", "E0002", Boolean.valueOf(true)},
-        {"Jane Doe", "E0003", Boolean.valueOf(false)}, {"Al Smith", "E0004", Boolean.valueOf(true)}};
+        {"Jane Doe", "E0003", Boolean.valueOf(false)},
+        {"Al Smith", "E0004", Boolean.valueOf(true)},
+        {"John Smith", "E0005", Boolean.valueOf(false)}};
 
     private static String[] employeeColumns = {"NAME", "SN", "MANAGER"};
 

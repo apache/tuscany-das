@@ -28,7 +28,8 @@ public class DepartmentData extends TestDataWithExplicitColumns {
 
     private static int[] columnTypes = {Types.VARCHAR, Types.VARCHAR, Types.VARCHAR};
 
-    private static Object[][] deptData = {{"Advanced Technologies", "NY", "123" }};
+    private static Object[][] deptData = {{"Advanced Technologies", "NY", "123" },
+                                          {"New Technologies", "CA", "125" }};
 
     private static String[] deptColumns = {"NAME", "LOCATION", "DEPNUMBER"};
 
