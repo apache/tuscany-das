@@ -133,28 +133,30 @@ public class RelationshipTests extends DasTest {
      */
     public void testSimulateFullOuterJoinRelationshipModification() throws Exception {
 
-//        DAS das = DAS.FACTORY.createDAS(getConfig("companyMappingWithResultDescriptor.xml"), getConnection());
-//        // Read some customers and related orders
-//         
-//        Command select = das.getCommand("testFullOuterJoinRelationship");
-//        DataObject root = select.executeQuery();
-//
-//        DataObject department = root.getDataObject("DEPARTMENT[ID='6']"); //department with no employees
-//        
-//        DataObject emp1 = root.getDataObject("EMPLOYEE[ID='12']"); //employee not assgned to department
-//        DataObject emp2 = root.getDataObject("EMPLOYEE[ID='15']"); //employee not assgned to department
-//        
-//        department.getList("employees").add(emp1);
-//        department.getList("employees").add(emp2);
-//
-//        das.applyChanges(root);
-//        
-//        //verify cust1 relationship updates
-//        select = das.getCommand("testEmployeesFromDepartment");
-//        select.setParameter(1, 6);
-//        
-//        root = select.executeQuery();
-//        assertEquals(2, root.getDataObject("DEPARTMENT[ID='6']").getList("employees").size());
+        DAS das = DAS.FACTORY.createDAS(getConfig("companyMappingWithResultDescriptor.xml"), getConnection());
+        // Read some customers and related orders
+        
+        Command select = das.getCommand("testFullOuterJoinRelationship");
+        DataObject root = select.executeQuery();
+
+        DataObject department = root.getDataObject("DEPARTMENT[NAME='New Technologies']"); //department with no employees
+                
+        DataObject emp1 = root.getDataObject("EMPLOYEE[NAME='Mary Smith']"); //employee not assgned to department
+        DataObject emp2 = root.getDataObject("EMPLOYEE[NAME='John Smith']"); //employee not assgned to department
+        
+        department.getList("employees").add(emp1);
+        department.getList("employees").add(emp2);
+
+        das.applyChanges(root);
+
+        //verify cust1 relationship updates
+        select = das.getCommand("testEmployeesFromDepartment");
+        select.setParameter(1, "New Technologies" );
+
+        root = select.executeQuery();
+        assertEquals(2, root.getDataObject("DEPARTMENT[NAME='New Technologies']").getList("employees").size());
+
+        
 
     }
     

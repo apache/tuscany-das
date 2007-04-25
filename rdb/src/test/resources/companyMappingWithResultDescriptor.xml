@@ -32,7 +32,7 @@
  		<ResultDescriptor columnName="DEPARTMENTID" tableName="EMPLOYEE" columnType="commonj.sdo.IntObject"/>
   </Command>
 
-  <Command name="testEmployeesFromDepartment" SQL="select * from DEPARTMENT left join EMPLOYEE on DEPARTMENT.ID = EMPLOYEE.DEPARTMENTID where DEPARTMENT.ID = ?" kind="Select"/>
+  <Command name="testEmployeesFromDepartment" SQL="select * from DEPARTMENT left join EMPLOYEE on DEPARTMENT.ID = EMPLOYEE.DEPARTMENTID where DEPARTMENT.NAME = ?" kind="Select"/>
       
   <Table tableName="COMPANY">
     <Column columnName="ID" primaryKey="true"/>
