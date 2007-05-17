@@ -44,7 +44,7 @@ public class DBConnectionHelper {
      *
      */
     public static Connection createConnection(ConnectionInfo connectionInfo) {
-        logger.log(Level.DEBUG, "DBConnectionHelper.initializeDatasourceConnection(ConnectionInfo)");
+        logger.log(Level.DEBUG, "DBConnectionHelper.createConnection(ConnectionInfo)");
         
         if (connectionInfo == null || 
             (connectionInfo.getDataSource() == null && connectionInfo.getConnectionProperties() == null)) {

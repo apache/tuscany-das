@@ -38,7 +38,7 @@ public class DBHelper {
     /**
      * Constructor
      * 
-     * @param dbInitHelper
+     * @param DBConfig
      */
     protected DBHelper(DBConfig dbConfig) {
         this.logger.log(Level.DEBUG, CLASS_NAME + "()");
@@ -53,7 +53,7 @@ public class DBHelper {
     protected boolean isDatabaseReady() {
         boolean bResult = true;
 
-        this.logger.log(Level.DEBUG, CLASS_NAME + "checkTablesCreated(DBConfig)");
+        this.logger.log(Level.DEBUG, CLASS_NAME + "isDatabaseReady()");
 
         Connection dbConnection = null;
         DatabaseMetaData dbMetaData = null;
@@ -82,7 +82,7 @@ public class DBHelper {
             }
         }
 
-        this.logger.log(Level.DEBUG, CLASS_NAME + "checkTablesCreated(DBConfig) exit");
+        this.logger.log(Level.DEBUG, CLASS_NAME + "isDatabaseReady() exit");
         return bResult;
     }
 
@@ -124,10 +124,10 @@ public class DBHelper {
     }
 
     /**
-     * Create the database tables based on dbConfig definition
+     * Drop the database tables based on dbConfig definition
      */
     protected void dropDatabaseTables() {
-        this.logger.log(Level.DEBUG, CLASS_NAME + "initializeDatabase()");
+        this.logger.log(Level.DEBUG, CLASS_NAME + "dropDatabaseTables()");
 
         Connection dbConnection = null;
         Statement dbStatement = null;
@@ -141,11 +141,12 @@ public class DBHelper {
                     Table table = (Table) tableIterator.next();
 
                     if (table.getSQLCreate() != null && table.getSQLCreate().length() > 0) {
-                        this.logger.log(Level.DEBUG, "Creating table '" + table.getName() + "' => " + table.getSQLCreate());
+                        this.logger.log(Level.DEBUG, "Dropping table '" + table.getName() );
 
                         try {
                             dbStatement.execute("DROP TABLE " + table.getName());
                         } catch (SQLException e) {
+                        	//ignore
                             this.logger.log(Level.DEBUG, "Error droping table '" + table.getName() + "'", e);
                         }
                     }
@@ -161,6 +162,6 @@ public class DBHelper {
             }
         }
 
-        this.logger.log(Level.DEBUG, CLASS_NAME + "initializeDatabase() exit");
+        this.logger.log(Level.DEBUG, CLASS_NAME + "dropDatabaseTables() exit");
     }
 }

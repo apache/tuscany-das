@@ -140,9 +140,9 @@ public class DBInitializer {
      */
     public void initializeDatabaseData(boolean clean) throws DatabaseInitializerException{
         if (clean) {
-            initializeDatabaseData(clean);
+        	dbDataHelper.deleteDatabaseData();
         }
-
+        dbDataHelper.initializeDatabaseData();
     }
 
     /**

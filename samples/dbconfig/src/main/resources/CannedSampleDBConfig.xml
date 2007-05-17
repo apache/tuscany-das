@@ -17,31 +17,31 @@
   specific language governing permissions and limitations
   under the License.
  -->
-<DBConfig xmlns="http:///org.apache.tuscany.das.rdb/DBConfig.xsd">
+<DBConfig xmlns="http:///org.apache.tuscany.das.rdb/dbconfig.xsd">
 	<ConnectionInfo>
 		<ConnectionProperties 
 			driverClass="org.apache.derby.jdbc.EmbeddedDriver" 
 			databaseURL="jdbc:derby:c:/dastest; create = true" 
 			loginTimeout="600000"/>
 	</ConnectionInfo>
-	<Table name="COMPANY" SQLCreate="CREATE TABLE COMPANY (ID INT PRIMARY KEY NOT NULL GENERATED ALWAYS AS IDENTITY , NAME VARCHAR(30))">
-		<row>'51','ACME Publishing'</row>
-		<row>'52','Do-rite plumbing'</row>
-		<row>'53','MegaCorp'</row>
+	<Table name="COMPANY" SQLCreate="CREATE TABLE COMPANY (ID INT PRIMARY KEY NOT NULL GENERATED ALWAYS AS IDENTITY , NAME VARCHAR(30))" >
+		<row>'ACME Publishing'</row>
+		<row>'Do-rite plumbing'</row>
+		<row>'MegaCorp'</row>
 	</Table>
 	<Table name="DEPARTMENT" SQLCreate="CREATE TABLE DEPARTMENT (ID INT PRIMARY KEY NOT NULL GENERATED ALWAYS AS IDENTITY, NAME VARCHAR(30),LOCATION VARCHAR(30), DEPNUMBER VARCHAR(10),COMPANYID INT)">
-		<row>'12','Advanced Technologies', 'NY', '123', '1'</row>
-		<row>'73','Default Name', '', '', '51'</row>
-		<row>'74','Default Name', '', '', '51'</row>
-		<row>'75','Default Name', '', '', '51'</row>
-		<row>'76','Default Name', '', '', '51'</row>
-		<row>'77','Default Name', '', '', '51'</row>
-		<row>'78','Default Name', '', '', '51'</row>
+		<row>'Advanced Technologies', 'NY', '123', 1</row>
+		<row>'Default Name', '', '', 51</row>
+		<row>'Default Name', '', '', 51</row>
+		<row>'Default Name', '', '', 51</row>
+		<row>'Default Name', '', '', 51</row>
+		<row>'Default Name', '', '', 51</row>
+		<row>'Default Name', '', '', 51</row>
 	</Table>
 	<Table name="EMPLOYEE" SQLCreate="CREATE TABLE EMPLOYEE (ID INT PRIMARY KEY NOT NULL GENERATED ALWAYS AS IDENTITY,NAME VARCHAR(30),SN VARCHAR(10), MANAGER SMALLINT, DEPARTMENTID INT)">
-		<row>'5','John Jones','E0001','0','12'</row>
-		<row>'6','Mary Smith','E0002','1',''</row>
-		<row>'7','Jane Doe','E0003','0','12'</row>
-		<row>'8','Al Smith','E0004','1','12'</row>
+		<row>'John Jones','E0001',0,12</row>
+		<row>'Mary Smith','E0002',1,null</row>
+		<row>'Jane Doe','E0003',0,12</row>
+		<row>'Al Smith','E0004',1,12</row>
 	</Table>
 </DBConfig>
