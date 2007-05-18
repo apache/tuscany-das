@@ -112,7 +112,7 @@ public class DBDataHelper {
         ResultSetMetaData rsMetaData = dummyRS.getMetaData(); 
         	
         
-        sqlBuffer.append("INSERT INTO ").append(tableName).append(" ");
+        sqlBuffer.append("INSERT INTO ").append(tableName).append(" (");
 
         int numberOfColumns = rsMetaData.getColumnCount();
         String columnName = null;
