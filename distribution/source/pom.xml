@@ -26,7 +26,7 @@
     </parent>
     
     <groupId>org.apache.tuscany.das.distribution</groupId>
-    <artifactId>tuscany-das</artifactId>
+    <artifactId>tuscany-das-src</artifactId>
     <packaging>pom</packaging>
     <name>Tuscany DAS Distribution</name>
     <description>Tuscany Distribution for DAS.</description>
@@ -41,6 +41,7 @@
 
     <build>
         <defaultGoal>install</defaultGoal>
+        <finalName>tuscany-das-${das.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

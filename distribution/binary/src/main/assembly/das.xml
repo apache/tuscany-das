@@ -35,9 +35,19 @@
                 <include>*.html</include>
             </includes>
         </fileSet>
+        
+        <!-- include javadocs -->
+        <!-- this will silient fail and generate empty distribution if javadoc is not available -->
+	<fileSet>
+	   <directory>../../rdb/target/apidocs</directory>
+	   <outputDirectory>tuscany-das-${das.version}/doc</outputDirectory>
+	</fileSet>  
+	
+	
     </fileSets>
 
     <dependencySets>
+        <!-- DAS api impl -->
         <dependencySet>
             <outputDirectory>tuscany-das-${das.version}/lib</outputDirectory>
             <includes>
@@ -45,5 +55,24 @@
             </includes>
             <fileMode>644</fileMode>
         </dependencySet>
+        
+        <!-- DAS Samples - Companyweb -->
+        <dependencySet>
+	    <outputDirectory>tuscany-das-${das.version}/samples/companyweb</outputDirectory>
+	        <includes>
+	            <include>org.apache.tuscany.das.samples:tuscany-das-sample-companyweb</include>
+	        </includes>
+	    <fileMode>644</fileMode>
+        </dependencySet>
+
+        <!-- DAS Samples - Customer -->
+        <dependencySet>
+	    <outputDirectory>tuscany-das-${das.version}/samples/customer</outputDirectory>
+	        <includes>
+	            <include>org.apache.tuscany.das.samples:tuscany-das-sample-customer-j2se</include>
+	        </includes>
+	    <fileMode>644</fileMode>
+        </dependencySet>
+
     </dependencySets>
 </assembly>
