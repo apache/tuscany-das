@@ -114,6 +114,7 @@ public class DBHelper {
             this.logger.log(Level.DEBUG, "Error retrieving database metadata", e);
         } finally {
             try {
+                dbStatement.close();
                 dbConnection.close();
             } catch (SQLException e) {
                 // ignore here
@@ -156,6 +157,7 @@ public class DBHelper {
             this.logger.log(Level.DEBUG, "Error droping table", e);
         } finally {
             try {
+                dbStatement.close();
                 dbConnection.close();
             } catch (SQLException e) {
                 // ignore here

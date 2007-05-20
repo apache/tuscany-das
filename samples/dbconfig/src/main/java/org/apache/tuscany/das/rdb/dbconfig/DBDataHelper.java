@@ -96,6 +96,7 @@ public class DBDataHelper {
         } finally {
             try {
                 dbStatement.close();
+                dbConnection.close();
             } catch (SQLException e1) {
                 // ignore and return false
             }
@@ -173,6 +174,7 @@ public class DBDataHelper {
         } finally {
             try {
                 dbStatement.close();
+                dbConnection.close();
             } catch (SQLException e1) {
                 // ignore and return false
             }
@@ -208,6 +210,7 @@ public class DBDataHelper {
         } finally {
             try {
                 dbStatement.close();
+                dbConnection.close();
             } catch (SQLException e1) {
                 // ignore and return false
             }
