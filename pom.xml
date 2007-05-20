@@ -35,14 +35,6 @@
         <sdo.version>1.0-incubating-SNAPSHOT</sdo.version>
     </properties>
     
-    <modules>
-        <module>rdb</module>
-        <module>samples</module>
-        <module>distribution/binary</module>
-        <module>distribution/samples</module>
-        <module>distribution/javadoc</module>
-    </modules>
-
     <!-- definition of repositories where the parent pom can be found -->
     <repositories>
         <repository>
@@ -86,7 +78,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
+    
     <build>
         <defaultGoal>install</defaultGoal>
 
@@ -121,4 +113,29 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
+            <modules>
+                <module>rdb</module>
+                <module>samples</module>
+            </modules>
+        </profile>
+        
+        <profile>
+            <id>distribution</id>
+            <modules>
+                <module>rdb</module>
+                <module>samples</module>
+                <module>distribution/binary</module>
+                <module>distribution/source</module>
+            </modules>
+        </profile>
+     </profiles>
+
 </project>
