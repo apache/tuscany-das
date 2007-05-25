@@ -54,13 +54,14 @@ public class ResultMetadata {
 
     private Converter[] converters;
 
+    //JIRA-952
     public ResultMetadata(ResultSet rs, MappingWrapper cfgWrapper, ResultSetShape shape) throws SQLException {
 
         this.resultSet = rs;
         this.configWrapper = cfgWrapper;
 
         if (shape == null) {
-            this.resultSetShape = new ResultSetShape(rs.getMetaData());
+            this.resultSetShape = new ResultSetShape(rs.getMetaData(), configWrapper.getConfig());
         } else {
             this.resultSetShape = shape;
         }
@@ -68,23 +69,53 @@ public class ResultMetadata {
         this.converters = new Converter[resultSetShape.getColumnCount()];
 
         Map impliedRelationships = new HashMap();
+        String schemaName = "";
         for (int i = 1; i <= resultSetShape.getColumnCount(); i++) {
             String tableName = resultSetShape.getTableName(i);
+             schemaName = resultSetShape.getSchemaName(i);
             if (( tableName == null ) || ( tableName.equals(""))) {
                 throw new RuntimeException("Unable to obtain table information from JDBC. DAS configuration must specify ResultDescriptors");
             }
+            String typeName = null;
             
-            String typeName = configWrapper.getTableTypeName(tableName);
+            if(this.configWrapper.getConfig().isDatabaseSchemaNameSupported()){
+            	typeName = configWrapper.getTableTypeName(schemaName+"."+tableName);
+            }
+            else{
+            	typeName = configWrapper.getTableTypeName(tableName);	
+            }
             String columnName = resultSetShape.getColumnName(i);
 
             if (columnName.contains("_ID")) {
-                impliedRelationships.put(columnName, tableName);
+            	String colName = "";
+            	if(this.configWrapper.getConfig().isDatabaseSchemaNameSupported()){
+            		colName = schemaName+"."+columnName;
+            		impliedRelationships.put(colName, schemaName+"."+tableName);
+            	}
+            	else{
+            		colName = columnName;
+            		impliedRelationships.put(colName, tableName);	
+            	}
             } else if (columnName.equalsIgnoreCase("ID")) {
-                configWrapper.addImpliedPrimaryKey(tableName, columnName);
+                configWrapper.addImpliedPrimaryKey(schemaName, tableName, columnName);
             }
 
-            String propertyName = configWrapper.getColumnPropertyName(tableName, columnName);
-            String converterName = configWrapper.getConverter(tableName, resultSetShape.getColumnName(i));
+            String propertyName = null;
+            
+            if(this.configWrapper.getConfig().isDatabaseSchemaNameSupported()){
+            	propertyName = configWrapper.getColumnPropertyName(schemaName+"."+tableName, columnName);	
+            }
+            else{
+            	propertyName = configWrapper.getColumnPropertyName(tableName, columnName);
+            }
+            String converterName = null;
+            
+            if(this.configWrapper.getConfig().isDatabaseSchemaNameSupported()){
+            	converterName = configWrapper.getConverter(schemaName+"."+tableName, resultSetShape.getColumnName(i));
+            }
+            else{
+            	converterName = configWrapper.getConverter(tableName, resultSetShape.getColumnName(i));	
+            }
 
             converters[i - 1] = loadConverter(converterName);
 

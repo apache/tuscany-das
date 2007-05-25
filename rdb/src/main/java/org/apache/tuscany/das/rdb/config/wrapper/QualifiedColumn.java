@@ -26,10 +26,12 @@ public class QualifiedColumn {
     private final String tableName;
 
     private final String columnName;
+    private final String schemaName;//JIRA-952
 
     private final Logger logger = LoggerFactory.INSTANCE.getLogger(QualifiedColumn.class);
 
     public QualifiedColumn(String name) {
+    	this.schemaName = "";
         int index = name.indexOf('.');
         if ( index == -1 ) {
             throw new RuntimeException("Column " + name + " must be qualified with a table name");
@@ -43,11 +45,51 @@ public class QualifiedColumn {
         }
     }
 
+    //JIRA-952
+    public QualifiedColumn(String name, boolean isDatabaseSchemaNameSupported) {
+        int index = name.indexOf('.');
+        if ( index == -1 ) {
+            throw new RuntimeException("Column " + name + " must be qualified with a table name and optional schema name");
+        }
+        
+        int lastIndex = name.lastIndexOf('.');
+        		
+        if(index == lastIndex && isDatabaseSchemaNameSupported){
+        	throw new RuntimeException("Column " + name + " must be qualified with a table name and schema name");
+        }
+                
+        if(isDatabaseSchemaNameSupported){
+            schemaName = name.substring(0, index);
+            tableName = name.substring(index+1, lastIndex);
+            columnName = name.substring(lastIndex + 1);        	
+        }
+        else{
+        	schemaName = "";
+            tableName = name.substring(0, index);
+            columnName = name.substring(index + 1);
+        }
+
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("Table name:  " + tableName);
+            this.logger.debug("Column name: " + columnName);
+        }
+    }
     public String getTableName() {
         return this.tableName;
     }
 
+    //JIRA-952
+    public String getSchemaName() {
+        return this.schemaName;
+    }
     public String getColumnName() {
         return this.columnName;
+    }
+    //JIRA-952
+    public String toString(){
+    	if(this.schemaName == null || this.schemaName.equals(""))
+    		return this.tableName+"."+this.columnName;
+    	else
+    		return this.schemaName+"."+this.tableName+"."+this.columnName;
     }
 }

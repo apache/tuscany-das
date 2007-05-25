@@ -41,7 +41,7 @@ public class ReadCommandImpl extends CommandImpl {
         this.configWrapper = mapping;
         
         if (resultDescriptor != null && !resultDescriptor.isEmpty()) {
-            this.resultSetShape = new ResultSetShape(resultDescriptor);
+            this.resultSetShape = new ResultSetShape(resultDescriptor, configWrapper.getConfig());//JIRA-952
         }
     }
 

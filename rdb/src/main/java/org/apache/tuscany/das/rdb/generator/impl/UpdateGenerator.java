@@ -57,7 +57,13 @@ public final class UpdateGenerator extends BaseGenerator {
         Type type = changedObject.getType();
         TableWrapper tableWrapper = new TableWrapper(table);
         StringBuffer statement = new StringBuffer("update ");
+        //JIRA-952
+        if(mapping.getConfig().isDatabaseSchemaNameSupported()){
+        	statement.append(table.getSchemaName()+"."+table.getTableName());
+        }
+        else{
         statement.append(table.getTableName());
+        }
         statement.append(" set ");
 
         ChangeSummary summary = changedObject.getDataGraph().getChangeSummary();

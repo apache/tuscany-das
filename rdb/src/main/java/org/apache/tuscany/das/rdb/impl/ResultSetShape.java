@@ -22,6 +22,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.tuscany.das.rdb.config.Config;
 import org.apache.tuscany.das.rdb.config.ResultDescriptor;
 import org.apache.tuscany.das.rdb.graphbuilder.schema.ResultSetTypeMap;
 
@@ -47,29 +48,60 @@ public class ResultSetShape {
 
     private final Type[] types;
 
-    public ResultSetShape(ResultSetMetaData metadata) throws SQLException {
+    private final String[] schema;//JIRA-952
+    //JIRA-952
+    public ResultSetShape(ResultSetMetaData metadata, Config model) throws SQLException {
         columns = new String[metadata.getColumnCount()];
         tables = new String[metadata.getColumnCount()];
         types = new Type[metadata.getColumnCount()];
+        schema = new String[metadata.getColumnCount()];
 
         ResultSetTypeMap typeMap = ResultSetTypeMap.INSTANCE;
         for (int i = 1; i <= metadata.getColumnCount(); i++) {
-            tables[i - 1] = metadata.getTableName(i);
+        	if(model.isDatabaseSchemaNameSupported()){
+            	if(metadata.getSchemaName(i) != null && !metadata.getSchemaName(i).equals("")){
+            		//tables[i - 1] = metadata.getSchemaName(i)+"."+metadata.getTableName(i);
+            		tables[i - 1] = metadata.getTableName(i);
+            		schema[i - 1] = metadata.getSchemaName(i);
+            	}
+            	else{
+            		tables[i - 1] = metadata.getTableName(i);
+            		schema[i - 1] = "";
+            	}        		
+        	}
+        	else{
+        		tables[i - 1] = metadata.getTableName(i);
+        		schema[i - 1] = "";
+        	}
             columns[i - 1] = metadata.getColumnName(i);
             types[i - 1] = typeMap.getType(metadata.getColumnType(i), true);
         }
     }
 
-    public ResultSetShape(List resultDescriptor) {
+    //JIRA-952
+    public ResultSetShape(List resultDescriptor, Config model) {
         TypeHelper helper = TypeHelper.INSTANCE;
         int size = resultDescriptor.size();
         columns = new String[size];
         tables = new String[size];
         types = new Type[size];
+        schema = new String[size];
 
         for (int i = 0; i < size; i++) {
             ResultDescriptor desc = (ResultDescriptor) resultDescriptor.get(i);
-            tables[i] = desc.getTableName();
+            if(model.isDatabaseSchemaNameSupported()){
+            	if(desc.getSchemaName() != null && !desc.getSchemaName().equals("")){
+            		tables[i] = desc.getTableName();
+            		schema[i] = desc.getSchemaName();
+            	}else{
+            		tables[i] = desc.getTableName();
+            		schema[i] = "";
+            	}
+            		
+            }else{
+           		tables[i] = desc.getTableName();
+           		schema[i] = "";
+            }
             columns[i] = desc.getColumnName();
 
             int idx = desc.getColumnType().lastIndexOf('.');
@@ -93,6 +125,10 @@ public class ResultSetShape {
         return tables[i - 1];
     }
 
+    //JIRA-952
+    public String getSchemaName(int i) {
+        return schema[i - 1];
+    }
     public String getColumnName(int i) {
         return columns[i - 1];
     }
@@ -103,11 +139,13 @@ public class ResultSetShape {
 
     public String toString() {
         StringBuffer result = new StringBuffer();
-        result.append(" column/table/type: ");
+        result.append(" column/table/schema/type: ");
         for (int i = 0; i < columns.length; i++) {
             result.append(columns[i]);
             result.append('\t');
             result.append(tables[i]);
+            result.append('\t');
+            result.append(schema[i]);
             result.append('\t');
             if (types[i] == null) {
                 result.append("null");

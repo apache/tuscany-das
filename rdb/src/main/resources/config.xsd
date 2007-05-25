@@ -37,6 +37,7 @@
       </xsd:sequence>
       <xsd:attribute name="uri" type="xsd:string"/>
       <xsd:attribute name="dataObjectModel" type="xsd:string"/>
+      <xsd:attribute name="databaseSchemaNameSupported" type="xsd:boolean" default="false"/>      
    </xsd:complexType>
 
    <xsd:complexType name="ConnectionProperties">
@@ -93,6 +94,7 @@
       </xsd:sequence>
       <xsd:attribute name="tableName" type="xsd:string"/>
       <xsd:attribute name="typeName" type="xsd:string"/>      
+      <xsd:attribute name="schemaName" type="xsd:string" default=""/> 
    </xsd:complexType>
    <xsd:complexType name="Create">
    	  <xsd:attribute name="sql" type="xsd:string"/>
@@ -122,6 +124,7 @@
    <xsd:complexType name="ResultDescriptor">
       <xsd:attribute name="columnName" type="xsd:string"/>
       <xsd:attribute name="tableName" type="xsd:string"/>
+      <xsd:attribute name="schemaName" type="xsd:string"/>      
       <xsd:attribute name="columnType" type="xsd:string"/>
    </xsd:complexType>
 

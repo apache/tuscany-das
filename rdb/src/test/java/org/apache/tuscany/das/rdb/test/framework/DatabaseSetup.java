@@ -106,7 +106,9 @@ public class DatabaseSetup extends TestSetup {
             dropSequences();
             dropTables();
             dropProcedures();
+            dropSchema();//JIRA-952
 
+            createSchema();//JIRA-952
             createSequences();
             createTables();
             createTriggers();
@@ -125,6 +127,26 @@ public class DatabaseSetup extends TestSetup {
 
     }
 
+    //JIRA-952
+    private void dropSchema(){
+        String[] statements = {"DROP SCHEMA DASTEST1 RESTRICT",
+        		"DROP SCHEMA DASTEST2 RESTRICT",
+        		"DROP SCHEMA DASTEST3 RESTRICT",
+        };
+        
+        for (int i = 0; i < statements.length; i++) {
+            try {
+                s.execute(statements[i]);
+            } catch (SQLException e) {
+                // If the table does not exist then ignore the exception on drop
+                if ((!e.getMessage().contains("does not exist")) && (!e.getMessage().contains("Unknown table")) 
+                        && (!e.getMessage().contains("42704"))) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }        
+    }
+    
     private void dropTables() {
 
         String[] statements = {
@@ -134,7 +156,13 @@ public class DatabaseSetup extends TestSetup {
             "DROP TABLE PART", "DROP TABLE TYPETEST", "DROP TABLE CITIES", 
             "DROP TABLE STATES", "DROP TABLE conmgt.SERVERSTATUS", 
             "DROP TABLE DOG", "DROP TABLE OWNER", "DROP TABLE KENNEL", 
-            "DROP TABLE VISIT"
+            "DROP TABLE VISIT",
+            "DROP TABLE DASTEST1.CUSTOMER" ,"DROP TABLE DASTEST2.CUSTOMER","DROP TABLE DASTEST3.CUSTOMER",
+            "DROP TABLE DASTEST1.CITY", "DROP TABLE DASTEST2.CITY",
+            "DROP TABLE DASTEST2.ACCOUNT",
+            "DROP TABLE DASTEST3.CUSTORDER",
+            "DROP TABLE DASTEST3.ORDERDETAILSDESC", "DROP TABLE DASTEST1.ORDERDETAILS",
+            "DROP TABLE DASTEST1.EMPLOYEE"
         };
 
         for (int i = 0; i < statements.length; i++) {
@@ -190,6 +218,18 @@ public class DatabaseSetup extends TestSetup {
         }
     }
 
+    //JIRA-952
+    private void createSchema() {
+    	// System.out.println("Creating schema");
+    	try {
+
+            s.execute("CREATE SCHEMA DASTEST1");
+            s.execute("CREATE SCHEMA DASTEST2");
+            s.execute("CREATE SCHEMA DASTEST3");
+    	}catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     private void createTables() {
 
         // System.out.println("Creating tables");
@@ -215,7 +255,19 @@ public class DatabaseSetup extends TestSetup {
             s.execute(getCreateKennel());
             s.execute(getCreateVisit());
             s.execute(getCreateOrderDetailsDesc());//JIRA-841
-
+            
+            //JIRA-952 start
+            s.execute(getCreateDASTEST1Customer());
+            s.execute(getCreateDASTEST1Employee());
+            s.execute(getCreateDASTEST2Customer());
+            s.execute(getCreateDASTEST3Customer());
+            s.execute(getCreateDASTEST1City());
+            s.execute(getCreateDASTEST2City());
+            s.execute(getCreateDASTEST2Account());
+            s.execute(getCreateDASTEST3CustOrder());
+            s.execute(getCreateDASTEST1OrderDetails());
+            s.execute(getCreateDASTEST3OrderDetailsDesc());            
+            //JIRA-952 end
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -372,7 +424,65 @@ public class DatabaseSetup extends TestSetup {
         return "CREATE TABLE ORDERDETAILSDESC ("+ getIntegerColumn("ID") + " NOT NULL, " + getIntegerColumn("ORDERID") + " NOT NULL, " 
             + getIntegerColumn("PRODUCTID")
                 + " NOT NULL,"+ getStringColumn("DESCR", 20)+", PRIMARY KEY (ID))";
+    } 
+    
+    //JIRA-952 start
+    protected String getCreateDASTEST1Customer() {
+        return "CREATE TABLE DASTEST1.CUSTOMER (" + getIntegerColumn("ID") + " PRIMARY KEY NOT NULL, " 
+            + getStringColumn("LASTNAME", 30)
+                + " DEFAULT 'Garfugengheist', " + getStringColumn("ADDRESS", 30) + ")";
+    }
+
+    protected String getCreateDASTEST1Employee() {
+        return "CREATE TABLE DASTEST1.EMPLOYEE (" + getIntegerColumn("ID") + " PRIMARY KEY NOT NULL, " 
+            + getStringColumn("LASTNAME", 30)
+                + " DEFAULT 'Garfugengheist', " + getStringColumn("ADDRESS", 30) + ")";
+    }
+    
+    protected String getCreateDASTEST2Customer() {
+        return "CREATE TABLE DASTEST2.CUSTOMER (" + getIntegerColumn("ID") + " PRIMARY KEY NOT NULL, " 
+            + getStringColumn("LASTNAME", 30)
+                + " DEFAULT 'Garfugengheist', " + getStringColumn("ADDRESS", 30) + ")";
+    }
+    
+    protected String getCreateDASTEST3Customer() {
+        return "CREATE TABLE DASTEST3.CUSTOMER (" + getIntegerColumn("ID") + " PRIMARY KEY NOT NULL, " 
+            + getStringColumn("LASTNAME", 30)
+                + " DEFAULT 'Garfugengheist', " + getStringColumn("ADDRESS", 30) + ")";
+    }
+    
+    protected String getCreateDASTEST1City() {
+        return "CREATE TABLE DASTEST1.CITY (" + getIntegerColumn("INDX") + " PRIMARY KEY NOT NULL," 
+                + getStringColumn("NAME", 50)  + ")";
+    }
+
+    protected String getCreateDASTEST2City() {
+        return "CREATE TABLE DASTEST2.CITY (" + getIntegerColumn("INDX") + " PRIMARY KEY NOT NULL," 
+                + getStringColumn("NAME", 50)  + ")";
     }    
+    
+    protected String getCreateDASTEST2Account() {
+    	return "CREATE TABLE DASTEST2.ACCOUNT ("+ getIntegerColumn("ACCOUNT_ID") + " PRIMARY KEY NOT NULL," +
+    	getIntegerColumn("CUSTOMER_ID") +", "+ getIntegerColumn("BALANCE") + ")";
+    }
+    
+    protected String getCreateDASTEST3CustOrder() {
+    	return "CREATE TABLE DASTEST3.CUSTORDER ("+ getIntegerColumn("ORDER_ID") + " PRIMARY KEY NOT NULL," +
+    	getIntegerColumn("CUSTOMER_ID") +", "+getIntegerColumn("ORDER_COUNT")+ ")";
+    }    
+
+    protected String getCreateDASTEST1OrderDetails() {
+        return "CREATE TABLE DASTEST1.ORDERDETAILS (" + getIntegerColumn("ORDERID") + " NOT NULL, " 
+            + getIntegerColumn("PRODUCTID")
+                + " NOT NULL, PRICE FLOAT, PRIMARY KEY (ORDERID, PRODUCTID))";
+    }
+    
+    protected String getCreateDASTEST3OrderDetailsDesc() {
+        return "CREATE TABLE DASTEST3.ORDERDETAILSDESC ("+ getIntegerColumn("ID") + " NOT NULL, " + getIntegerColumn("ORDERID") + " NOT NULL, " 
+            + getIntegerColumn("PRODUCTID")
+                + " NOT NULL,"+ getStringColumn("DESCR", 20)+", PRIMARY KEY (ID))";
+    }
+    //JIRA-952 end
     // /////////////////
 
     protected String getForeignKeyConstraint(String pkTable, String pkColumn, String foreignKey) {

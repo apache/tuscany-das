@@ -22,6 +22,7 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.apache.tuscany.das.rdb.config.Table;
+import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
 import org.apache.tuscany.das.rdb.config.wrapper.TableWrapper;
 import org.apache.tuscany.das.rdb.impl.DeleteCommandImpl;
 import org.apache.tuscany.das.rdb.impl.ParameterImpl;
@@ -38,12 +39,18 @@ public final class DeleteGenerator extends BaseGenerator {
         super();
     }
 
-    private String getDeleteStatement(Table t) {
+    //JIRA-952
+    private String getDeleteStatement(MappingWrapper mapping, Table t) {
         TableWrapper table = new TableWrapper(t);
 
         StringBuffer statement = new StringBuffer();
         statement.append("delete from ");
+        if(mapping.getConfig().isDatabaseSchemaNameSupported()){
+        	statement.append(t.getSchemaName()+"."+t.getTableName());
+        }
+        else{
         statement.append(t.getTableName());
+        }
         statement.append(" where ");
 
         Iterator names = table.getPrimaryKeyNames().iterator();
@@ -64,9 +71,9 @@ public final class DeleteGenerator extends BaseGenerator {
         return statement.toString();
     }
 
-    public DeleteCommandImpl getDeleteCommand(Table t) {
+    public DeleteCommandImpl getDeleteCommand(MappingWrapper mapping, Table t) {
         TableWrapper tw = new TableWrapper(t);
-        DeleteCommandImpl deleteCommand = new DeleteCommandImpl(getDeleteStatement(t));
+        DeleteCommandImpl deleteCommand = new DeleteCommandImpl(getDeleteStatement(mapping, t));
 
         Iterator i = tw.getPrimaryKeyProperties().iterator();
         for (int idx = 1; i.hasNext(); idx++) {

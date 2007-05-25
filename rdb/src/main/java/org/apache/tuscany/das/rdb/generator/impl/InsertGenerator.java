@@ -52,8 +52,13 @@ public final class InsertGenerator extends BaseGenerator {
         List parameters = new ArrayList();
         TableWrapper table = new TableWrapper(t);
         StringBuffer statement = new StringBuffer("insert into ");
+        //JIRA-952
+        if(config.getConfig().isDatabaseSchemaNameSupported()){
+        	statement.append(t.getSchemaName()+"."+t.getTableName());
+        }
+        else{
         statement.append(t.getTableName());
-
+        }
         HashSet changedProperties = getAttributeProperties(changedObject, config, table);
         Iterator i;
         if ( changedProperties.isEmpty() ) {

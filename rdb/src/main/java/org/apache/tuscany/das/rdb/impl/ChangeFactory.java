@@ -128,7 +128,7 @@ public class ChangeFactory {
             Delete delete = table.getDelete();
 
             if (delete == null) {
-                deleteCommand = DeleteGenerator.INSTANCE.getDeleteCommand(table);
+                deleteCommand = DeleteGenerator.INSTANCE.getDeleteCommand(mapping, table);//JIRA-952
             } else {
                 deleteCommand = new DeleteCommandImpl(delete);
             }

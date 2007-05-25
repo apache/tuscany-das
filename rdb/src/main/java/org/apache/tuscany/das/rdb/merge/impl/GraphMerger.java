@@ -46,12 +46,19 @@ public class GraphMerger {
     private Map keys = new HashMap();
 
     private TableRegistry registry = new MultiTableRegistry();
+    
+    private Config config = null;//JIRA-962 for any new tests with schema , we need this
 
     // TODO lots of cleanup/design
     public GraphMerger() {
         // Empty Constructor
     }
 
+    //JIRA-952
+    public GraphMerger(Config cfg) {
+        this.config = cfg;
+    }
+    
     // TODO Replace EMF reference with SDOUtil function when available
     // (Tuscany-583)
     public DataObject emptyGraph(Config config) {
@@ -187,8 +194,16 @@ public class GraphMerger {
         return (String) keys.get(object.getType().getName());
     }
 
+    //JIRA-952
     public void addPrimaryKey(String key) {
-        QualifiedColumn column = new QualifiedColumn(key);
+    	QualifiedColumn column = null;
+    	if(this.config != null && this.config.isDatabaseSchemaNameSupported()){
+    		column = new QualifiedColumn(key, this.config.isDatabaseSchemaNameSupported()); 
+    	}
+    	else{
+    		column = new QualifiedColumn(key);
+    	}
+        
         logger.finest("Adding " + column.getTableName() + " " + column.getColumnName() + " to keys");
         keys.put(column.getTableName(), column.getColumnName());
     }

@@ -54,14 +54,34 @@ public class MappingWrapper {
 
     public MappingWrapper() {
         config = FACTORY.createConfig();
+        //JIRA-952
+        this.checkSchemaNameSupport();
     }
 
+	//JIRA-952 - check if there is any entry with no schemaName when support is ON
+    public void checkSchemaNameSupport(){
+        if(config.isDatabaseSchemaNameSupported()){
+        	List tableList = config.getTable();
+        	for(int i=0; i<tableList.size(); i++){
+        		Table t = (Table)tableList.get(i);
+        		if(t.getSchemaName() == null || t.getSchemaName().equals("")){
+        			throw new RuntimeException("No schemaName provided for tableName "+t.getTableName()+" when schemaNameSupport is ON");
+        		}
+        		
+        		if(t.getTypeName()==null){
+        			t.setTypeName(t.getSchemaName()+"."+t.getTableName());
+        		}
+        	}
+        }
+    }
     public MappingWrapper(Config mapping) {
         if (mapping == null) {
             this.config = FACTORY.createConfig();
         } else {
             this.config = mapping;
         }
+        //JIRA-952
+        checkSchemaNameSupport();
     }
 
     public Config getConfig() {
@@ -77,8 +97,15 @@ public class MappingWrapper {
         Iterator i = config.getTable().iterator();
         while (i.hasNext()) {
             Table t = (Table) i.next();
+            //JIRA-952
+            if(this.config.isDatabaseSchemaNameSupported()){
+            	if (tableName.equalsIgnoreCase(t.getSchemaName()+"."+t.getTableName())) {
+                    return t;
+                }
+            }else{
             if (tableName.equalsIgnoreCase(t.getTableName())) {
                 return t;
+                }            	
             }
         }
 
@@ -136,13 +163,31 @@ public class MappingWrapper {
 
     public Relationship addRelationship(String parentName, String childName) {
 
-        QualifiedColumn parent = new QualifiedColumn(parentName);
-        QualifiedColumn child = new QualifiedColumn(childName);
+    	//JIRA-952
+        QualifiedColumn parent = null;
+        QualifiedColumn child = null;
 
+        if(this.config.isDatabaseSchemaNameSupported()){
+        	parent = new QualifiedColumn(parentName, true);
+        	child = new QualifiedColumn(childName, true);
+        }
+        else{
+        	parent = new QualifiedColumn(parentName);
+        	child = new QualifiedColumn(childName);        	
+        }
+        
         Relationship r = FACTORY.createRelationship();
+        //JIRA-952
+        if(this.config.isDatabaseSchemaNameSupported()){        	
+            r.setName(child.getSchemaName()+"."+child.getTableName());
+            r.setPrimaryKeyTable(parent.getSchemaName()+"."+parent.getTableName());
+            r.setForeignKeyTable(child.getSchemaName()+"."+child.getTableName());        	
+        }
+        else{
         r.setName(child.getTableName());
         r.setPrimaryKeyTable(parent.getTableName());
         r.setForeignKeyTable(child.getTableName());
+        }
 
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Created relationship from " + r.getPrimaryKeyTable() 
@@ -172,8 +217,17 @@ public class MappingWrapper {
         Vector childColumns = new Vector();
         
         for(int i=0; i<parentNames.size(); i++){
-            QualifiedColumn parent = new QualifiedColumn((String)parentNames.get(i));
-            QualifiedColumn child = new QualifiedColumn((String)childNames.get(i));
+            QualifiedColumn parent = null;
+            QualifiedColumn child = null;
+            
+            if(this.config.isDatabaseSchemaNameSupported()){
+            	parent = new QualifiedColumn((String)parentNames.get(i), true);
+            	child = new QualifiedColumn((String)childNames.get(i), true);
+            }
+            else{
+            	parent = new QualifiedColumn((String)parentNames.get(i));
+            	child = new QualifiedColumn((String)childNames.get(i));
+            }
             
             parentColumns.add(parent);
             childColumns.add(child);
@@ -182,23 +236,32 @@ public class MappingWrapper {
         //all parent columns should be from same table and schema
         //all child columns should be from same table and schema
         checkTableNames(parentColumns);
-        //checkSchemaNames(parentColumns);
+    	checkSchemaNames(parentColumns);
         
         checkTableNames(childColumns);
-        //checkSchemaNames(childColumns);
+    	checkSchemaNames(childColumns);
         
         Relationship r = FACTORY.createRelationship();
-
+        //JIRA-952
+        if(this.config.isDatabaseSchemaNameSupported()){        	
+            r.setName(((QualifiedColumn)childColumns.get(0)).getSchemaName()+"."
+            		+((QualifiedColumn)childColumns.get(0)).getTableName());
+            r.setPrimaryKeyTable(((QualifiedColumn)parentColumns.get(0)).getSchemaName()+"."
+            		+((QualifiedColumn)parentColumns.get(0)).getTableName());
+            r.setForeignKeyTable(((QualifiedColumn)childColumns.get(0)).getSchemaName()+"."
+            		+((QualifiedColumn)childColumns.get(0)).getTableName());        	
+        }
+        else{
         r.setName(((QualifiedColumn)childColumns.get(0)).getTableName());
         r.setPrimaryKeyTable(((QualifiedColumn)parentColumns.get(0)).getTableName());
         r.setForeignKeyTable(((QualifiedColumn)childColumns.get(0)).getTableName());
-
+        }
 
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Created relationship from " + r.getPrimaryKeyTable() 
                     + " to " + r.getForeignKeyTable() + " named " + r.getName());
         }
-
+        
         KeyPair pair = null;
         
         for(int i=0; i<parentColumns.size(); i++){
@@ -227,6 +290,22 @@ public class MappingWrapper {
         }       
     }
     
+    public void checkSchemaNames(Vector columns){
+    	if(!this.config.isDatabaseSchemaNameSupported()){
+    		return;
+    	}
+    	
+    	 String	expectedSchemaName = ((QualifiedColumn)columns.get(0)).getSchemaName();
+
+    	for(int i=0; i<columns.size(); i++){
+    		QualifiedColumn currColumns = (QualifiedColumn)columns.get(i);
+    		String	currSchemaName = ((QualifiedColumn)columns.get(i)).getSchemaName();
+    		    		
+    		if(!currSchemaName.equals(expectedSchemaName)){
+    			throw new RuntimeException("Columns in one side of relationship can not be from different schema");
+    		}
+    	}
+    }
     public void addPrimaryKey(String columnName) {
         addPrimaryKey(Collections.singletonList(columnName));
     }
@@ -237,8 +316,10 @@ public class MappingWrapper {
         while (i.hasNext()) {
             String columnName = (String) i.next();
 
-            QualifiedColumn pkColumn = new QualifiedColumn(columnName);
-            Table t = findOrCreateTable(pkColumn.getTableName());
+            QualifiedColumn pkColumn = null;
+           	pkColumn = new QualifiedColumn(columnName, this.config.isDatabaseSchemaNameSupported());
+            //Table t = findOrCreateTable(pkColumn.getTableName());
+            Table t = findOrCreateTable(pkColumn);
             Column c = findOrCreateColumn(t, pkColumn.getColumnName());
             c.setPrimaryKey(true);
         }
@@ -281,9 +362,11 @@ public class MappingWrapper {
         if (t == null) {
             return null;
         }
+        
         Iterator i = t.getColumn().iterator();
         while (i.hasNext()) {
             Column c = (Column) i.next();
+            
             if (c.getColumnName().equals(propertyName)) {
                 return c;
             }
@@ -329,6 +412,41 @@ public class MappingWrapper {
         return table;
     }
 
+    //JIRA-952
+    public Table addTable(String tableName, String schemaName, String typeName) {    	
+        Table table = null;
+        
+        if(this.config.isDatabaseSchemaNameSupported()){
+        	table = getTable(schemaName+"."+tableName);	
+        }
+        else{
+        	table = getTable(tableName);
+        }
+        
+        if (table != null) {
+        	if(this.config.isDatabaseSchemaNameSupported()){
+        		throw new RuntimeException("Table " + schemaName+"."+tableName + "already exists");	
+        	}
+        	else{
+        		throw new RuntimeException("Table " + tableName + "already exists");
+        	}            
+        }
+
+        table = ConfigFactory.INSTANCE.createTable();
+        table.setTableName(tableName);
+        
+        if(this.config.isDatabaseSchemaNameSupported()){
+        	table.setSchemaName(schemaName);
+        }
+        else{
+        	table.setSchemaName("");
+        }
+        
+        table.setTypeName(typeName);
+        config.getTable().add(table);
+
+        return table;
+    }
     public Column addColumn(Table table, String name, String propertyName) {
         Column column = ConfigFactory.INSTANCE.createColumn();
         column.setColumnName(name);
@@ -338,17 +456,52 @@ public class MappingWrapper {
         return column;
     }
     
-    private Table findOrCreateTable(String tableName) {
-        Table table = getTable(tableName);
+    //JIRA-952
+    private Table findOrCreateTable(String schemaName, String tableName) {
+        Table table = null;
+        
+        if(this.config.isDatabaseSchemaNameSupported()){
+        	table = getTable(schemaName+"."+tableName);	
+        }
+        else{
+        	table = getTable(tableName);	
+        }        
         if (table == null) {
             table = ConfigFactory.INSTANCE.createTable();
             table.setTableName(tableName);
+            table.setSchemaName(schemaName);
+            
+            if(this.config.isDatabaseSchemaNameSupported()){
+            	table.setTypeName(schemaName+"."+tableName);
+            }
+            else{
+            	table.setTypeName(tableName);
+            }
             config.getTable().add(table);
         }
         return table;
 
     }
 
+    //JIRA-952
+    private Table findOrCreateTable(QualifiedColumn column) {   	
+    	Table table = null;
+    	if(this.config.isDatabaseSchemaNameSupported()){
+    		table = getTable(column.getSchemaName()+"."+column.getTableName());
+    	}
+    	else{
+    		table = getTable(column.getTableName());
+    	}
+
+        if (table == null) {
+            table = ConfigFactory.INSTANCE.createTable();
+            table.setTableName(column.getTableName());
+            table.setSchemaName(column.getSchemaName());
+            config.getTable().add(table);
+        }
+        return table;
+
+    }
     private Column findOrCreateColumn(Table t, String name) {
         Iterator i = t.getColumn().iterator();
         while (i.hasNext()) {
@@ -443,13 +596,13 @@ public class MappingWrapper {
         return deleteOrder;
     }
 
+    //JIRA-952
     public void addConverter(String name, String converter) {
-
-        QualifiedColumn column = new QualifiedColumn(name);
-        Table t = findOrCreateTable(column.getTableName());
+        QualifiedColumn column = new QualifiedColumn(name, this.config.isDatabaseSchemaNameSupported());
+        Table t = null;
+       	t = findOrCreateTable(column);
         Column c = findOrCreateColumn(t, column.getColumnName());
         c.setConverterClassName(converter);
-
     }
 
     public String getConverter(String tableName, String columnName) {
@@ -539,6 +692,7 @@ public class MappingWrapper {
     public void addConnectionInfo(String driverClass, String connectionURL, String user, String password, int loginTimeout) {
         ConnectionInfo info = ConfigFactory.INSTANCE.createConnectionInfo();
         
+        info.setDataSource(connectionURL);
         ConnectionProperties connectionProperties = ConfigFactory.INSTANCE.createConnectionProperties(); 
         connectionProperties.setDriverClass(driverClass);
         connectionProperties.setDatabaseURL(connectionURL);
@@ -562,8 +716,9 @@ public class MappingWrapper {
         return cmd;
     }
 
-    public void addImpliedPrimaryKey(String tableName, String columnName) {
-        Table t = findOrCreateTable(tableName);
+    //JIRA-952
+    public void addImpliedPrimaryKey(String schemaName, String tableName, String columnName) {
+        Table t = findOrCreateTable(schemaName, tableName);//JIRA-952
 
         Iterator i = t.getColumn().iterator();
         boolean hasPK = false;

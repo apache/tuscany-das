@@ -379,7 +379,7 @@ public class ProgrammaticConfigTests extends DasTest {
         try {
             helper.addPrimaryKey("PK");
         } catch (RuntimeException ex) {
-            assertEquals ("Column PK must be qualified with a table name", ex.getMessage());
+            this.assertEquals ("Column PK must be qualified with a table name and optional schema name", ex.getMessage());
         }
     }
 }

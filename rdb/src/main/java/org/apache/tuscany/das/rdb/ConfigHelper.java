@@ -67,6 +67,9 @@ public class ConfigHelper {
     public Table addTable(String name, String typeName) {
         return configWrapper.addTable(name, typeName);
     }
+    public Table addTable(String name, String schemaName, String typeName) {
+        return configWrapper.addTable(name, schemaName, typeName);
+    }
     
     public Column addColumn(Table table, String columnName, String propertyName) {
         return configWrapper.addColumn(table, columnName, propertyName);

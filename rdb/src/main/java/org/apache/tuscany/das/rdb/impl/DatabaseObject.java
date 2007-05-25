@@ -18,20 +18,26 @@
  */
 package org.apache.tuscany.das.rdb.impl;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.apache.tuscany.das.rdb.ConfigHelper;
 import org.apache.tuscany.das.rdb.config.Column;
 import org.apache.tuscany.das.rdb.config.Config;
 import org.apache.tuscany.das.rdb.config.KeyPair;
 import org.apache.tuscany.das.rdb.config.Relationship;
 import org.apache.tuscany.das.rdb.config.Table;
 import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
+import org.apache.tuscany.das.rdb.config.wrapper.TableWrapper;
 import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
+import commonj.sdo.DataGraph;
 import commonj.sdo.DataObject;
 import commonj.sdo.Property;
 
@@ -67,13 +73,19 @@ public class DatabaseObject {
                 Relationship r = (Relationship) i.next();
                 if (this.logger.isDebugEnabled()) {
                     this.logger.debug("Initializing relationship: " + r.getName());
+                    this.logger.debug("r.getForeignKeyTable():"+r.getForeignKeyTable());
+                    this.logger.debug("getTypeName():"+getTypeName());
                 }
+                
                 if (r.getForeignKeyTable().equals(getTypeName())) {
                     List pairs = r.getKeyPair();
                     Iterator iter = pairs.iterator();
                     while (iter.hasNext()) {
                         KeyPair pair = (KeyPair) iter.next();
                         keyMappings.put(pair.getForeignKeyColumn(), r);
+                    	if (this.logger.isDebugEnabled()) {
+                            this.logger.debug("Putting key pair: " + pair.getPrimaryKeyColumn()+","+pair.getForeignKeyColumn());
+                    	}                        
                     }
                 }
             }
@@ -81,7 +93,6 @@ public class DatabaseObject {
     }
 
     public Object get(String parameter) {
-
         if (isPartOfPrimaryKey(parameter)) {
             return dataObject.get(parameter);
         }
@@ -91,8 +102,23 @@ public class DatabaseObject {
             return dataObject.get(parameter);
         }
 
-        Property parentRef = getParentReference(r.getPrimaryKeyTable());
+        //JIRA-952
+        Table tbl = this.mappingWrapper.getTable(r.getPrimaryKeyTable());
+        Property parentRef = null;
+        if(tbl == null){
+        	//this is case when config file is not present and 
+        	//ConfigHelper helper = new ConfigHelper(); is used
+        	parentRef = getParentReference(r.getPrimaryKeyTable());	
+        }
+        else{
+        	//other cases, its better to use typeName as r.getPrimaryKeyTable()
+        	//gives tableName and tableName and typeName can be different
+        	//and SDO looks for typeName and not tableName.
+        	parentRef = getParentReference((new TableWrapper(tbl)).getTypeName());
+        }
+        
         DataObject parent = dataObject.getDataObject(parentRef);
+        
         if (parent == null) {
             return null;
         }
@@ -115,7 +141,6 @@ public class DatabaseObject {
 
     public Property getParentReference(String parentName) {
         if (this.parentReference == null) {
-
             Iterator i = dataObject.getType().getProperties().iterator();
             while (i.hasNext()) {
                 Property ref = (Property) i.next();
@@ -127,14 +152,35 @@ public class DatabaseObject {
         return this.parentReference;
     }
 
+    //JIRA-952
     public String getTableName() {
         if (mappingWrapper.getConfig() != null) {
-            return mappingWrapper.getTableByTypeName(getTypeName()).getTableName();
+        	
+        	if(mappingWrapper.getConfig().isDatabaseSchemaNameSupported()){
+	        	if (this.logger.isDebugEnabled()) {
+	                this.logger.debug("DatabaseObject.getTableName:(schemaName.tableName) " +
+	                		mappingWrapper.getTableByTypeName(getTypeName()).getSchemaName()+"."+
+	                		mappingWrapper.getTableByTypeName(getTypeName()).getTableName());
+	        	} 
+	        	
+	            return (mappingWrapper.getTableByTypeName(getTypeName()).getSchemaName()+"."+
+        		mappingWrapper.getTableByTypeName(getTypeName()).getTableName());    		
+        	}
+        	else{
+	        	if (this.logger.isDebugEnabled()) {
+	                this.logger.debug("DatabaseObject.getTableName: " + mappingWrapper.getTableByTypeName(getTypeName()).getTableName());
+	        	} 
+	        	
+	            return mappingWrapper.getTableByTypeName(getTypeName()).getTableName();
+        	}
         } 
         return null;       
     }
 
     public String getTypeName() {
+    	if (this.logger.isDebugEnabled()) {
+            this.logger.debug("DatabaseObject.getTypeName: " + dataObject.getType().getName());
+    	}    	
         return dataObject.getType().getName();
     }
 
