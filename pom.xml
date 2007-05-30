@@ -28,7 +28,7 @@
     <artifactId>tuscany-das</artifactId>
     <version>1.0-incubating-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Tuscany DAS</name>
+    <name>Apache Tuscany DAS Implementation project</name>
     
     <scm>
         <connection>scm:svn:http://svn.apache.org/repos/asf/incubator/tuscany/java/das</connection>
