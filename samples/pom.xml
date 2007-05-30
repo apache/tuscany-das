@@ -31,6 +31,7 @@
     <name>Tuscany DAS Samples</name>
 
     <modules>
+        <module>dbconfig</module>
         <module>companyweb</module>
         <module>customer</module>
     </modules>
