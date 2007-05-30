@@ -19,9 +19,7 @@
 package org.apache.tuscany.das.rdb.exception;
 
 public class DataSourceInitializationException extends RuntimeException  {
-	/**
-     * 
-     */
+    
     private static final long serialVersionUID = 302160989411041041L;
 
     public DataSourceInitializationException(String string) {

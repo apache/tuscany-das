@@ -26,9 +26,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
-/**
- * 
- */
 public class TableData {
     private final Logger logger = LoggerFactory.INSTANCE.getLogger(TableData.class);
 

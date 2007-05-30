@@ -22,8 +22,6 @@ import java.util.List;
 
 import commonj.sdo.DataObject;
 
-/**
- */
 public interface TableRegistry {
     /**
      * Get the table with the specified name and primary key

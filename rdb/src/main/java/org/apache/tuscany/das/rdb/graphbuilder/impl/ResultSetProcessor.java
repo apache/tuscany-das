@@ -57,10 +57,6 @@ public class ResultSetProcessor {
 
     }
 
-    // private void debug(Object output) {
-    // DebugUtil.debugln(getClass(), debug, output);
-    // }
-
     /**
      * Process the ResultSet. For each row in the ResultSet, a
      * 
@@ -69,8 +65,8 @@ public class ResultSetProcessor {
      *       between each object in the
      * @link ResultSetRow.
      * 
-     * @param rs
-     *            The ResultSet
+     * @param start
+     * @param end
      */
     public void processResults(int start, int end) throws SQLException {
 

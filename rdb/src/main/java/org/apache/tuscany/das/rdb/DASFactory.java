@@ -25,8 +25,6 @@ import org.apache.tuscany.das.rdb.config.Config;
 
 /**
  * A DASFactory produces {@link DAS} instances.
- * 
- * 
  */
 public interface DASFactory {
 

@@ -22,8 +22,6 @@ import java.util.List;
 
 import commonj.sdo.DataObject;
 
-/**
- */
 public class SingleTableRegistry implements TableRegistry {
 
 

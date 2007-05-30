@@ -286,7 +286,7 @@ public class ResultMetadata {
 
     /**
      * @param i
-     * @return
+     * @return Type
      */
     public Type getDataType(int i) {
         return resultSetShape.getColumnType(i);
@@ -294,7 +294,7 @@ public class ResultMetadata {
 
     /**
      * @param tableName
-     * @return
+     * @return Collection
      */
     public Collection getPropertyNames(String tableName) {
         return (Collection) tableToPropertyMap.get(tableName);
