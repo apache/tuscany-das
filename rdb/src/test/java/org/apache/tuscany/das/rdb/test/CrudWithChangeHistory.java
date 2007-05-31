@@ -210,6 +210,34 @@ public class CrudWithChangeHistory extends DasTest {
 
     }
     
+    public void testReadModifyApplyMultipleRows() throws Exception {
+        /*
+        DAS das = DAS.FACTORY.createDAS(getConnection());
+        // Verify pre-condition
+        Command select = das.createCommand("Select * from CUSTOMER");
+        DataObject root = select.executeQuery();
+        assertFalse(root.get("CUSTOMER[1]/LASTNAME").equals("Pavick"));
+        assertFalse(root.get("CUSTOMER[2]/LASTNAME").equals("Silva"));
+
+        
+        // Read and modify customer 1
+        DataObject customer1 = (DataObject) root.get("CUSTOMER[1]");
+        customer1.set("LASTNAME", "Pavick");
+
+        // Read and modify customer 2
+        DataObject customer2 = (DataObject) root.get("CUSTOMER[2]");
+        customer2.set("LASTNAME", "Silva");
+        
+        // Build apply changes command
+        das.applyChanges(root);
+
+        // Verify changes
+        root = select.executeQuery();
+        assertEquals("Pavick", root.getString("CUSTOMER[1]/LASTNAME"));
+        assertEquals("Silva", root.getString("CUSTOMER[2]/LASTNAME"));
+        */
+    }    
+    
     /**
      * Test ability to handle multiple changes to the graph including Creates/Updates/Deletes Employs generated CUD
      */
