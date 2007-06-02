@@ -140,31 +140,30 @@ public class ChangeFactory {
 
     private UpdateCommandImpl getUpdateCommand(DataObject changedObject) {
 
-        if (updateCommand == null) {
-            Table table = mapping.getTableByTypeName(changedObject.getType().getName());
-            if (table == null) {
-                if (changedObject.getType().getProperty("ID") != null) {
-                    mapping.addPrimaryKey(changedObject.getType().getName() + ".ID");
-                    table = mapping.getTableByTypeName(changedObject.getType().getName());
-                } else {
-                    throw new RuntimeException("Table " + changedObject.getType().getName()
-                            + " was changed in the DataGraph but is not present in the Config");
-                }
-            }
-            Update update = table.getUpdate();
-            if (update == null) {
-                updateCommand = UpdateGenerator.INSTANCE.getUpdateCommand(mapping, changedObject, table);
+        Table table = mapping.getTableByTypeName(changedObject.getType().getName());
+        if (table == null) {
+            if (changedObject.getType().getProperty("ID") != null) {
+                mapping.addPrimaryKey(changedObject.getType().getName() + ".ID");
+                table = mapping.getTableByTypeName(changedObject.getType().getName());
             } else {
-                TableWrapper t = new TableWrapper(table);
-                if (t.getCollisionColumn() != null) {
-                    updateCommand = new OptimisticWriteCommandImpl(update);
-                } else {
-                    updateCommand = new UpdateCommandImpl(update);
-                }
+                throw new RuntimeException("Table " + changedObject.getType().getName()
+                        + " was changed in the DataGraph but is not present in the Config");
             }
-            updateCommand.setConnection(connection);
-            updateCommand.configWrapper = mapping;
         }
+        Update update = table.getUpdate();
+        if (update == null) {
+            updateCommand = UpdateGenerator.INSTANCE.getUpdateCommand(mapping, changedObject, table);
+        } else {
+            TableWrapper t = new TableWrapper(table);
+            if (t.getCollisionColumn() != null) {
+                updateCommand = new OptimisticWriteCommandImpl(update);
+            } else {
+                updateCommand = new UpdateCommandImpl(update);
+            }
+        }
+        updateCommand.setConnection(connection);
+        updateCommand.configWrapper = mapping;
+
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Returning updateCommand: " + updateCommand);
         }

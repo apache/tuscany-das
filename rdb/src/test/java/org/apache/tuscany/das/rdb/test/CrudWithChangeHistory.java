@@ -100,6 +100,7 @@ public class CrudWithChangeHistory extends DasTest {
         // Read customer 1
         Command select = das.createCommand("Select * from CUSTOMER where ID = 1");
         DataObject root = select.executeQuery();
+        assertFalse(root.get("CUSTOMER[1]/LASTNAME").equals("Pavick"));
 
         DataObject customer = (DataObject) root.get("CUSTOMER[1]");
 
@@ -124,6 +125,7 @@ public class CrudWithChangeHistory extends DasTest {
         // Read customer 1
         Command select = das.createCommand("Select * from CUSTOMER where ID = 1");
         DataObject root = select.executeQuery();
+        assertFalse(root.get("CUSTOMER[1]/LASTNAME").equals("Pavick"));
 
         DataObject customer = (DataObject) root.get("CUSTOMER[1]");
 
@@ -148,6 +150,7 @@ public class CrudWithChangeHistory extends DasTest {
         // Read customer with particular ID
         Command select = das.createCommand("Select * from CUSTOMER where ID = 1");
         DataObject root = select.executeQuery();
+        assertFalse(root.get("CUSTOMER[1]/LASTNAME").equals("Pavick"));
 
         DataObject customer = root.getDataObject("CUSTOMER[1]");
 
@@ -171,6 +174,7 @@ public class CrudWithChangeHistory extends DasTest {
         // Read customer with particular ID
         Command select = das.createCommand("Select * from CUSTOMER where ID = 1");
         DataObject root = select.executeQuery();
+        assertFalse(root.get("CUSTOMER[1]/LASTNAME").equals("Pavick"));
 
         DataObject customer = (DataObject) root.get("CUSTOMER[1]");
 
@@ -195,6 +199,7 @@ public class CrudWithChangeHistory extends DasTest {
         Command select = das.getCommand("getCustomer");
         select.setParameter(1, 1);
         DataObject root = select.executeQuery();
+        assertFalse(root.get("CUSTOMER[1]/LASTNAME").equals("Pavick"));
 
         DataObject customer = (DataObject) root.get("CUSTOMER[1]");
 
@@ -211,7 +216,6 @@ public class CrudWithChangeHistory extends DasTest {
     }
     
     public void testReadModifyApplyMultipleRows() throws Exception {
-        /*
         DAS das = DAS.FACTORY.createDAS(getConnection());
         // Verify pre-condition
         Command select = das.createCommand("Select * from CUSTOMER");
@@ -235,7 +239,6 @@ public class CrudWithChangeHistory extends DasTest {
         root = select.executeQuery();
         assertEquals("Pavick", root.getString("CUSTOMER[1]/LASTNAME"));
         assertEquals("Silva", root.getString("CUSTOMER[2]/LASTNAME"));
-        */
     }    
     
     /**
