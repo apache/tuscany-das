@@ -43,7 +43,7 @@
               maxActive="100" maxIdle="30" maxWait="10000"
               username="" password="" 
               driverClassName="org.apache.derby.jdbc.EmbeddedDriver"
-              url="{$database_location}"/>
+              url="{$database_location};create = true"/>
 
    </xsl:copy>
 	

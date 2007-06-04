@@ -31,18 +31,31 @@
     <description>Sample use of RDB DAS in a Web application</description>
 
     <dependencies>
-
         <dependency>
             <groupId>org.apache.tuscany.das</groupId>
             <artifactId>tuscany-das-rdb</artifactId>
-            <version>${pom.version}</version>
+            <version>${das.version}</version>
             <scope>compile</scope>
         </dependency>
-
+        
+        <dependency>
+            <groupId>org.apache.tuscany.das.samples</groupId>
+            <artifactId>tuscany-das-sample-dbconfig</artifactId>
+            <version>${das.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <!-- this will place the java source files inside the war -->
     <build>
+        <finalName>sample-companyweb</finalName>
         <sourceDirectory>src/main/java</sourceDirectory>
         <resources>
             <resource>

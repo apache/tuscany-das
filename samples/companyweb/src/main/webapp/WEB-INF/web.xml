@@ -27,4 +27,10 @@ Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
         <welcome-file>Company.jsp</welcome-file>
     </welcome-file-list>
 
+    <!-- Initialize Company database -->
+    <servlet>
+        <servlet-name>CompanyDBInit</servlet-name>
+        <servlet-class>org.apache.tuscany.samples.das.companyweb.CompanyDBInit</servlet-class>
+        <load-on-startup>2</load-on-startup>
+  </servlet>
 </web-app>

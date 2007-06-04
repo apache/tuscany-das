@@ -169,10 +169,11 @@
                         <fileset dir="${tuscany.acceptance.das.samples.companyweb.dir}">
                                 <include name="**/*.war" />
                         </fileset>
-                        <chainedmapper>
+                        <!-- lresende - using the right name on the build now, don't need to clean up -->
+                        <!-- chainedmapper>
                                 <flattenmapper/>
                                 <globmapper from="*-1.0-incubating-SNAPSHOT.war" to="*.war"/>
-                        </chainedmapper>
+                        </chainedmapper -->
                 </copy>
 
                 <!-- Create directory for the derby database -->
@@ -180,11 +181,12 @@
                 <mkdir dir="${tuscany.acceptance.target.databases.dir}" />
 
                 <!-- Copy over the Derby database -->
-                <copy todir="${tuscany.acceptance.target.databases.dir}">
+                <!-- lresende - we now use the dbConfig, and don't need to copy canned database here -->
+                <!-- copy todir="${tuscany.acceptance.target.databases.dir}">
                         <fileset dir="${tuscany.acceptance.das.samples.companyweb.dir}">
                                 <include name="**/dastest/**" />
                         </fileset>
-                </copy>
+                </copy -->
         </target>
 
 
