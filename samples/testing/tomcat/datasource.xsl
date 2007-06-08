@@ -25,6 +25,7 @@
 <xsl:output method="xml" indent="yes"/>	
 
    <xsl:param name="database_location"/>
+   <xsl:param name="database_location_ajax"/>
 	
 <!--Add derby database resource-->
 <xsl:template match="GlobalNamingResources">
@@ -43,8 +44,14 @@
               maxActive="100" maxIdle="30" maxWait="10000"
               username="" password="" 
               driverClassName="org.apache.derby.jdbc.EmbeddedDriver"
-              url="{$database_location};create = true"/>
-
+              url="{$database_location};create=true"/>
+         <Resource name="jdbc/ajaxdastest"
+              type="javax.sql.DataSource"  auth="Container"
+              description="Derby database for Ajax DAS Web sample"
+              maxActive="100" maxIdle="30" maxWait="10000"
+              username="" password="" 
+              driverClassName="org.apache.derby.jdbc.EmbeddedDriver"
+              url="{$database_location_ajax};create=true"/>
    </xsl:copy>
 	
 </xsl:template>	

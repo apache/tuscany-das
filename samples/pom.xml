@@ -33,6 +33,7 @@
     <modules>
         <module>dbconfig</module>
         <module>companyweb</module>
+        <module>sample-ajax-das</module>
         <module>customer</module>
     </modules>
 </project>

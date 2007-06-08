@@ -49,7 +49,6 @@
 <!-- KJW define property for the complete path of apache dir -->
         <property name="fullpath.tuscany.acceptance.tc.dir" value= '${basedir}/${tuscany.acceptance.tc.dir}' />
 
-
         <property name="tuscany.acceptance.groupId" value='org/apache/tuscany' />
         <property name="tuscany.acceptance.version" value='incubating-M1' />
 
@@ -61,6 +60,7 @@
 
 <!--KJW  Define location of canned Derby database -->
         <property name="tuscany.acceptance.das.samples.companyweb.dir" value='../../companyweb' />
+        <property name="tuscany.acceptance.das.samples.sampleajaxdas.dir" value='../../sample-ajax-das' />
 
         <property name="tuscany.maven.repos.dir" value='${user.home}\.m2\repository' />
         <condition property="isWindows">
@@ -151,6 +151,9 @@
                         <fileset dir="${tuscany.maven.repos.dir}">
                                 <patternset refid="tuscany.acceptance.tc.specsdoimpl" />
                         </fileset>
+                        <fileset dir="${tuscany.acceptance.das.samples.sampleajaxdas.dir}">
+                                <include name="**/*.war" />
+                        </fileset>                        
                         <fileset dir="${tuscany.maven.repos.dir}">
                                 <patternset>  <!-- for Derby and DAS support -->
                                   <include name="**/${tuscany.acceptance.groupId}/das/tuscany-das-rdb/${tuscany.acceptance.version}/tuscany-das-rdb-${tuscany.acceptance.version}.jar" />
@@ -169,6 +172,9 @@
                         <fileset dir="${tuscany.acceptance.das.samples.companyweb.dir}">
                                 <include name="**/*.war" />
                         </fileset>
+                        <fileset dir="${tuscany.acceptance.das.samples.sampleajaxdas.dir}">
+                                <include name="**/*.war" />
+                        </fileset>                         
                         <!-- lresende - using the right name on the build now, don't need to clean up -->
                         <!-- chainedmapper>
                                 <flattenmapper/>
@@ -185,6 +191,9 @@
                 <!-- copy todir="${tuscany.acceptance.target.databases.dir}">
                         <fileset dir="${tuscany.acceptance.das.samples.companyweb.dir}">
                                 <include name="**/dastest/**" />
+                        </fileset>
+                        <fileset dir="${tuscany.acceptance.das.samples.sampleajaxdas.dir}">
+                                <include name="**/ajaxdastest/**" />
                         </fileset>
                 </copy -->
         </target>
@@ -231,6 +240,7 @@
                   in="${tuscany.acceptance.tc.dir}/conf/server.xml.original" style="datasource.xsl" 
                   out="${tuscany.acceptance.tc.dir}/conf/server.xml">
                   <param name="database_location" expression="jdbc:derby:../Databases/dastest"/>
+                  <param name="database_location_ajax" expression="jdbc:derby:../Databases/ajaxdastest"/>                  
                 </xslt>
 
 
