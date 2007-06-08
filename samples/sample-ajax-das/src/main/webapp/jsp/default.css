@@ -1,0 +1,16 @@
+BODY {BACKGROUND-COLOR: #FFFFFF; COLOR: #333366;  FONT-FAMILY: 'Times New Roman'}
+H1 {COLOR: #6666CC; FONT-FAMILY: 'Times New Roman'; TEXT-TRANSFORM: capitalize }
+H2 {COLOR: #6666CC; FONT-FAMILY: 'Times New Roman'; TEXT-TRANSFORM: capitalize }
+H3 {COLOR: #6666CC; FONT-FAMILY: 'Times New Roman'; TEXT-TRANSFORM: capitalize }
+H4 {COLOR: #6666CC; FONT-FAMILY: 'Times New Roman'; TEXT-TRANSFORM: capitalize }
+H5 {COLOR: #6666CC; FONT-FAMILY: 'Times New Roman'; TEXT-TRANSFORM: capitalize }
+H6 {COLOR: #6666CC; FONT-FAMILY: 'Times New Roman'; TEXT-TRANSFORM: capitalize }
+TH {COLOR: #000000; font-weight: bold }
+
+#TRowEven {background-color: #ccff99}
+#TRowOdd  {background-color: #ffffcc}
+
+A:link		{cursor:hand; color: #3300FF; text-decoration: none;}
+A:visited	{cursor:hand; color: #3300FF; text-decoration: none; }
+A:active	{cursor:hand; color:#FEAA02;  text-decoration: none;}
+A:hover		{cursor:hand; color:#FEAA02;}
