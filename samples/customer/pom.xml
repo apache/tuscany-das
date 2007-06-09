@@ -48,6 +48,7 @@
 
     <!-- this will place the java source files inside the jar -->
     <build>
+        <finalName>sample-customer</finalName>
         <sourceDirectory>src/main/java</sourceDirectory>
         <resources>
             <resource>
