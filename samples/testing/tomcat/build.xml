@@ -22,7 +22,7 @@
         <property file="${user.home}/tuscany/build.properties" />
         <property file="${user.home}/build.properties" />
 
-        <property name="tuscany.acceptance.tomcat.version" value='6.0.10' />
+        <property name="tuscany.acceptance.tomcat.version" value='6.0.13' />
         <condition property="tuscany.acceptance.tomcat.zipped" value='apache-tomcat-${tuscany.acceptance.tomcat.version}.zip'>
             <os family="windows"/>
         </condition>

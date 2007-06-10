@@ -30,14 +30,15 @@
 &nbsp; &nbsp;Most of the following only needs to be done once
 unless noted otherwise.<br>
 <ul>
-<li>Follow the steps to build Tuscany DAS Companyweb sample application from <a target="_blank" href="http://incubator.apache.org/tuscany/java_das_overview.html">Tuscany DAS Java Overview</a>.</li>
+<li>Be sure JAVA_HOME variable is pointing to a Java JDK directory.</li>
+<li>Follow the steps to build Tuscany DAS Companyweb sample application from <a target="_blank" href="http://incubator.apache.org/tuscany/das-java-developer-guide.html">DAS Java Developer Guide</a>.</li>
 
 <li>Change directory
 to <span style="font-weight: bold;">java/das/samples/testing/tomcat</span>.</li>
 
 <li>Download
-Tomcat Core 5.5.<span style="font-style: italic;"><span style="color: rgb(255, 102, 102);">xx</span>&nbsp;</span>zip
-for Windows or &nbsp;tar.gz for Linux &nbsp;from <a href="http://tomcat.apache.org/download-55.cgi" target="_blank">Apache
+Tomcat Core 6.0.<span style="font-style: italic;"><span style="color: rgb(255, 102, 102);">xx</span>&nbsp;</span>zip
+for Windows or &nbsp;tar.gz for Linux &nbsp;from <a href="http://tomcat.apache.org/download-60.cgi" target="_blank">Apache
 Tomcat</a>.</li>
 
 <li>You can place the tomcat distribution in your java/samples/das/testing/tomcat directory or, alternatively, you can create/edit {user home}/build.properties to
@@ -62,7 +63,21 @@ Tomcat (You should see another window running Tomcat)&nbsp;</li><li>Begins
 running HTML unit tests that should closely match running the samples
 as a user would.</li></ul>If all goes well at the end you
 should see:<br>
-<pre>[INFO] ----------------------------------------------------------------------------<br>[INFO] Reactor Summary:<br>[INFO] ----------------------------------------------------------------------------<br>[INFO] Tuscany Testing in Tomcat .............................. SUCCESS [0.340s]<br>[INFO] Tuscany Testing Tomcat DAS Sample - Companyweb ......... SUCCESS [48.350s]<br>[INFO] ----------------------------------------------------------------------------<br>[INFO] ----------------------------------------------------------------------------<br>[INFO] BUILD SUCCESSFUL<br>[INFO] ----------------------------------------------------------------------------<br>[INFO] Total time: 49 seconds<br>[INFO] Finished at: Tue Aug 08 15:30:28 EDT 2006<br>[INFO] Final Memory: 7M/15M<br>[INFO] ----------------------------------------------------------------------------<br><br></pre><h3>Cleanup</h3>Close
+<pre>[INFO] ----------------------------------------------------------------------------
+[INFO] Reactor Summary:
+[INFO] ----------------------------------------------------------------------------
+[INFO] Tuscany Testing in Tomcat .............................. SUCCESS [0.961s]
+[INFO] Tuscany Testing Tomcat DAS Sample - Companyweb ......... SUCCESS [1:09.771s]
+[INFO] Tuscany Testing Ajax DAS Web Sample .................... SUCCESS [47.458s]
+[INFO] ----------------------------------------------------------------------------
+[INFO] ----------------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL<br>
+[INFO] ----------------------------------------------------------------------------
+[INFO] Total time:  1 minute 59 seconds
+[INFO] Finished at: Sun Jun 10 01:23:19 VET 2007
+[INFO] Final Memory: 9M/17M
+[INFO] ----------------------------------------------------------------------------<br>
+</pre><h3>Cleanup</h3>Close
 the Tomcat window and issue <code>mvn clean</code>.<p><b><font size="4">Note</font></b></p>
 <p>Because the html unit tests execute multiple user actions that change the contents of the database tables, is recommended
 that you always run these tests in a clean environment (after a mvn clean),
