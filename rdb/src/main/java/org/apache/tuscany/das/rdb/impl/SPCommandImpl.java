@@ -25,14 +25,13 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.apache.tuscany.das.rdb.config.Parameter;
 import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
-import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
 import commonj.sdo.DataObject;
 import commonj.sdo.Type;
 import commonj.sdo.helper.TypeHelper;
 
 public class SPCommandImpl extends ReadCommandImpl {
-    private final Logger logger = LoggerFactory.INSTANCE.getLogger(SPCommandImpl.class);
+    private final Logger logger = Logger.getLogger(SPCommandImpl.class);
 
     public SPCommandImpl(String sqlString, MappingWrapper config, List params) {
         super(sqlString, config, null);

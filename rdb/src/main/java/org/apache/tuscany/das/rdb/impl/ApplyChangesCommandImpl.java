@@ -22,7 +22,6 @@ import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
-import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
 import commonj.sdo.DataObject;
 
@@ -31,7 +30,7 @@ import commonj.sdo.DataObject;
  */
 public class ApplyChangesCommandImpl extends BaseCommandImpl {
 
-    private final Logger logger = LoggerFactory.INSTANCE.getLogger(ApplyChangesCommandImpl.class);
+    private final Logger logger = Logger.getLogger(ApplyChangesCommandImpl.class);
 
     private ChangeSummarizer summarizer = new ChangeSummarizer();
 

@@ -28,12 +28,11 @@ import org.apache.tuscany.das.rdb.config.wrapper.TableWrapper;
 import org.apache.tuscany.das.rdb.generator.impl.DeleteGenerator;
 import org.apache.tuscany.das.rdb.generator.impl.InsertGenerator;
 import org.apache.tuscany.das.rdb.generator.impl.UpdateGenerator;
-import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
 import commonj.sdo.DataObject;
 
 public class ChangeFactory {
-    private final Logger logger = LoggerFactory.INSTANCE.getLogger(ChangeFactory.class);
+    private final Logger logger = Logger.getLogger(ChangeFactory.class);
 
     private InsertCommandImpl createCommand;
 

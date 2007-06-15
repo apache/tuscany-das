@@ -24,10 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
 public class TableData {
-    private final Logger logger = LoggerFactory.INSTANCE.getLogger(TableData.class);
+    private final Logger logger = Logger.getLogger(TableData.class);
 
     private Map columnData = new HashMap();
 

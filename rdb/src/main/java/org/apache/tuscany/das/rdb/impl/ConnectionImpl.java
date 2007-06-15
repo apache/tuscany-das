@@ -27,11 +27,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.apache.log4j.Logger;
-import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
 public class ConnectionImpl {
 
-    private final Logger logger = LoggerFactory.INSTANCE.getLogger(ConnectionImpl.class);
+    private final Logger logger = Logger.getLogger(ConnectionImpl.class);
 
     private Connection connection;
 

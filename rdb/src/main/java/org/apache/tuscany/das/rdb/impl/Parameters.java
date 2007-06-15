@@ -23,12 +23,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
 import commonj.sdo.Type;
 
 public class Parameters {
-    private final Logger logger = LoggerFactory.INSTANCE.getLogger(Parameters.class);
+    private final Logger logger = Logger.getLogger(Parameters.class);
 
     private List parameters = new ArrayList();
 

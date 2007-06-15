@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
 import commonj.sdo.DataObject;
 
@@ -34,7 +33,7 @@ import commonj.sdo.DataObject;
  * efficient if we could use LinkedHashMap from JDK 1.4
  */
 public class MultiTableRegistry implements TableRegistry {
-    private final Logger logger = LoggerFactory.INSTANCE.getLogger(MultiTableRegistry.class);
+    private final Logger logger = Logger.getLogger(MultiTableRegistry.class);
 
     private Map tableNameMap;
 

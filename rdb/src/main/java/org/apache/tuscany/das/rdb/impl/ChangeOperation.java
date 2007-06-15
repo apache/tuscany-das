@@ -21,7 +21,6 @@ package org.apache.tuscany.das.rdb.impl;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
-import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
 import commonj.sdo.DataObject;
 
@@ -32,7 +31,7 @@ public abstract class ChangeOperation {
 
     protected String propagatedID;
     
-    private final Logger logger = LoggerFactory.INSTANCE.getLogger(ChangeOperation.class);
+    private final Logger logger = Logger.getLogger(ChangeOperation.class);
 
     private final WriteCommandImpl writeCommand;
 

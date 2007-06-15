@@ -32,7 +32,6 @@ import org.apache.tuscany.das.rdb.config.Table;
 import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
 import org.apache.tuscany.das.rdb.config.wrapper.RelationshipWrapper;
 import org.apache.tuscany.das.rdb.config.wrapper.TableWrapper;
-import org.apache.tuscany.das.rdb.util.LoggerFactory;
 import org.apache.tuscany.sdo.impl.ChangeSummaryImpl;
 
 import commonj.sdo.ChangeSummary;
@@ -42,7 +41,7 @@ import commonj.sdo.Type;
 
 public class ChangeSummarizer {
 
-    private final Logger logger = LoggerFactory.INSTANCE.getLogger(ChangeSummarizer.class);
+    private final Logger logger = Logger.getLogger(ChangeSummarizer.class);
 
     private Changes changes = new Changes();
 

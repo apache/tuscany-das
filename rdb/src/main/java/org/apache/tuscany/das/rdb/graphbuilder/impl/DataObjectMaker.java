@@ -21,7 +21,6 @@ package org.apache.tuscany.das.rdb.graphbuilder.impl;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
-import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
 import commonj.sdo.DataObject;
 import commonj.sdo.Property;
@@ -32,7 +31,7 @@ public class DataObjectMaker {
 
     private final DataObject rootObject;
 
-    private final Logger logger = LoggerFactory.INSTANCE.getLogger(DataObjectMaker.class);
+    private final Logger logger = Logger.getLogger(DataObjectMaker.class);
 
     public DataObjectMaker(DataObject root) {
         this.rootObject = root;

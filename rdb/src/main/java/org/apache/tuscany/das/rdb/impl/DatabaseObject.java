@@ -18,16 +18,12 @@
  */
 package org.apache.tuscany.das.rdb.impl;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.apache.tuscany.das.rdb.ConfigHelper;
 import org.apache.tuscany.das.rdb.config.Column;
 import org.apache.tuscany.das.rdb.config.Config;
 import org.apache.tuscany.das.rdb.config.KeyPair;
@@ -35,9 +31,7 @@ import org.apache.tuscany.das.rdb.config.Relationship;
 import org.apache.tuscany.das.rdb.config.Table;
 import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
 import org.apache.tuscany.das.rdb.config.wrapper.TableWrapper;
-import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
-import commonj.sdo.DataGraph;
 import commonj.sdo.DataObject;
 import commonj.sdo.Property;
 
@@ -48,7 +42,7 @@ import commonj.sdo.Property;
  */
 public class DatabaseObject {
 
-    private final Logger logger = LoggerFactory.INSTANCE.getLogger(DatabaseObject.class);
+    private final Logger logger = Logger.getLogger(DatabaseObject.class);
 
     private final MappingWrapper mappingWrapper;
 

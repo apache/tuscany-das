@@ -40,7 +40,6 @@ import org.apache.tuscany.das.rdb.config.KeyPair;
 import org.apache.tuscany.das.rdb.config.Relationship;
 import org.apache.tuscany.das.rdb.config.Table;
 import org.apache.tuscany.das.rdb.config.Update;
-import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
 import commonj.sdo.Property;
 
@@ -48,7 +47,7 @@ public class MappingWrapper {
 
     private static final ConfigFactory FACTORY = ConfigFactory.INSTANCE;
 
-    private final Logger logger = LoggerFactory.INSTANCE.getLogger(MappingWrapper.class);
+    private final Logger logger = Logger.getLogger(MappingWrapper.class);
 
     private Config config;
 

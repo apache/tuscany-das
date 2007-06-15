@@ -34,7 +34,6 @@ import org.apache.tuscany.das.rdb.impl.ManagedParameterImpl;
 import org.apache.tuscany.das.rdb.impl.OptimisticWriteCommandImpl;
 import org.apache.tuscany.das.rdb.impl.ParameterImpl;
 import org.apache.tuscany.das.rdb.impl.UpdateCommandImpl;
-import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
 import commonj.sdo.ChangeSummary;
 import commonj.sdo.DataObject;
@@ -46,7 +45,7 @@ public final class UpdateGenerator extends BaseGenerator {
 
     public static final UpdateGenerator INSTANCE = new UpdateGenerator();
 
-    private final Logger logger = LoggerFactory.INSTANCE.getLogger(UpdateGenerator.class);
+    private final Logger logger = Logger.getLogger(UpdateGenerator.class);
 
     private UpdateGenerator() {
         super();

@@ -28,13 +28,12 @@ import org.apache.log4j.Logger;
 import org.apache.tuscany.das.rdb.config.KeyPair;
 import org.apache.tuscany.das.rdb.config.Relationship;
 import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
-import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
 import commonj.sdo.DataObject;
 import commonj.sdo.Property;
 
 public class RowObjects {
-    private final Logger logger = LoggerFactory.INSTANCE.getLogger(RowObjects.class);
+    private final Logger logger = Logger.getLogger(RowObjects.class);
 
     private Map objectsByTableName;
 

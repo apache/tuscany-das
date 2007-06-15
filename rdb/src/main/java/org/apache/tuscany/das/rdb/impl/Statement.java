@@ -29,7 +29,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
 // TODO - Can use some refactoring. Much code is duplicated in "execute" methods
 public class Statement {
@@ -38,7 +37,7 @@ public class Statement {
 
     protected ConnectionImpl jdbcConnection;
 
-    private final Logger logger = LoggerFactory.INSTANCE.getLogger(Statement.class);
+    private final Logger logger = Logger.getLogger(Statement.class);
     
     private PreparedStatement preparedStatement;
 

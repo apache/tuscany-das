@@ -19,7 +19,6 @@
 package org.apache.tuscany.das.rdb.config.wrapper;
 
 import org.apache.log4j.Logger;
-import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
 public class QualifiedColumn {
 
@@ -28,7 +27,7 @@ public class QualifiedColumn {
     private final String columnName;
     private final String schemaName;//JIRA-952
 
-    private final Logger logger = LoggerFactory.INSTANCE.getLogger(QualifiedColumn.class);
+    private final Logger logger = Logger.getLogger(QualifiedColumn.class);
 
     public QualifiedColumn(String name) {
     	this.schemaName = "";

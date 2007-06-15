@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
 /**
  * InsertList will sort ChangeOperation objects so that parents are inserted before children
@@ -34,7 +33,7 @@ import org.apache.tuscany.das.rdb.util.LoggerFactory;
  * 
  */
 public class InsertList {
-    private final Logger logger = LoggerFactory.INSTANCE.getLogger(InsertList.class);
+    private final Logger logger = Logger.getLogger(InsertList.class);
 
     private Map opsByTableName = new HashMap();
 

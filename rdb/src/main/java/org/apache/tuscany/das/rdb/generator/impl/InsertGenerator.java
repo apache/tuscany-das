@@ -33,7 +33,6 @@ import org.apache.tuscany.das.rdb.config.wrapper.RelationshipWrapper;
 import org.apache.tuscany.das.rdb.config.wrapper.TableWrapper;
 import org.apache.tuscany.das.rdb.impl.InsertCommandImpl;
 import org.apache.tuscany.das.rdb.impl.ParameterImpl;
-import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
 import commonj.sdo.DataObject;
 import commonj.sdo.Property;
@@ -42,7 +41,7 @@ public final class InsertGenerator extends BaseGenerator {
 
     public static final InsertGenerator INSTANCE = new InsertGenerator();
 
-    private final Logger logger = LoggerFactory.INSTANCE.getLogger(InsertGenerator.class);
+    private final Logger logger = Logger.getLogger(InsertGenerator.class);
 
     private InsertGenerator() {
         super();

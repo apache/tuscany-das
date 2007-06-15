@@ -23,7 +23,6 @@ import java.sql.SQLException;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
-import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
 import commonj.sdo.DataObject;
 
@@ -32,7 +31,7 @@ import commonj.sdo.DataObject;
  * A ResultSetProcessor is used to transform the data in a ResultSet into a set of inter-related EDataObjects.
  */
 public class ResultSetProcessor {
-    private final Logger logger = LoggerFactory.INSTANCE.getLogger(ResultSetProcessor.class);
+    private final Logger logger = Logger.getLogger(ResultSetProcessor.class);
 
     private TableRegistry registry;
 

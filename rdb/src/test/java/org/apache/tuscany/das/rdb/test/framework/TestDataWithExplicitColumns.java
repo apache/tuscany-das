@@ -23,7 +23,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
-import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
 public abstract class TestDataWithExplicitColumns extends TestData {
 
@@ -31,7 +30,7 @@ public abstract class TestDataWithExplicitColumns extends TestData {
 
     private int[] sqlTypes;
     
-    private final Logger logger = LoggerFactory.INSTANCE.getLogger(TestDataWithExplicitColumns.class);
+    private final Logger logger = Logger.getLogger(TestDataWithExplicitColumns.class);
 
     public TestDataWithExplicitColumns(Connection c, Object[][] data, String[] columns, int[] sqlTypes) {
         super(c, data);

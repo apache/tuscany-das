@@ -23,13 +23,12 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
-import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
 import commonj.sdo.Type;
 
 public class FactoryRegistry {
 
-    private final Logger logger = LoggerFactory.INSTANCE.getLogger(FactoryRegistry.class);
+    private final Logger logger = Logger.getLogger(FactoryRegistry.class);
 
     private Map registry = new HashMap();
 

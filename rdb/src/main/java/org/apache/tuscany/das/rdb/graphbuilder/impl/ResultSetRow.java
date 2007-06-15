@@ -26,14 +26,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
 /**
  * 
  * A ResultSetRow is used to transform a single row of a ResultSet into a set of EDataObjects.
  */
 public class ResultSetRow {
-    private final Logger logger = LoggerFactory.INSTANCE.getLogger(ResultSetRow.class);
+    private final Logger logger = Logger.getLogger(ResultSetRow.class);
 
     private final ResultMetadata metadata;
 

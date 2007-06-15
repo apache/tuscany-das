@@ -27,13 +27,12 @@ import org.apache.tuscany.das.rdb.config.wrapper.TableWrapper;
 import org.apache.tuscany.das.rdb.impl.DeleteCommandImpl;
 import org.apache.tuscany.das.rdb.impl.ParameterImpl;
 import org.apache.tuscany.das.rdb.impl.SDODataTypes;
-import org.apache.tuscany.das.rdb.util.LoggerFactory;
 
 public final class DeleteGenerator extends BaseGenerator {
 
     public static final DeleteGenerator INSTANCE = new DeleteGenerator();
 
-    private final Logger logger = LoggerFactory.INSTANCE.getLogger(DeleteGenerator.class);
+    private final Logger logger = Logger.getLogger(DeleteGenerator.class);
 
     private DeleteGenerator() {
         super();
