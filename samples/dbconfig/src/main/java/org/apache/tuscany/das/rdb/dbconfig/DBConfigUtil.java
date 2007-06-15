@@ -34,7 +34,6 @@ import commonj.sdo.helper.XMLHelper;
 public final class DBConfigUtil {
 
     private DBConfigUtil() {
-        
     }
     
     public static DBConfig loadDBConfig(InputStream dbconfigStream) {

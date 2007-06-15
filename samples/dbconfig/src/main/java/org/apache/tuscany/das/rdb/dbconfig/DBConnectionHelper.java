@@ -31,10 +31,12 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 public class DBConnectionHelper {
-	private static final Logger logger = Logger.getLogger("DBConnectionHelper.class");
+	private static final Logger logger = Logger.getLogger(DBConnectionHelper.class);
 	
 	protected DBConnectionHelper(){
-		logger.log(Level.DEBUG, "DBConnectionHelper()");
+        if(logger.isDebugEnabled()) {
+            logger.log(Level.DEBUG, "DBConnectionHelper()");
+        }
 	}
     
     /**
@@ -44,7 +46,9 @@ public class DBConnectionHelper {
      *
      */
     public static Connection createConnection(ConnectionInfo connectionInfo) {
-        logger.log(Level.DEBUG, "DBConnectionHelper.createConnection(ConnectionInfo)");
+        if (logger.isDebugEnabled()) {
+            logger.log(Level.DEBUG, "DBConnectionHelper.createConnection(ConnectionInfo)");
+        }
         
         if (connectionInfo == null || 
             (connectionInfo.getDataSource() == null && connectionInfo.getConnectionProperties() == null)) {
@@ -70,7 +74,9 @@ public class DBConnectionHelper {
      * Initializes a DB connection on a managed environmet (e.g inside Tomcat)
      */
 	private static Connection initializeDatasourceConnection(ConnectionInfo connectionInfo){
-		logger.log(Level.DEBUG, "DBConnectionHelper.initializeDatasourceConnection(ConnectionInfo)");
+        if (logger.isDebugEnabled()) {
+            logger.log(Level.DEBUG, "DBConnectionHelper.initializeDatasourceConnection(ConnectionInfo)");
+        }
         
         InitialContext ctx;
         Connection connection;
@@ -95,8 +101,10 @@ public class DBConnectionHelper {
         } catch (NamingException e) {
             throw new RuntimeException(e);
         }
-        
-        logger.log(Level.DEBUG, "DBConnectionHelper.initializeDatasourceConnection() exit");
+
+        if( logger.isDebugEnabled()) {
+            logger.log(Level.DEBUG, "DBConnectionHelper.initializeDatasourceConnection() exit");
+        }
         return connection;
     }
     
@@ -105,7 +113,9 @@ public class DBConnectionHelper {
      * For more info, see http://java.sun.com/j2se/1.3/docs/guide/jdbc/getstart/drivermanager.html
      */
 	private static Connection initializeDriverManagerConnection(ConnectionInfo connectionInfo) {
-		logger.log(Level.DEBUG, "DBConnectionHelper.initializeDriverManagerConnection(ConnectionInfo)");
+		if (logger.isDebugEnabled()) {
+		    logger.log(Level.DEBUG, "DBConnectionHelper.initializeDriverManagerConnection(ConnectionInfo)");
+        }
     	
         if (connectionInfo.getConnectionProperties() == null) {
             throw new DataSourceInitializationException("No existing context and no connection properties");
@@ -145,7 +155,11 @@ public class DBConnectionHelper {
         }catch(SQLException sqle){
             throw new DataSourceInitializationException(sqle.getMessage(), sqle);
         }
-        logger.log(Level.DEBUG, "DBConnectionHelper.initializeDriverManagerConnection() exit");
+        
+        if (logger.isDebugEnabled()) {
+            logger.log(Level.DEBUG, "DBConnectionHelper.initializeDriverManagerConnection() exit");
+        }
+        
         return connection;
     }
 }

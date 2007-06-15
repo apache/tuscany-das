@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
 public class DBHelper {
     private static final String CLASS_NAME = "DBHelper";
 
-    private final Logger logger = Logger.getLogger("DBHelper.class");
+    private final Logger logger = Logger.getLogger(DBHelper.class);
 
     private final DBConfig dbConfig;
 
@@ -41,7 +41,9 @@ public class DBHelper {
      * @param DBConfig
      */
     protected DBHelper(DBConfig dbConfig) {
-        this.logger.log(Level.DEBUG, CLASS_NAME + "()");
+        if (logger.isDebugEnabled()) {
+            this.logger.log(Level.DEBUG, CLASS_NAME + "()");
+        }
         this.dbConfig = dbConfig;
     }
 
@@ -53,7 +55,9 @@ public class DBHelper {
     protected boolean isDatabaseReady() {
         boolean bResult = true;
 
-        this.logger.log(Level.DEBUG, CLASS_NAME + "isDatabaseReady()");
+        if (logger.isDebugEnabled()) {
+            this.logger.log(Level.DEBUG, CLASS_NAME + "isDatabaseReady()");
+        }
 
         Connection dbConnection = null;
         DatabaseMetaData dbMetaData = null;
@@ -73,7 +77,9 @@ public class DBHelper {
                 }
             }
         } catch (SQLException e) {
-            this.logger.log(Level.DEBUG, "Error retrieving database metadata", e);
+            if (logger.isDebugEnabled()) {
+                this.logger.log(Level.DEBUG, "Error retrieving database metadata", e);
+            }
         } finally {
             try {
                 dbConnection.close();
@@ -82,7 +88,10 @@ public class DBHelper {
             }
         }
 
-        this.logger.log(Level.DEBUG, CLASS_NAME + "isDatabaseReady() exit");
+        if (logger.isDebugEnabled()) {
+            this.logger.log(Level.DEBUG, CLASS_NAME + "isDatabaseReady() exit");
+        }
+        
         return bResult;
     }
 
@@ -90,7 +99,9 @@ public class DBHelper {
      * Create the database tables based on dbConfig definition
      */
     protected void initializeDatabase() {
-        this.logger.log(Level.DEBUG, CLASS_NAME + "initializeDatabase()");
+        if (logger.isDebugEnabled()) {
+            this.logger.log(Level.DEBUG, CLASS_NAME + "initializeDatabase()");
+        }
 
         Connection dbConnection = null;
         Statement dbStatement = null;
@@ -104,14 +115,18 @@ public class DBHelper {
                     Table table = (Table) tableIterator.next();
 
                     if (table.getSQLCreate() != null && table.getSQLCreate().length() > 0) {
-                        this.logger.log(Level.DEBUG, "Creating table '" + table.getName() + "' => " + table.getSQLCreate());
+                        if (logger.isDebugEnabled()) {
+                            this.logger.log(Level.DEBUG, "Creating table '" + table.getName() + "' => " + table.getSQLCreate());
+                        }
 
                         dbStatement.execute(table.getSQLCreate());
                     }
                 }
             }
         } catch (SQLException e) {
-            this.logger.log(Level.DEBUG, "Error retrieving database metadata", e);
+            if (logger.isDebugEnabled()) {
+                this.logger.log(Level.DEBUG, "Error retrieving database metadata", e);
+            }
         } finally {
             try {
                 dbStatement.close();
@@ -121,14 +136,18 @@ public class DBHelper {
             }
         }
 
-        this.logger.log(Level.DEBUG, CLASS_NAME + "initializeDatabase() exit");
+        if (logger.isDebugEnabled()) {
+            this.logger.log(Level.DEBUG, CLASS_NAME + "initializeDatabase() exit");
+        }
     }
 
     /**
      * Drop the database tables based on dbConfig definition
      */
     protected void dropDatabaseTables() {
-        this.logger.log(Level.DEBUG, CLASS_NAME + "dropDatabaseTables()");
+        if (logger.isDebugEnabled()) {
+            this.logger.log(Level.DEBUG, CLASS_NAME + "dropDatabaseTables()");
+        }
 
         Connection dbConnection = null;
         Statement dbStatement = null;
@@ -142,19 +161,25 @@ public class DBHelper {
                     Table table = (Table) tableIterator.next();
 
                     if (table.getSQLCreate() != null && table.getSQLCreate().length() > 0) {
-                        this.logger.log(Level.DEBUG, "Dropping table '" + table.getName() );
+                        if (logger.isDebugEnabled()) {
+                            this.logger.log(Level.DEBUG, "Dropping table '" + table.getName() );
+                        }
 
                         try {
                             dbStatement.execute("DROP TABLE " + table.getName());
                         } catch (SQLException e) {
                         	//ignore
-                            this.logger.log(Level.DEBUG, "Error droping table '" + table.getName() + "'", e);
+                            if (logger.isDebugEnabled()) {
+                                this.logger.log(Level.DEBUG, "Error droping table '" + table.getName() + "'", e);
+                            }
                         }
                     }
                 }
             }
         } catch (SQLException e) {
-            this.logger.log(Level.DEBUG, "Error droping table", e);
+            if (logger.isDebugEnabled()) {
+                this.logger.log(Level.DEBUG, "Error droping table", e);
+            }
         } finally {
             try {
                 dbStatement.close();
@@ -164,6 +189,8 @@ public class DBHelper {
             }
         }
 
-        this.logger.log(Level.DEBUG, CLASS_NAME + "dropDatabaseTables() exit");
+        if (logger.isDebugEnabled()) {
+            this.logger.log(Level.DEBUG, CLASS_NAME + "dropDatabaseTables() exit");
+        }
     }
 }

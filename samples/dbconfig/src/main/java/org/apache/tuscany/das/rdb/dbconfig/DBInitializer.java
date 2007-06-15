@@ -54,8 +54,6 @@ public class DBInitializer {
      */
     protected DBDataHelper dbDataHelper;
 
-    //private final Logger logger = Logger.getLogger("DBInitializer.class");
-
     /**
      * Create instance of DBInitHelper based on default canned database configuration
      * 
