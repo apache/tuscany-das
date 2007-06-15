@@ -28,7 +28,7 @@
     <groupId>org.apache.tuscany.das.distribution</groupId>
     <artifactId>tuscany-das-bin</artifactId>
     <packaging>pom</packaging>
-    <name>Tuscany DAS Distribution</name>
+    <name>Tuscany DAS Distribution (Binary)</name>
     <description>Tuscany Distribution for DAS.</description>
 
     <dependencies>
@@ -49,6 +49,13 @@
           <groupId>org.apache.tuscany.das.samples</groupId>
           <artifactId>tuscany-das-sample-customer-j2se</artifactId>
           <version>${das.version}</version>
+      </dependency>        
+
+       <dependency>
+          <groupId>org.apache.tuscany.das.samples</groupId>
+          <artifactId>sample-ajax-das</artifactId>
+          <version>${das.version}</version>
+          <type>war</type>
       </dependency>        
 
     </dependencies>

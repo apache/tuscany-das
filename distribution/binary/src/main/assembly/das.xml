@@ -74,5 +74,14 @@
 	    <fileMode>644</fileMode>
         </dependencySet>
 
+        <!-- DAS Samples - Ajax advanced features -->
+        <dependencySet>
+	    <outputDirectory>tuscany-das-${das.version}/samples/sample-ajax-das</outputDirectory>
+	        <includes>
+	            <include>org.apache.tuscany.das.samples:sample-ajax-das</include>
+	        </includes>
+	    <fileMode>644</fileMode>
+        </dependencySet>
+
     </dependencySets>
 </assembly>
