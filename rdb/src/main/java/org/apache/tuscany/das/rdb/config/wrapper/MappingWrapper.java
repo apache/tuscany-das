@@ -691,7 +691,6 @@ public class MappingWrapper {
     public void addConnectionInfo(String driverClass, String connectionURL, String user, String password, int loginTimeout) {
         ConnectionInfo info = ConfigFactory.INSTANCE.createConnectionInfo();
         
-        info.setDataSource(connectionURL);
         ConnectionProperties connectionProperties = ConfigFactory.INSTANCE.createConnectionProperties(); 
         connectionProperties.setDriverClass(driverClass);
         connectionProperties.setDatabaseURL(connectionURL);

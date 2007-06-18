@@ -249,6 +249,7 @@ public class ProgrammaticConfigTests extends DasTest {
 
         Config config = helper.getConfig();
         ConnectionInfo info = config.getConnectionInfo();
+        assertNull(info.getDataSource());
         assertEquals(info.getConnectionProperties().getDriverClass(), "org.apache.derby.jdbc.EmbeddedDriver");
         assertEquals(info.getConnectionProperties().getDatabaseURL(), "jdbc:derby:target/dastest");
         assertEquals(info.getConnectionProperties().getUserName(), "user");
