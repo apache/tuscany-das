@@ -24,23 +24,17 @@ package org.apache.tuscany.das.rdb.test;
  */
 
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Vector;
 
 import org.apache.tuscany.das.rdb.Command;
 import org.apache.tuscany.das.rdb.ConfigHelper;
 import org.apache.tuscany.das.rdb.DAS;
 import org.apache.tuscany.das.rdb.config.Relationship;
-//import org.apache.tuscany.das.rdb.test.data.CustomerData;
-//import org.apache.tuscany.das.rdb.test.data.OrderData;
 import org.apache.tuscany.das.rdb.test.data.OrderDetailsData;
 import org.apache.tuscany.das.rdb.test.data.OrderDetailsDescriptionData;
-//import org.apache.tuscany.das.rdb.test.data.ProductData;
 import org.apache.tuscany.das.rdb.test.framework.DasTest;
 
 import commonj.sdo.DataObject;
-
-import org.apache.tuscany.sdo.helper.*;//JIRA-841
 
 public class CompoundKeyRelationshipTests extends DasTest {
 

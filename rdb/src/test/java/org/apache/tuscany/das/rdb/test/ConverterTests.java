@@ -18,7 +18,6 @@
  */
 package org.apache.tuscany.das.rdb.test;
 
-import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

@@ -24,9 +24,6 @@ package org.apache.tuscany.das.rdb.test;
  * 
  */
 
-import java.util.Iterator;
-import java.util.Random;
-
 import org.apache.tuscany.das.rdb.Command;
 import org.apache.tuscany.das.rdb.DAS;
 import org.apache.tuscany.das.rdb.test.data.BookData;

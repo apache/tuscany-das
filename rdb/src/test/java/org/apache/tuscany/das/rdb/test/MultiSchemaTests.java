@@ -18,8 +18,6 @@
  */
 package org.apache.tuscany.das.rdb.test;
 
-import java.io.InputStream;
-import java.sql.Connection;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,7 +28,6 @@ import org.apache.tuscany.das.rdb.Command;
 import org.apache.tuscany.das.rdb.DAS;
 import org.apache.tuscany.das.rdb.test.data.MultiSchemaData;
 import org.apache.tuscany.das.rdb.test.framework.DasTest;
-import org.apache.tuscany.das.rdb.util.ConfigUtil;
 
 import commonj.sdo.DataObject;
 
