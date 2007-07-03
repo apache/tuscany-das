@@ -58,5 +58,21 @@
               <directory>src/main/resources</directory>
             </resource>
         </resources>
+	   <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest> 
+                    <mainClass>org.apache.tuscany.samples.das.customer.CustomerClient</mainClass> 
+                    <addClasspath>true</addClasspath> 
+                    <classpathPrefix>../../lib/</classpathPrefix> 
+                   </manifest> 
+
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>
