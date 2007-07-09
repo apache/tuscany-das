@@ -44,7 +44,7 @@ public class ConnectionImpl {
         try {
             DatabaseMetaData dbmd = connection.getMetaData();
 
-            if (dbmd.getDatabaseProductName().contains("Oracle")) {
+            if (dbmd.getDatabaseProductName().contains("Oracle") || dbmd.getDatabaseProductName().contains("PostgreSQL")) {
                 this.useGetGeneratedKeys = false;
             } else {
                 this.useGetGeneratedKeys = true;
