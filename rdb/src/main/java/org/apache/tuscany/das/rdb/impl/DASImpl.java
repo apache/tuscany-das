@@ -6,15 +6,15 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 package org.apache.tuscany.das.rdb.impl;
 
@@ -43,10 +43,10 @@ import org.apache.tuscany.das.rdb.util.ConfigUtil;
 import commonj.sdo.DataObject;
 
 /**
- * An ConfiguredCommandFactory produces instances of Command and ApplyChangesCommand. This 
+ * An ConfiguredCommandFactory produces instances of Command and ApplyChangesCommand. This
  * factory is initialized with a configuration that defines
  * the commands it produces.
- * 
+ *
  */
 public class DASImpl implements DAS {
 
@@ -70,7 +70,7 @@ public class DASImpl implements DAS {
 
         Iterator i = configWrapper.getConfig().getCommand().iterator();
         while (i.hasNext()) {
-            org.apache.tuscany.das.rdb.config.Command commandConfig = 
+            org.apache.tuscany.das.rdb.config.Command commandConfig =
                 (org.apache.tuscany.das.rdb.config.Command) i.next();
             String kind = commandConfig.getKind();
             if (kind.equalsIgnoreCase("select")) {
@@ -107,17 +107,17 @@ public class DASImpl implements DAS {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.tuscany.das.rdb.CommandGroup#getApplyChangesCommand()
      */
     public ApplyChangesCommandImpl getApplyChangesCommand() {
-        ApplyChangesCommandImpl cmd = new ApplyChangesCommandImpl(configWrapper, connection);
+        ApplyChangesCommandImpl cmd = new ApplyChangesCommandImpl(configWrapper, getConnection());
         return cmd;
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.tuscany.das.rdb.CommandGroup#getCommand(java.lang.String)
      */
     public Command getCommand(String name) {
@@ -139,10 +139,10 @@ public class DASImpl implements DAS {
         }
         return connection;
     }
-    
+
     private void initializeConnection() {
         Config config = configWrapper.getConfig();
-        if (config == null || config.getConnectionInfo() == null || 
+        if (config == null || config.getConnectionInfo() == null ||
             (config.getConnectionInfo().getDataSource() == null && config.getConnectionInfo().getConnectionProperties() == null)) {
             throw new RuntimeException("No connection has been provided and no data source has been specified");
         }
@@ -150,7 +150,7 @@ public class DASImpl implements DAS {
         if(config.getConnectionInfo().getDataSource() != null && config.getConnectionInfo().getConnectionProperties() != null){
             throw new RuntimeException("Use either dataSource or ConnectionProperties. Can't use both !");
         }
-        
+
         ConnectionInfo connectionInfo = configWrapper.getConfig().getConnectionInfo();
         if(config.getConnectionInfo().getConnectionProperties() != null){
             initializeDriverManagerConnection(connectionInfo);
@@ -188,7 +188,7 @@ public class DASImpl implements DAS {
             throw new RuntimeException(e);
         }
     }
-    
+
     /**
      * Initialize a DB connection on a J2SE environment
      * For more info, see http://java.sun.com/j2se/1.3/docs/guide/jdbc/getstart/drivermanager.html
@@ -196,7 +196,7 @@ public class DASImpl implements DAS {
     private void initializeDriverManagerConnection(ConnectionInfo connectionInfo) {
 
         Connection connection = null;
-        
+
         if (connectionInfo.getConnectionProperties() == null) {
             throw new DataSourceInitializationException("No existing context and no connection properties");
         }
@@ -208,13 +208,13 @@ public class DASImpl implements DAS {
         try {
             //initialize driver and register it with DriverManager
             Class.forName(connectionInfo.getConnectionProperties().getDriverClass());
-            
+
             //prepare to initialize connection
             String databaseUrl = connectionInfo.getConnectionProperties().getDatabaseURL();
             String userName = connectionInfo.getConnectionProperties().getUserName();
             String userPassword = connectionInfo.getConnectionProperties().getPassword();
             int loginTimeout = connectionInfo.getConnectionProperties().getLoginTimeout();
-            
+
             DriverManager.setLoginTimeout(loginTimeout);
             if( (userName == null || userName.length() ==0) && (userPassword == null || userPassword.length()==0) ){
                 //no username or password suplied
@@ -222,15 +222,15 @@ public class DASImpl implements DAS {
             }else{
                 connection = DriverManager.getConnection(databaseUrl, userName, userPassword);
             }
-            
+
             if(connection == null){
                 throw new DataSourceInitializationException("Error initializing connection : null");
             }
-            
+
             connection.setAutoCommit(false);
             setConnection(connection);
-                
-            
+
+
         }catch(ClassNotFoundException cnf){
             throw new DataSourceInitializationException("JDBC Driver '" + connectionInfo.getConnectionProperties().getDriverClass() + "' not found", cnf);
         }catch(SQLException sqle){
@@ -238,7 +238,7 @@ public class DASImpl implements DAS {
         }
 
     }
-    
+
     public void releaseResources() {
 
         if (managingConnections()) {
