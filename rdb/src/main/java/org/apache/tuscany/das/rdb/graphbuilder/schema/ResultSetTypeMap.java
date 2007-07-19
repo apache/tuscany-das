@@ -6,15 +6,15 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 package org.apache.tuscany.das.rdb.graphbuilder.schema;
 
@@ -38,8 +38,8 @@ public class ResultSetTypeMap {
         // Empty Constructor
     }
 
-    /**    
-     * 
+    /**
+     *
      * @param type
      * @param isNullable
      * @return
@@ -65,30 +65,30 @@ public class ResultSetTypeMap {
                     return helper.getType("commonj.sdo", "Boolean");
                 }
                 return helper.getType("commonj.sdo", "boolean");
-                
+
 
             case Types.TINYINT:
             case Types.SMALLINT:
             case Types.INTEGER:
                 if (isNullable) {
                     return helper.getType("commonj.sdo", "IntObject");
-                } 
-                
+                }
+
                 return helper.getType("commonj.sdo", "Int");
-               
+
 
             case Types.BIGINT:
                 if (isNullable) {
                     return helper.getType("commonj.sdo", "Long");
-                } 
+                }
                 return helper.getType("commonj.sdo", "long");
 
             case Types.REAL:
                 if (isNullable) {
                     return helper.getType("commonj.sdo", "Float");
-                } 
+                }
                 return helper.getType("commonj.sdo", "float");
-                
+
 
             case Types.FLOAT:
             case Types.DOUBLE:
@@ -96,12 +96,12 @@ public class ResultSetTypeMap {
                     return helper.getType("commonj.sdo", "Double");
                 }
                 return helper.getType("commonj.sdo", "double");
-              
+
 
             case Types.BINARY:
             case Types.VARBINARY:
             case Types.LONGVARBINARY:
-                return helper.getType("commonj.sdo", "ByteArray");
+                return helper.getType("commonj.sdo", "Bytes");
 
             case Types.DATE:
             case Types.TIME:
@@ -112,7 +112,7 @@ public class ResultSetTypeMap {
                 return helper.getType("commonj.sdo", "Clob");
 
             case Types.BLOB:
-                return helper.getType("commonj.sdo", "Blob");
+                return helper.getType("commonj.sdo", "Bytes");
 
             case Types.ARRAY:
                 return helper.getType("commonj.sdo", "Array");
