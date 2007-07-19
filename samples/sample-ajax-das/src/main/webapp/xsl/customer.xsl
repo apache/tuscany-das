@@ -31,13 +31,13 @@
 						<xsl:for-each select="das:DataGraphRoot">
 							<tr>
 								<td>
-									<xsl:value-of select="CUSTOMER/@ID"/>
+									<xsl:value-of select="CUSTOMER/ID"/>
 								</td>
 								<td>
-									<xsl:value-of select="CUSTOMER/@LASTNAME"/>
+									<xsl:value-of select="CUSTOMER/LASTNAME"/>
 								</td>
 								<td>
-									<xsl:value-of select="CUSTOMER/@ADDRESS"/>
+									<xsl:value-of select="CUSTOMER/ADDRESS"/>
 								</td>
 							</tr>
 						</xsl:for-each>

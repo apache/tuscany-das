@@ -17,7 +17,7 @@
  
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:das="http://org.apache.tuscany.das.rdb/config.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<xsl:output method="html" version="1.0" encoding="Unicode" indent="yes"/>
-	<xsl:key name="companyidkey" match="/root/das:DataGraphRoot/DEPARTMENT" use="@COMPANYID"/>
+	<xsl:key name="companyidkey" match="/root/das:DataGraphRoot/DEPARTMENT" use="COMPANYID"/>
 	<xsl:template match="/root/das:DataGraphRoot">
 		<html>
 			<body>
@@ -35,10 +35,10 @@
 							
 					<tr>
 						<td>
-							<xsl:value-of select="@ID"/>
+							<xsl:value-of select="ID"/>
 						</td>
 						<td>
-							<xsl:value-of select="@NAME"/>
+							<xsl:value-of select="NAME"/>
 						</td>
 						<table border="1">
 							<tr bgcolor="#9acd32">
@@ -46,14 +46,14 @@
 								<th align="left">DEPNAME</th>
 							</tr>
 					
-							<xsl:variable name="tmp" select="@ID"/>
+							<xsl:variable name="tmp" select="ID"/>
 							<xsl:for-each select="key('companyidkey', $tmp)">
 							<tr>
 							   <td>
-								<xsl:value-of select="@ID"/>
+								<xsl:value-of select="ID"/>
 								</td>
 								<td>
-								<xsl:value-of select="@NAME"/>
+								<xsl:value-of select="NAME"/>
 								</td>
 							</tr>					
 							</xsl:for-each>

@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
  -->
- 
+
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:das="http://org.apache.tuscany.das.rdb/config.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<xsl:output method="html" version="1.0" encoding="Unicode" indent="yes"/>
 	<xsl:template match="/root/das:DataGraphRoot">
@@ -25,21 +25,20 @@
 			</body>
 		</html>
 	</xsl:template>
-	<xsl:template match="COMPANY">				
-				<table border="1">
-					<tr bgcolor="#9acd32">
-						<th align="left">COMPANYID</th>
-						<th align="left">COMPANYNAME</th>
-					</tr>
-							
-					<tr>
-						<td>
-							<xsl:value-of select="@ID"/>
-						</td>
-						<td>
-							<xsl:value-of select="@NAME"/>
-						</td>
-					</tr>
-				</table>				
-</xsl:template>
+	<xsl:template match="COMPANY">
+		<table border="1">
+			<tr bgcolor="#9acd32">
+				<th align="left">COMPANYID</th>
+				<th align="left">COMPANYNAME</th>
+			</tr>
+			<tr>
+				<td>
+					<xsl:value-of select="ID"/>
+				</td>
+				<td>
+					<xsl:value-of select="NAME"/>
+				</td>
+			</tr>
+		</table>
+	</xsl:template>
 </xsl:stylesheet>
