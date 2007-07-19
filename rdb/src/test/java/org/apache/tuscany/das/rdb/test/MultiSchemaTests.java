@@ -120,7 +120,7 @@ public class MultiSchemaTests extends DasTest{
 		//test update 
 		//System.out.println("Result:test case 2 - UPDATE");
 		changeFirstAccountBalance(das);
-		assertEquals( ((DataObject)getAccounts(das).get(0)).get("BALANCE"), 45000);
+		assertEquals( ((DataObject)getAccounts(das).get(0)).get("BALANCE"), new Integer(45000));
 		//System.out.println("******************************************");		
 	}
 	
@@ -287,8 +287,8 @@ public class MultiSchemaTests extends DasTest{
         //System.out.println("cust 1 ID :"+cust1ID);
         //System.out.println("cust 2 ID :"+cust2ID);
         // save account count
-        Integer cust1AccountCount = Integer.valueOf(cust1.getList("accounts").size());
-        Integer cust2AccountCount = Integer.valueOf(cust2.getList("accounts").size());
+        Integer cust1AccountCount = new Integer(cust1.getList("accounts").size());
+        Integer cust2AccountCount = new Integer(cust2.getList("accounts").size());
 
         // Move an account to cust1 from cust2
         DataObject account = (DataObject) cust2.getList("accounts").get(0);
@@ -341,8 +341,8 @@ public class MultiSchemaTests extends DasTest{
         Integer prod2ID = (Integer) ordDet2.get("PRODUCTID");
         
         // save order count
-        Integer order1DetDescCount = Integer.valueOf(ordDet1.getList("orderDetailsDesc").size());
-        Integer order2DetDescCount = Integer.valueOf(ordDet2.getList("orderDetailsDesc").size());
+        Integer order1DetDescCount = new Integer(ordDet1.getList("orderDetailsDesc").size());
+        Integer order2DetDescCount = new Integer(ordDet2.getList("orderDetailsDesc").size());
 
         // Move an order detail desc to ord det1 from ord det2
         DataObject orderDetailsDesc = (DataObject) ordDet2.getList("orderDetailsDesc").get(0);
@@ -563,7 +563,7 @@ public class MultiSchemaTests extends DasTest{
         DataObject root = readAll.executeQuery();
 
         DataObject firstAccount = root.getDataObject("DASTEST2.ACCOUNT[1]");
-        firstAccount.set("BALANCE", 45000);
+        firstAccount.set("BALANCE", new Integer(45000));
         
         das.applyChanges(root);
     }

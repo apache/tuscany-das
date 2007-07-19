@@ -91,7 +91,7 @@ public class StoredProcs extends DasTest {
     public void testGetCustomersAndOrder() throws Exception {
         DAS das = DAS.FACTORY.createDAS(getConfig("CustomersOrdersConfig.xml"), getConnection());
         Command read = das.createCommand("{call getCustomerAndOrders(?)}");
-        read.setParameter(1, Integer.valueOf(1));
+        read.setParameter(1, new Integer(1));
 
         DataObject root = read.executeQuery();
 
@@ -129,7 +129,7 @@ public class StoredProcs extends DasTest {
     public void testDelete() throws Exception {
         DAS das = DAS.FACTORY.createDAS(getConnection());
         Command delete = das.createCommand("{call DELETECUSTOMER(?)}");
-        delete.setParameter(1, Integer.valueOf(1));
+        delete.setParameter(1, new Integer(1));
         delete.execute();
 
         // Verify DELETE

@@ -57,7 +57,7 @@ public class InsertCommandImpl extends WriteCommandImpl {
 
     public int getGeneratedKey() {
         try {
-            return statement.getGeneratedKey();
+            return statement.getGeneratedKey().intValue();
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }

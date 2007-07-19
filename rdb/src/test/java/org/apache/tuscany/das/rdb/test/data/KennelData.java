@@ -36,9 +36,9 @@ public class KennelData extends TestDataWithExplicitColumns {
     //id omitted.  id is auto-generated.
     private static int[] columnTypes = {Types.INTEGER, Types.VARCHAR, Types.INTEGER};
 
-    private static Object[][] data = {{Integer.valueOf(100), "Small", Integer.valueOf(1)}, 
-        {Integer.valueOf(101), "Small", Integer.valueOf(1)},
-        {Integer.valueOf(102), "Large", Integer.valueOf(1)}};
+    private static Object[][] data = {{new Integer(100), "Small", new Integer(1)}, 
+        {new Integer(101), "Small", new Integer(1)},
+        {new Integer(102), "Large", new Integer(1)}};
 
     private static String[] columns = {"KNUMBER", "KIND", "OCC_COUNT"};
 

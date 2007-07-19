@@ -33,7 +33,6 @@ public class CompanyDBInit extends HttpServlet {
     private static final long serialVersionUID = -4795999792460944805L;
     private static final String dbConfigFile = "CompanyWebDBConfig.xml";
 
-    @Override
     public void init() throws ServletException {
         try {
             DBInitializer dbInitializer;

@@ -97,7 +97,7 @@ public class CommandGroupTests extends DasTest {
         DAS das = DAS.FACTORY.createDAS(getConfig("CustomersOrdersConfig.xml"), getConnection());
 
         Command read = das.getCommand("order by id");
-        read.setParameter(1, Integer.valueOf(1));
+        read.setParameter(1, new Integer(1));
         DataObject root = read.executeQuery();
 
         assertEquals("recombobulator", root.getString("ANORDER[1]/PRODUCT"));
@@ -118,7 +118,7 @@ public class CommandGroupTests extends DasTest {
         int id = root.getInt("CUSTOMER[1]/ID");
 
         Command update = das.getCommand("update customer");
-        update.setParameter(1, Integer.valueOf(id));
+        update.setParameter(1, new Integer(id));
         update.execute();
 
         // Verify update - reuse select command

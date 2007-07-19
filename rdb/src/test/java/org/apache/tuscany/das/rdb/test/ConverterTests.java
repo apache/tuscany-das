@@ -109,7 +109,7 @@ public class ConverterTests extends DasTest {
                 .createCommand("SELECT * FROM CUSTOMER LEFT JOIN ANORDER " + "ON CUSTOMER.ID = ANORDER.CUSTOMER_ID where CUSTOMER.ID = ?");
 
         // Parameterize the command
-        select.setParameter(1, Integer.valueOf(1));
+        select.setParameter(1, new Integer(1));
 
         // Get the graph
         try {

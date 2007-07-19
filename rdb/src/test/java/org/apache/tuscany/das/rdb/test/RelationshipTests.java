@@ -98,8 +98,8 @@ public class RelationshipTests extends DasTest {
         Integer cust1ID = (Integer) cust1.get("ID");
         Integer cust2ID = (Integer) cust2.get("ID");
         // save order count
-        Integer cust1OrderCount = Integer.valueOf(cust1.getList("orders").size());
-        Integer cust2OrderCount = Integer.valueOf(cust2.getList("orders").size());
+        Integer cust1OrderCount = new Integer(cust1.getList("orders").size());
+        Integer cust2OrderCount = new Integer(cust2.getList("orders").size());
 
         // Move an order to cust1 from cust2
         DataObject order = (DataObject) cust2.getList("orders").get(0);
@@ -178,7 +178,7 @@ public class RelationshipTests extends DasTest {
         // Move an order to cust1 from cust2
         DataObject order = (DataObject) cust2.getList("orders").get(0);
         cust1.getList("orders").add(order);
-        order.setInt("CUSTOMER_ID", cust1ID);
+        order.setInt("CUSTOMER_ID", cust1ID.intValue());
        
         try {
             das.applyChanges(root);
@@ -205,7 +205,7 @@ public class RelationshipTests extends DasTest {
         // Move an order to cust1 from cust2
         DataObject order = root.createDataObject("ANORDER");
         order.setInt("ID", 500);
-        order.setInt("CUSTOMER_ID", cust1ID);
+        order.setInt("CUSTOMER_ID", cust1ID.intValue());
         cust1.getList("orders").add(order);       
        
         try {

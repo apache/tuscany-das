@@ -207,7 +207,7 @@ public class Statement {
         if (getConnection().useGetGeneratedKeys()) {
             ResultSet rs = preparedStatement.getGeneratedKeys();
             if (rs.next()) {
-                return Integer.valueOf(rs.getInt(1));
+                return new Integer(rs.getInt(1));
             }
         }
 

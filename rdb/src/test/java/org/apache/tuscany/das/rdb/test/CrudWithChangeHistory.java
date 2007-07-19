@@ -197,7 +197,7 @@ public class CrudWithChangeHistory extends DasTest {
         DAS das = DAS.FACTORY.createDAS(getConfig("CustomerConfig.xml"), getConnection());
         // Read customer with particular ID
         Command select = das.getCommand("getCustomer");
-        select.setParameter(1, 1);
+        select.setParameter(1, new Integer(1));
         DataObject root = select.executeQuery();
         assertFalse(root.get("CUSTOMER[1]/LASTNAME").equals("Pavick"));
 
@@ -268,7 +268,7 @@ public class CrudWithChangeHistory extends DasTest {
 
         // Create a new customer
         DataObject cust4 = root.createDataObject("CUSTOMER");
-        cust4.set("ID", Integer.valueOf(100));
+        cust4.set("ID", new Integer(100));
         cust4.set("ADDRESS", "5528 Wells Fargo Drive");
         cust4.set("LASTNAME", "Gerkin");
 
@@ -277,23 +277,23 @@ public class CrudWithChangeHistory extends DasTest {
 
         // Verify deletes
         select = das.createCommand("Select * from CUSTOMER where ID = ?");
-        select.setParameter(1, Integer.valueOf(cust2ID));
+        select.setParameter(1, new Integer(cust2ID));
         root = select.executeQuery();
         assertTrue(root.getList("CUSTOMER").isEmpty());
         // reparameterize same command
-        select.setParameter(1, Integer.valueOf(cust3ID));
+        select.setParameter(1, new Integer(cust3ID));
         root = select.executeQuery();
         assertTrue(root.getList("CUSTOMER").isEmpty());
 
         // verify insert
-        select.setParameter(1, Integer.valueOf(100));
+        select.setParameter(1, new Integer(100));
         root = select.executeQuery();
         assertEquals(1, root.getList("CUSTOMER").size());
         assertEquals("5528 Wells Fargo Drive", root.getString("CUSTOMER[1]/ADDRESS"));
         assertEquals("Gerkin", root.getString("CUSTOMER[1]/LASTNAME"));
 
         // verify update
-        select.setParameter(1, Integer.valueOf(cust1ID));
+        select.setParameter(1, new Integer(cust1ID));
         root = select.executeQuery();
         assertEquals("Pavick", root.getString("CUSTOMER[1]/LASTNAME"));
 
@@ -346,7 +346,7 @@ public class CrudWithChangeHistory extends DasTest {
         try {
             das.applyChanges(root);
         } catch (RuntimeException ex) {
-            assertTrue(ex.getMessage().contains("changed in the DataGraph but is not present in the Config"));
+            assertTrue(ex.getMessage().indexOf("changed in the DataGraph but is not present in the Config") >= 0);
         }
 
     }
@@ -365,7 +365,7 @@ public class CrudWithChangeHistory extends DasTest {
         try {
             das.applyChanges(root);
         } catch (RuntimeException ex) {
-            assertTrue(ex.getMessage().contains("changed in the DataGraph but is not present in the Config"));
+            assertTrue(ex.getMessage().indexOf("changed in the DataGraph but is not present in the Config") >= 0);
         }
 
     }
@@ -387,7 +387,7 @@ public class CrudWithChangeHistory extends DasTest {
         try {
             das.applyChanges(root);
         } catch (RuntimeException ex) {
-            assertTrue(ex.getMessage().contains("changed in the DataGraph but is not present in the Config"));
+            assertTrue(ex.getMessage().indexOf("changed in the DataGraph but is not present in the Config") >= 0);
         }
 
     }

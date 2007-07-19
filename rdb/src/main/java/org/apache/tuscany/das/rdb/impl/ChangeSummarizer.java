@@ -32,6 +32,7 @@ import org.apache.tuscany.das.rdb.config.Table;
 import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
 import org.apache.tuscany.das.rdb.config.wrapper.RelationshipWrapper;
 import org.apache.tuscany.das.rdb.config.wrapper.TableWrapper;
+import org.apache.tuscany.das.rdb.util.CollectionsUtil;
 import org.apache.tuscany.sdo.impl.ChangeSummaryImpl;
 
 import commonj.sdo.ChangeSummary;
@@ -161,7 +162,7 @@ public class ChangeSummarizer {
             TableWrapper tw = new TableWrapper(t);
             RelationshipWrapper rw = new RelationshipWrapper(rel);
             if ((rel.getForeignKeyTable().equals(t.getTableName())) 
-                    && (Collections.disjoint(tw.getPrimaryKeyProperties(), rw.getForeignKeys()))) {
+                    && (CollectionsUtil.disjoint(tw.getPrimaryKeyProperties(), rw.getForeignKeys()))) {
                 return true;
             }
 

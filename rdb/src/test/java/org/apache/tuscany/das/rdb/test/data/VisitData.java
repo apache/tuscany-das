@@ -35,9 +35,9 @@ public class VisitData extends TestDataWithExplicitColumns {
     private static int[] columnTypes = {Types.TIMESTAMP, Types.TIMESTAMP, Types.INTEGER};
 
     private static Object[][] data = {
-        {getTimestamp("2006-10-20 00:00:00.0"), getTimestamp("2006-10-22 00:00:00.0"), Integer.valueOf(1)},
-        {getTimestamp("2006-10-20 00:00:00.0"), getTimestamp("2006-10-22 00:00:00.0"), Integer.valueOf(1)},
-        {getTimestamp("2006-10-20 00:00:00.0"), getTimestamp("2006-10-22 00:00:00.0"), Integer.valueOf(1)}};
+        {getTimestamp("2006-10-20 00:00:00.0"), getTimestamp("2006-10-22 00:00:00.0"), new Integer(1)},
+        {getTimestamp("2006-10-20 00:00:00.0"), getTimestamp("2006-10-22 00:00:00.0"), new Integer(1)},
+        {getTimestamp("2006-10-20 00:00:00.0"), getTimestamp("2006-10-22 00:00:00.0"), new Integer(1)}};
 
     private static String[] columns = {"CHECK_IN", "CHECK_OUT", "OCC_COUNT"};
 

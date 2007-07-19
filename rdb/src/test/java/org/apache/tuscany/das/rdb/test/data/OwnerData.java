@@ -36,9 +36,9 @@ public class OwnerData extends TestDataWithExplicitColumns {
     //id omitted.  id is auto-generated.
     private static int[] columnTypes = {Types.VARCHAR, Types.VARCHAR, Types.INTEGER};
 
-    private static Object[][] data = {{"Fanny", "222-2222", Integer.valueOf(1)}, 
-        {"Manny", "333-3333", Integer.valueOf(1)},
-        {"Sammy", "444-4444", Integer.valueOf(1)}};
+    private static Object[][] data = {{"Fanny", "222-2222", new Integer(1)}, 
+        {"Manny", "333-3333", new Integer(1)},
+        {"Sammy", "444-4444", new Integer(1)}};
 
     private static String[] columns = {"NAME", "CONTACT_PHONE", "OCC_COUNT"};
 

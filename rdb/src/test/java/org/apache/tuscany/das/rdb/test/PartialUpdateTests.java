@@ -192,7 +192,7 @@ public class PartialUpdateTests extends DasTest {
 
         // Create a new customer
         DataObject newCust = root.createDataObject("CUSTOMER");
-        newCust.set("ID", Integer.valueOf(200));
+        newCust.set("ID", new Integer(200));
         // Purposely do not set lastname to let it default to 'Garfugengheist'
         // newCust.set("LASTNAME", "Gerkin" );
 
@@ -219,7 +219,7 @@ public class PartialUpdateTests extends DasTest {
 
         // Create a new customer
         DataObject newCust = root.createDataObject("CUSTOMER");
-        newCust.set("ID", Integer.valueOf(300));
+        newCust.set("ID", new Integer(300));
         newCust.set("ADDRESS", "5528 Wells Fargo Drive");
         newCust.set("LASTNAME", "Gerkin" );
 
@@ -244,7 +244,7 @@ public class PartialUpdateTests extends DasTest {
 
         // Create a new customer
         DataObject newCust = root.createDataObject("CUSTOMER");
-        newCust.set("ID", Integer.valueOf(100));
+        newCust.set("ID", new Integer(100));
         newCust.set("ADDRESS", "5528 Wells Fargo Drive");
         // Purposely do not set lastname to let it default to 'Garfugengheist'
         // newCust.set("LASTNAME", "Gerkin" );

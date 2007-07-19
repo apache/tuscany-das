@@ -95,8 +95,8 @@ public class CompoundKeyRelationshipTests extends DasTest {
         Integer prod2ID = (Integer) ordDet2.get("PRODUCTID");
         
         // save order count
-        Integer order1DetDescCount = Integer.valueOf(ordDet1.getList("orderDetailsDesc").size());
-        Integer order2DetDescCount = Integer.valueOf(ordDet2.getList("orderDetailsDesc").size());
+        Integer order1DetDescCount = new Integer(ordDet1.getList("orderDetailsDesc").size());
+        Integer order2DetDescCount = new Integer(ordDet2.getList("orderDetailsDesc").size());
 
         // Move an order detail desc to ord det1 from ord det2
         DataObject orderDetailsDesc = (DataObject) ordDet2.getList("orderDetailsDesc").get(0);
@@ -142,7 +142,7 @@ public class CompoundKeyRelationshipTests extends DasTest {
         // Move an order det desc to ord det1 from ord det2
         DataObject orderDetDesc = (DataObject) ordDet2.getList("orderDetailsDesc").get(0);
         ordDet1.getList("orderDetailsDesc").add(orderDetDesc);
-        orderDetDesc.setInt("ORDERID", ord1ID);
+        orderDetDesc.setInt("ORDERID", ord1ID.intValue());
        
         try {
             das.applyChanges(root);
@@ -172,7 +172,7 @@ public class CompoundKeyRelationshipTests extends DasTest {
         // Create an order det desc for ord det1
         DataObject orderDetDesc = root.createDataObject("ORDERDETAILSDESC");
         orderDetDesc.setInt("ID", 500);
-        orderDetDesc.setInt("ORDERID", ord1ID);
+        orderDetDesc.setInt("ORDERID", ord1ID.intValue());
         ordDet1.getList("orderDetailsDesc").add(orderDetDesc);       
        
         try {

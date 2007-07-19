@@ -139,8 +139,8 @@ public class DatabaseSetup extends TestSetup {
                 s.execute(statements[i]);
             } catch (SQLException e) {
                 // If the table does not exist then ignore the exception on drop
-                if ((!e.getMessage().contains("does not exist")) && (!e.getMessage().contains("Unknown table")) 
-                        && (!e.getMessage().contains("42704"))) {
+                if ((!(e.getMessage().indexOf("does not exist") >= 0)) && (!(e.getMessage().indexOf("Unknown table") >= 0)) 
+                        && (!(e.getMessage().indexOf("42704") >= 0))) {
                     throw new RuntimeException(e);
                 }
             }
@@ -170,8 +170,8 @@ public class DatabaseSetup extends TestSetup {
                 s.execute(statements[i]);
             } catch (SQLException e) {
                 // If the table does not exist then ignore the exception on drop
-                if ((!e.getMessage().contains("does not exist")) && (!e.getMessage().contains("Unknown table")) 
-                        && (!e.getMessage().contains("42704"))) {
+                if ((!(e.getMessage().indexOf("does not exist") >= 0)) && (!(e.getMessage().indexOf("Unknown table") >= 0))
+                        && (!(e.getMessage().indexOf("42704") >= 0))) {
                     throw new RuntimeException(e);
                 }
             }
@@ -211,7 +211,7 @@ public class DatabaseSetup extends TestSetup {
                 s.execute(statements[i]);
             } catch (SQLException e) {
                 // If the proc does not exist then ignore the exception on drop
-                if (!e.getMessage().contains("does not exist") && !e.getMessage().contains("42704")) {
+                if (!(e.getMessage().indexOf("does not exist") >= 0) && !(e.getMessage().indexOf("42704") >= 0)) {
                     throw new RuntimeException(e);
                 }
             }
@@ -498,7 +498,7 @@ public class DatabaseSetup extends TestSetup {
     }
 
     protected String getStringColumn(String name, int length) {
-        return name + ' ' + stringType + "(" + Integer.valueOf(length).toString() + ")";
+        return name + ' ' + stringType + "(" + new Integer(length).toString() + ")";
     }
 
     protected String getIntegerColumn(String name) {
@@ -510,8 +510,8 @@ public class DatabaseSetup extends TestSetup {
     }
 
     protected String getDecimalColumn(String name, int size1, int size2) {
-        return name + ' ' + decimalType + "(" + Integer.valueOf(size1).toString() + ',' 
-            + Integer.valueOf(size2).toString() + ")";
+        return name + ' ' + decimalType + "(" + new Integer(size1).toString() + ',' 
+            + new Integer(size2).toString() + ")";
     }
 
     protected String getFloatColumn(String name) {

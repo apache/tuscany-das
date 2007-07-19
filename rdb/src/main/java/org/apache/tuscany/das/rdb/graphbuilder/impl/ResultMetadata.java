@@ -86,7 +86,7 @@ public class ResultMetadata {
             }
             String columnName = resultSetShape.getColumnName(i);
 
-            if (columnName.contains("_ID")) {
+            if (columnName.indexOf("_ID") >= 0) {
             	String colName = "";
             	if(this.configWrapper.getConfig().isDatabaseSchemaNameSupported()){
             		colName = schemaName+"."+columnName;

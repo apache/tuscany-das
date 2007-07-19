@@ -33,6 +33,7 @@ import org.apache.tuscany.das.rdb.config.wrapper.RelationshipWrapper;
 import org.apache.tuscany.das.rdb.config.wrapper.TableWrapper;
 import org.apache.tuscany.das.rdb.impl.InsertCommandImpl;
 import org.apache.tuscany.das.rdb.impl.ParameterImpl;
+import org.apache.tuscany.das.rdb.util.CollectionsUtil;
 
 import commonj.sdo.DataObject;
 import commonj.sdo.Property;
@@ -169,7 +170,7 @@ public final class InsertGenerator extends BaseGenerator {
                    
             RelationshipWrapper rw = new RelationshipWrapper(rel);
             if ((rel.getForeignKeyTable().equals(tw.getTableName())) 
-                    && (Collections.disjoint(tw.getPrimaryKeyProperties(), rw.getForeignKeys()))) {
+                    && (CollectionsUtil.disjoint(tw.getPrimaryKeyProperties(), rw.getForeignKeys()))) {
                 return true;
             }
         }

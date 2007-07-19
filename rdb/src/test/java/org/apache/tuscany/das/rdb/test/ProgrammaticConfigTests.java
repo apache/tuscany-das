@@ -64,7 +64,7 @@ public class ProgrammaticConfigTests extends DasTest {
 
         // Read a book instance
         Command select = das.getCommand("select book by id");
-        select.setParameter(1, Integer.valueOf(1));
+        select.setParameter(1, new Integer(1));
         DataObject root = select.executeQuery();
         DataObject book = root.getDataObject("BOOK[1]");
         // Change a field to mark the instance 'dirty'
@@ -164,7 +164,7 @@ public class ProgrammaticConfigTests extends DasTest {
 
         DAS das = DAS.FACTORY.createDAS(helper.getConfig(), getConnection());
         Command select = das.createCommand(statement);
-        select.setParameter(1, Integer.valueOf(1));
+        select.setParameter(1, new Integer(1));
 
         DataObject root = select.executeQuery();
 
@@ -176,7 +176,7 @@ public class ProgrammaticConfigTests extends DasTest {
         das.applyChanges(root);
 
         //Verify
-        select.setParameter(1, Integer.valueOf(1001));
+        select.setParameter(1, new Integer(1001));
         root = select.executeQuery();
         assertEquals("Ant Colonies of the Old World", root.getString("Book[1]/NAME"));
 
@@ -195,7 +195,7 @@ public class ProgrammaticConfigTests extends DasTest {
         helper.addColumn(table, "NAME", "bookName");
         DAS das = DAS.FACTORY.createDAS(helper.getConfig(), getConnection());
         Command select = das.createCommand(statement);
-        select.setParameter(1, Integer.valueOf(1));
+        select.setParameter(1, new Integer(1));
 
         DataObject root = select.executeQuery();
 
@@ -207,7 +207,7 @@ public class ProgrammaticConfigTests extends DasTest {
         das.applyChanges(root);
 
         //Verify
-        select.setParameter(1, Integer.valueOf(1001));
+        select.setParameter(1, new Integer(1001));
         root = select.executeQuery();
         assertEquals("Ant Colonies of the Old World", root.getString("Book[1]/bookName"));
     }

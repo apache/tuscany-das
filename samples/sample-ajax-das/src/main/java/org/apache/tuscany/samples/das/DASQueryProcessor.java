@@ -165,11 +165,11 @@ public class DASQueryProcessor extends ServiceProcessor{
 				root = read.executeQuery();
 			}
 			else{
-				Vector<String> batch = formQueries(qry);//separate {}{} in different queries
+				Vector batch = formQueries(qry);//separate {}{} in different queries
 
 				if(batch != null){
 					for(int i=0; i<batch.size(); i++){
-						String curQry = batch.get(i);
+						String curQry = (String) batch.get(i);
 						if(curQry.substring(0, 6).equalsIgnoreCase("select")){
 							read = das.createCommand(curQry);
 							root = read.executeQuery();
@@ -188,14 +188,14 @@ public class DASQueryProcessor extends ServiceProcessor{
 			String methodName = "get"+qry; //some convention to form method name instead of lenghtening code
 
 			Method commandMethod = this.getClass().getMethod(methodName, new Class[]{String.class});
-			root = (DataObject)commandMethod.invoke(this, qry);
+			root = (DataObject)commandMethod.invoke(this, new Object[] {qry});
         }
         return root;
 	}
 
 	/* Separate batch of queries into vector of queries - for adhoc*/
-	private Vector<String> formQueries(String qry){
-		Vector<String> batch = new Vector<String>();
+	private Vector formQueries(String qry){
+		Vector batch = new Vector();
 		StringTokenizer strTok = new StringTokenizer(qry, "{");
 		while(strTok.hasMoreTokens()){
 			String curQry = strTok.nextToken();

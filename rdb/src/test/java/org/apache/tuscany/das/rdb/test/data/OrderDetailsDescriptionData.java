@@ -30,12 +30,12 @@ public class OrderDetailsDescriptionData extends TestData {
     // PRIMARY KEY ID, FOREIGN KEY (ORDERID, PRODUCTID))
 
     protected static Object[][] orderDetailsDescriptionData = 
-    {   {Integer.valueOf(1), Integer.valueOf(1), Integer.valueOf(1), "Descr 1,1,1"},
-        {Integer.valueOf(2), Integer.valueOf(1), Integer.valueOf(1), "Descr 2,1,1"}, 
-        {Integer.valueOf(3), Integer.valueOf(1), Integer.valueOf(2), "Descr 3,1,2"},
-        {Integer.valueOf(4), Integer.valueOf(1), Integer.valueOf(2), "Descr 4,1,2"},
-        {Integer.valueOf(5), Integer.valueOf(2), Integer.valueOf(1), "Descr 6,2,1"},
-        {Integer.valueOf(6), Integer.valueOf(2), Integer.valueOf(2), "Descr 6,2,2"}};
+    {   {new Integer(1), new Integer(1), new Integer(1), "Descr 1,1,1"},
+        {new Integer(2), new Integer(1), new Integer(1), "Descr 2,1,1"}, 
+        {new Integer(3), new Integer(1), new Integer(2), "Descr 3,1,2"},
+        {new Integer(4), new Integer(1), new Integer(2), "Descr 4,1,2"},
+        {new Integer(5), new Integer(2), new Integer(1), "Descr 6,2,1"},
+        {new Integer(6), new Integer(2), new Integer(2), "Descr 6,2,2"}};
 
     public OrderDetailsDescriptionData(Connection c) {
         super(c, orderDetailsDescriptionData);

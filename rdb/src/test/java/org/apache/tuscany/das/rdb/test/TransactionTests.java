@@ -62,12 +62,12 @@ public class TransactionTests extends DasTest {
         //Create two identical customers.  Will force insert error on dup key
         
         DataObject custA = root.createDataObject("CUSTOMER");
-        custA.set("ID", Integer.valueOf(100));
+        custA.set("ID", new Integer(100));
         custA.set("ADDRESS", "5528 Wells Fargo Drive");
         custA.set("LASTNAME", "Gerkin");
        
         DataObject custB = root.createDataObject("CUSTOMER");
-        custB.set("ID", Integer.valueOf(100));
+        custB.set("ID", new Integer(100));
         custB.set("ADDRESS", "5528 Wells Fargo Drive");
         custB.set("LASTNAME", "Gerkin");
         try {

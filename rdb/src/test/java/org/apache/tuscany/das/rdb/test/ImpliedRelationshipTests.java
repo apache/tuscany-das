@@ -90,9 +90,9 @@ public class ImpliedRelationshipTests extends DasTest {
         // Create a new Order and add to customer1
         DataObject order = root.createDataObject("ANORDER");
 
-        order.set("ID", Integer.valueOf(99));
+        order.set("ID", new Integer(99));
         order.set("PRODUCT", "The 99th product");
-        order.set("QUANTITY", Integer.valueOf(99));
+        order.set("QUANTITY", new Integer(99));
         cust.getList("ANORDER").add(order);
 
         assertEquals(custOrderCount + 1, cust.getList("ANORDER").size());
@@ -104,7 +104,7 @@ public class ImpliedRelationshipTests extends DasTest {
         select = das.createCommand("SELECT * FROM CUSTOMER LEFT JOIN ANORDER ON CUSTOMER.ID = ANORDER.CUSTOMER_ID "
                  + "where CUSTOMER.ID = ?");
 
-        select.setParameter(1, Integer.valueOf(custID));
+        select.setParameter(1, new Integer(custID));
         root = select.executeQuery();
 
         assertEquals(custOrderCount + 1, root.getList("CUSTOMER[1]/ANORDER").size());

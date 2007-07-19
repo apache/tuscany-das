@@ -94,7 +94,7 @@ public class GeneratedId extends DasTest {
         insert.setParameter(1, "AAA Rental");
         insert.execute();
         //       Integer key = (Integer) insert.getParameterValue("generated_key");
-        Integer key = (Integer) insert.getGeneratedKey();
+        Integer key = new Integer(insert.getGeneratedKey());
 
         // Verify insert
         Command select = das.createCommand("Select ID, NAME from COMPANY where ID = ?");

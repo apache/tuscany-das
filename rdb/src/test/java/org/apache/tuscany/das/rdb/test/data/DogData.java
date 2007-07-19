@@ -37,9 +37,9 @@ public class DogData extends TestDataWithExplicitColumns {
     //id and owner_id omitted.  id is auto-generated. owner_id is filled in by DogOwner data
     private static int[] columnTypes = {Types.VARCHAR, Types.VARCHAR, Types.INTEGER};
 
-    private static Object[][] data = {{"Fido", "Mutt", Integer.valueOf(1)}, 
-        {"Max", "German Shepherd", Integer.valueOf(1)},
-        {"Saddie", "Collie", Integer.valueOf(1)}};
+    private static Object[][] data = {{"Fido", "Mutt", new Integer(1)}, 
+        {"Max", "German Shepherd", new Integer(1)},
+        {"Saddie", "Collie", new Integer(1)}};
 
     private static String[] columns = {"NAME", "BREED", "OCC_COUNT"};
 

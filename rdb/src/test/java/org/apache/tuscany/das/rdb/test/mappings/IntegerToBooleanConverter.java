@@ -34,9 +34,9 @@ public class IntegerToBooleanConverter implements Converter {
     public Object getColumnValue(Object propertyData) {
         Boolean value = (Boolean) propertyData;
         if (value.booleanValue()) {
-            return Integer.valueOf(1);
+            return new Integer(1);
         } 
-        return Integer.valueOf(0);
+        return new Integer(0);
     }
     
 
