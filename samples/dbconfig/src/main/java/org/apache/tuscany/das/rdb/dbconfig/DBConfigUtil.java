@@ -22,9 +22,9 @@ package org.apache.tuscany.das.rdb.dbconfig;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.tuscany.sdo.util.SDOUtil;
-
+import commonj.sdo.helper.HelperContext;
 import commonj.sdo.helper.XMLHelper;
+import commonj.sdo.impl.HelperProvider;
 
 /**
  * Config util provides config-related utilities such as loading a Config
@@ -43,8 +43,9 @@ public final class DBConfigUtil {
                     + "Possibly caused by an incorrect config xml file name");
         }
 
-        SDOUtil.registerStaticTypes(DbconfigFactory.class);
-        XMLHelper helper = XMLHelper.INSTANCE;
+        HelperContext context = HelperProvider.getDefaultContext();
+        DbconfigFactory.INSTANCE.register(context);
+        XMLHelper helper = context.getXMLHelper();
 
         try {
             return (DBConfig) helper.load(dbconfigStream).getRootObject();

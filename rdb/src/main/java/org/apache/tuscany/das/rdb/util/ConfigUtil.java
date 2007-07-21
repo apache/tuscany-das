@@ -23,9 +23,10 @@ import java.io.InputStream;
 
 import org.apache.tuscany.das.rdb.config.Config;
 import org.apache.tuscany.das.rdb.config.ConfigFactory;
-import org.apache.tuscany.sdo.util.SDOUtil;
 
+import commonj.sdo.helper.HelperContext;
 import commonj.sdo.helper.XMLHelper;
+import commonj.sdo.impl.HelperProvider;
 
 /**
  * Config util provides config-related utilities such as loading a Config
@@ -45,8 +46,9 @@ public final class ConfigUtil {
                     + "Possibly caused by an incorrect config xml file name");
         }
 
-        SDOUtil.registerStaticTypes(ConfigFactory.class);
-        XMLHelper helper = XMLHelper.INSTANCE;
+        HelperContext context = HelperProvider.getDefaultContext();
+        ConfigFactory.INSTANCE.register(context);
+        XMLHelper helper = context.getXMLHelper();
 
         try {
             return (Config) helper.load(configStream).getRootObject();
