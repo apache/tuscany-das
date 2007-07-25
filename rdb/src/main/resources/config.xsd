@@ -37,7 +37,15 @@
       </xsd:sequence>
       <xsd:attribute name="uri" type="xsd:string"/>
       <xsd:attribute name="dataObjectModel" type="xsd:string"/>
-      <xsd:attribute name="databaseSchemaNameSupported" type="xsd:boolean" default="false"/>      
+      <xsd:attribute name="databaseSchemaNameSupported" type="xsd:boolean" default="false"/>
+      <xsd:attribute name="generatedKeysSupported">
+         <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="true"/>
+                <xsd:enumeration value="false"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+      </xsd:attribute>
    </xsd:complexType>
 
    <xsd:complexType name="ConnectionProperties">

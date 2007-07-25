@@ -204,7 +204,7 @@ public class Statement {
 
     public Integer getGeneratedKey() throws SQLException {
 
-        if (getConnection().useGetGeneratedKeys()) {
+    	if (getConnection().isGeneratedKeysSupported()) {
             ResultSet rs = preparedStatement.getGeneratedKeys();
             if (rs.next()) {
                 return new Integer(rs.getInt(1));

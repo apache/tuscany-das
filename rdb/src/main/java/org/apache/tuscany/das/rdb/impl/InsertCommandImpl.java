@@ -57,7 +57,11 @@ public class InsertCommandImpl extends WriteCommandImpl {
 
     public int getGeneratedKey() {
         try {
-            return statement.getGeneratedKey().intValue();
+        	Integer key = statement.getGeneratedKey();
+        	if(key != null)
+        		return key.intValue();
+        	else
+        		throw new RuntimeException("Could not obtain generated key!");
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }

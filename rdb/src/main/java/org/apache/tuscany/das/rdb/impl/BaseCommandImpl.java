@@ -24,27 +24,39 @@ import org.apache.tuscany.das.rdb.config.Config;
 import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
 
 public abstract class BaseCommandImpl {
-
     protected MappingWrapper configWrapper = new MappingWrapper();
 
+    //when no config in method params, useGetGeneratedKeys will default to True
+    //as DBMS metadata method is not reliable in all cases
     public void setConnection(Connection connection) {
         setConnection(new ConnectionImpl(connection));
     }
 
     public void setConnection(Connection connection, Config config) {
         boolean managed = true;
-        if (config != null && config.getConnectionInfo() != null) {
-            managed = config.getConnectionInfo().isManagedtx();
+        String generatedKeysSupported = null;
+        
+        if (config != null){
+        	if(config.getConnectionInfo() != null) {
+        		managed = config.getConnectionInfo().isManagedtx();
+        	}
+        
+            generatedKeysSupported = config.getGeneratedKeysSupported();
+        	
+        	setConnection(connection, managed, generatedKeysSupported);
         }
-        setConnection(connection, managed);
+        else{
+        	setConnection(connection);
+        }
     }
 
-    public void setConnection(Connection connection, boolean manageTransaction) {
+    public void setConnection(Connection connection, boolean manageTransaction, String generatedKeysSupported) {
         ConnectionImpl c = new ConnectionImpl(connection);
         c.setManageTransactions(manageTransaction);
+        c.setGeneratedKeysSupported(generatedKeysSupported);
         setConnection(c);
     }
-
+    
     public abstract void setConnection(ConnectionImpl c);
 
 }

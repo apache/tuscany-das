@@ -36,19 +36,12 @@ public class ConnectionImpl {
 
     private boolean managingTransaction = true;
 
-    private final boolean useGetGeneratedKeys;
-
+    private String generatedKeysSupported = null;
+    
     public ConnectionImpl(Connection connection) {
         this.connection = connection;
 
         try {
-            DatabaseMetaData dbmd = connection.getMetaData();
-
-            if (dbmd.getDatabaseProductName().indexOf("Oracle") >= 0  || dbmd.getDatabaseProductName().indexOf("PostgreSQL") >= 0) {
-                this.useGetGeneratedKeys = false;
-            } else {
-                this.useGetGeneratedKeys = true;
-            }
             if (connection.getAutoCommit()) {
                 throw new RuntimeException("AutoCommit must be off");
             }
@@ -62,6 +55,45 @@ public class ConnectionImpl {
         return connection;
     }
 
+    public String getGeneratedKeysSupported() {
+        return this.generatedKeysSupported;
+    }
+    
+    public void setGeneratedKeysSupported(String useGetGeneratedKeys){
+        this.generatedKeysSupported = useGetGeneratedKeys;
+    }    
+    
+    public boolean isGeneratedKeysSupported() {
+        try{
+            if(this.generatedKeysSupported == null){
+                DatabaseMetaData dbmsMetadata = this.connection.getMetaData();
+                boolean supportsGetGeneratedKeys = dbmsMetadata.supportsGetGeneratedKeys();
+                if(supportsGetGeneratedKeys){
+                    this.generatedKeysSupported = "true";
+                }
+                //currently DERBY partially supports this feature and thus returns FALSE,
+                //this hardcoding is needed as the partial support is enough for DAS
+                //we can remove this later, when DERBY change the behaviour of it's "supportsGetGeneratedKeys"
+                else if(dbmsMetadata.getDatabaseProductName().indexOf("Derby") > 0){                    
+                    this.generatedKeysSupported = "true";
+                }
+                else{
+                    this.generatedKeysSupported = "false";
+                }
+            }           
+        }catch(Exception e){//can be from supportsGetGeneratedKeys or due to absense of supportsGetGeneratedKeys
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("exception setiing useGetGeneratedKeys false");
+            }
+            this.generatedKeysSupported = "false";
+        }
+        
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("returning useGetGeneratedKeys():"+ this.generatedKeysSupported);
+        }
+        return Boolean.parseBoolean(this.generatedKeysSupported);
+    }
+    
     public void cleanUp() {
         try {
             if (managingTransaction) {
@@ -91,9 +123,10 @@ public class ConnectionImpl {
     public PreparedStatement prepareStatement(String queryString, String[] returnKeys) throws SQLException {
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Preparing Statement: " + queryString);
+            this.logger.debug("Boolean value for use gen key: " + this.generatedKeysSupported);
         }
 
-        if (useGetGeneratedKeys) {
+        if (isGeneratedKeysSupported()) {
             return connection.prepareStatement(queryString, Statement.RETURN_GENERATED_KEYS);
         } else if (returnKeys.length > 0) {
             return connection.prepareStatement(queryString, returnKeys);
@@ -101,7 +134,7 @@ public class ConnectionImpl {
 
         return connection.prepareStatement(queryString);
     }
-
+    
     public PreparedStatement preparePagedStatement(String queryString) throws SQLException {
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Preparing Statement: " + queryString);
@@ -117,9 +150,5 @@ public class ConnectionImpl {
 
     public CallableStatement prepareCall(String queryString) throws SQLException {
         return connection.prepareCall(queryString);
-    }
-
-    public boolean useGetGeneratedKeys() {
-        return this.useGetGeneratedKeys;
     }
 }
