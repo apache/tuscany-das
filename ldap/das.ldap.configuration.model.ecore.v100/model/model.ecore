@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="model"
+    nsURI="http://org.apache.tuscany/das.ldap.configuration.model.ecore.v100" nsPrefix="tuscany">
+  <eClassifiers xsi:type="ecore:EClass" name="Configuration">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="host" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="localhost"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="port" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="10389"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="initialContextFactory"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" defaultValueLiteral="org.apache.directory.server.core.jndi.CoreContextFactory"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dasPartitionName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="das"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="schemaPartitionName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="schema"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="securityPrincipal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="uid=admin,ou=system"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="securityAuthenticationType"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" defaultValueLiteral="simple"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="securityCredentials" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="secret"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nlog4jConfigurationFilePath"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" defaultValueLiteral="src/test/resources/log4j.properties"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="embedded" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DASMeta">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="supportedSchemas" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" defaultValueLiteral="localhost"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="0" iD="true"/>
+  </eClassifiers>
+</ecore:EPackage>

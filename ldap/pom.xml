@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.apache.tuscany.das</groupId>
+        <artifactId>tuscany-das</artifactId>
+        <version>1.0-incubating-SNAPSHOT</version>
+    </parent>
+	<artifactId>tuscany-das-ldap</artifactId>
+	<version>1.0-incubating-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencyManagement>
+		<dependencies>
+
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>3.8.1</version>
+				<scope>compile</scope>
+			</dependency>
+
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>ant</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>codegen</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>codegen-ecore</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>codegen-ecore-ui</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>codegen-ui</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>common</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>commonj-sdo</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>common-ui</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>converter</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>ecore</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>ecore-change</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>ecore-change-edit</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>ecore-edit</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>ecore-sdo</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>ecore-sdo-edit</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>ecore-xmi</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>edit</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>edit-ui</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>emf</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>exporter</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>importer</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>importer-ecore</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>importer-java</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>importer-rose</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>mapping</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>mapping-ecore2ecore</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>mapping-ecore2ecore-editor</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>mapping-ecore2xml</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>mapping-ecore2xml-ui</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>mapping-ui</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>mapping-xsd2ecore</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.emf</groupId>
+				<artifactId>mapping-xsd2ecore-editor</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.xsd</groupId>
+				<artifactId>ecore-exporter</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.xsd</groupId>
+				<artifactId>ecore-importer</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.xsd</groupId>
+				<artifactId>edit</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.xsd</groupId>
+				<artifactId>xsd</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+	
+	<repositories>
+		<repository>
+			<id>emf-maven-mirror</id>
+			<url>
+				http://mirrors.cat.pdx.edu/eclipse/tools/emf/maven2/
+			</url>
+		</repository>
+	</repositories>
+	
+  <modules>
+    <module>das.ldap</module>
+    <module>das.ldap.constants</module>
+    <module>das.ldap.configuration.model.v100</module>
+    <module>das.ldap.configuration.model.ecore.v100</module>
+  </modules>
+</project>

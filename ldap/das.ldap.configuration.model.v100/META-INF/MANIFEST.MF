@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: das.ldap.configuration.model.ecore.v100; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-ClassPath: .
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: org.apache.tuscany.model,
+ org.apache.tuscany.model.impl,
+ org.apache.tuscany.model.util
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.emf.ecore;visibility:=reexport,
+ org.eclipse.emf.commonj.sdo;visibility:=reexport,
+ org.eclipse.emf.ecore.sdo;visibility:=reexport
+Eclipse-LazyStart: true
