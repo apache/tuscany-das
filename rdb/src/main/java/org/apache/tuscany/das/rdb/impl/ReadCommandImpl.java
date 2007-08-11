@@ -18,9 +18,15 @@
  */
 package org.apache.tuscany.das.rdb.impl;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
 
+import org.apache.tuscany.das.rdb.config.ResultDescriptor;
+import org.apache.tuscany.das.rdb.config.impl.ResultDescriptorImpl;
 import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
 import org.apache.tuscany.das.rdb.graphbuilder.impl.GraphBuilderMetadata;
 import org.apache.tuscany.das.rdb.graphbuilder.impl.ResultSetProcessor;
@@ -36,6 +42,8 @@ public class ReadCommandImpl extends CommandImpl {
 
     private int endRow = Integer.MAX_VALUE;   
 
+    private List resultDescriptors = null;
+    
     public ReadCommandImpl(String sqlString, MappingWrapper mapping, List resultDescriptor) {
         super(sqlString);
         this.configWrapper = mapping;
@@ -45,7 +53,204 @@ public class ReadCommandImpl extends CommandImpl {
         }
     }
 
-   
+    private void refreshResultSetShape(){
+		//sort descriptor and use in ResultSetShape
+        sortResultDescriptors();    		
+		this.resultSetShape = new ResultSetShape(this.resultDescriptors, configWrapper.getConfig());	
+    }
+    
+	private void sortResultDescriptors(){
+		if(this.resultDescriptors == null) {
+			return;
+		}
+		
+		if( this.resultDescriptors.size()==0) {
+			return;
+		}
+		
+		//when any index is found not set, do not sort	
+		for(Iterator it =  this.resultDescriptors.iterator() ; it.hasNext();){
+			ResultDescriptor resultDescriptor = (ResultDescriptor) it.next();
+			if(resultDescriptor.getColumnIndex() <= -1){
+				return;
+			}
+		}
+
+		//now is time to sort
+		Object[] resultDescAry = this.resultDescriptors.toArray();
+		for(int i=0; i<resultDescAry.length; i++){
+			for(int j=i+1; j<resultDescAry.length; j++){
+				if( ((ResultDescriptor)resultDescAry[j]).getColumnIndex()
+						< ((ResultDescriptor)resultDescAry[i]).getColumnIndex()){
+					ResultDescriptor tmpResDesc = (ResultDescriptor)resultDescAry[i];
+					resultDescAry[i] = resultDescAry[j];
+					resultDescAry[j] = tmpResDesc;
+				}
+				
+				if( ((ResultDescriptor)resultDescAry[j]).getColumnIndex()
+						== ((ResultDescriptor)resultDescAry[i]).getColumnIndex()){
+					throw new RuntimeException("Two columns in Result Descriptor can not have same index");				
+				}
+			}
+		}
+		
+		this.resultDescriptors.clear();
+		for(int i=0; i<resultDescAry.length; i++){
+			this.resultDescriptors.add(resultDescAry[i]);
+		}
+		
+		return;
+	}
+	
+	private ResultDescriptor deepCopyResultDescriptor(ResultDescriptor inObj){
+		ResultDescriptorImpl outObj = new ResultDescriptorImpl();
+		outObj.setColumnIndex(inObj.getColumnIndex());
+		outObj.setColumnName(inObj.getColumnName());
+		outObj.setColumnType(inObj.getColumnType());
+		outObj.setTableName(inObj.getTableName());
+		outObj.setSchemaName(inObj.getSchemaName());	
+		return outObj;
+	}
+	
+	private List deepCopyResultDescriptors(List resultDescriptors){
+		if(resultDescriptors == null || resultDescriptors.size() == 0)
+			return null;
+		
+		ArrayList copyList = new ArrayList();
+		
+		for(Iterator it =  resultDescriptors.iterator() ; it.hasNext();){
+			copyList.add( deepCopyResultDescriptor( (ResultDescriptorImpl) it.next()));
+		}
+		return copyList;
+	}
+	
+    /**
+     * When any columnIndex == -ve, sorting will not happen in ResultShapeSorter (old way)
+     * When null is passed, set this.resultSetShape to null, this will later trigger, dbms metadata
+     * based shaping of result
+     */
+    public void setResultDescriptors(List resultDescriptors){    	
+    	this.resultDescriptors = deepCopyResultDescriptors(resultDescriptors);
+    	if(this.resultDescriptors == null || this.resultDescriptors.size()==0){
+    		this.resultSetShape = null;
+    	}
+    	else{
+    		//below will go away with List<> JDK5
+    		for(Iterator it =  this.resultDescriptors.iterator() ; it.hasNext();){
+
+    			if(!(it.next() instanceof ResultDescriptor)){
+    				throw new RuntimeException("Elements in List not of type ResultDescriptor!");
+    			}
+
+    		}
+    		refreshResultSetShape();
+    	}
+    }
+      
+    public List getResultDescriptors(){
+    	return this.resultDescriptors;
+    }
+    
+    public void addResultDescriptor(ResultDescriptor resultDescriptor){
+    	//if >= 0 columnIndex, add/replace for given index 
+    	//if < 0 columnIndex, add at end of current list
+    	if(resultDescriptor == null) {
+    		return;
+    	}
+    	
+		if(this.resultDescriptors == null){
+			this.resultDescriptors = new ArrayList();
+		}
+		
+    	if(resultDescriptor.getColumnIndex() <0){
+    		this.resultDescriptors.add(deepCopyResultDescriptor(resultDescriptor));//dont care about columnIndex,add at end,  old way
+    	}
+    	else{
+    		ResultDescriptor existing = getResultDescriptor(resultDescriptor.getColumnIndex());
+    		if(existing != null){
+    			removeResultDescriptor(resultDescriptor.getColumnIndex());
+    		}
+    		this.resultDescriptors.add(deepCopyResultDescriptor(resultDescriptor));//add at end, sorting will happen below
+    	}
+    	
+    	refreshResultSetShape();
+    }
+    
+
+    public ResultDescriptor removeResultDescriptor(int columnIndex){
+    	//if < 0 index return null
+    	//if >=0 index and available at given index, remove and return same
+    	//if >=0 index and not available at given index, return null
+    	ResultDescriptor existing = null;
+    	if(columnIndex >=0 && ((existing = getResultDescriptor(columnIndex)) != null) ){
+    		this.resultDescriptors.remove(existing);    	
+    		refreshResultSetShape();			
+    		return existing;
+    	}    	
+    	return null;
+    }
+    
+    public ResultDescriptor removeResultDescriptor(ResultDescriptor resultDescriptor){
+    	//remove and return only if matched for index, name, type, table name, schema name
+    	//else return null
+    	if(resultDescriptor != null){
+    		ResultDescriptor existing = getResultDescriptor(resultDescriptor.getColumnIndex());
+    		if(existing != null &&
+    		   existing.getColumnName().equals(resultDescriptor.getColumnName()) &&
+    		   existing.getColumnType().equals(resultDescriptor.getColumnType()) &&
+    		   existing.getTableName().equals(resultDescriptor.getTableName()) ) {
+    		   if(this.configWrapper.getConfig().isDatabaseSchemaNameSupported()){//multi schema support
+    			   if(resultDescriptor.getSchemaName() != null && existing.getSchemaName() != null
+    				&& resultDescriptor.getSchemaName().equals(existing.getSchemaName())){
+    				   this.resultDescriptors.remove(existing);    				   
+    				   refreshResultSetShape();    					
+    				   return existing;
+    			   }
+    			   return null;
+    		   }
+    		   else{
+    			   this.resultDescriptors.remove(existing);    			   
+    			   refreshResultSetShape();    				
+				   return existing;
+    		   }    			
+    		}    				
+    	}
+    	return null;
+    }
+    
+    public ResultDescriptor getResultDescriptor(int columnIndex){
+    	//if <0 index return null
+    	//if >=0 index and available at given index,  return same
+    	//if >=0 index and not available at given index, return null
+    	if(columnIndex >=0 && this.resultDescriptors != null){
+			
+			for(Iterator it =  this.resultDescriptors.iterator() ; it.hasNext();){
+				ResultDescriptor rs = (ResultDescriptor) it.next();
+
+				if( rs.getColumnIndex() == columnIndex){
+					return rs;
+				}
+
+			}    		
+    	}
+
+    	return null;
+    }
+    
+    //Utility method
+    public void printResultDescriptors(OutputStream ostrm) throws IOException{
+    	if(this.resultDescriptors != null && this.resultDescriptors.size() != 0){
+
+		for(Iterator it =  this.resultDescriptors.iterator() ; it.hasNext();){
+    			ostrm.write( it.next().toString().getBytes() );
+    			ostrm.write('\n');
+
+    		}
+    		ostrm.flush();
+
+    	}
+    }
+    
     public void execute() {
         throw new UnsupportedOperationException();
     }

@@ -18,6 +18,12 @@
  */
 package org.apache.tuscany.das.rdb;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.List;
+
+import org.apache.tuscany.das.rdb.config.ResultDescriptor;
+
 import commonj.sdo.DataObject;
 
 /**
@@ -65,4 +71,51 @@ public interface Command {
      */
     int getGeneratedKey();
 
+    /**
+     * Allow set of ResultDescriptor when command is created on-the-fly
+     * @param resultDescriptorList
+     */
+    void setResultDescriptors(List resultDescriptorList);
+    
+    List getResultDescriptors();
+   
+    /**
+     * Add/replace based on columnIndex (>=0)embedded in resultDescriptor else add at end
+     * @param resultDescriptor
+     */
+    void addResultDescriptor(ResultDescriptor resultDescriptor);
+    
+    /**
+     * remove ResultDescriptor at given columnIndex(>=0) and return same. If not
+     * present return null. For -ve index, return null
+     * @param columnIndex
+     * @return
+     */
+    ResultDescriptor removeResultDescriptor(int columnIndex);
+    
+    /**
+     * Remove resultDescriptor only if matched for index(>=0), name, type, schema
+     * name and table name and return same, else return null For -ve index, ignore  
+     *  index and if unique match for rest of the attriutes, remove/return, if multiple
+     *  matches found, throw RuntimeException
+     * @param resultDescriptor
+     * @return
+     */
+    ResultDescriptor removeResultDescriptor(ResultDescriptor resultDescriptor);
+    
+    /**
+     * Return resultDescriptor if exact match for columnIndex(>=0) found  
+     * else return null;
+     * 
+     * @param columnIndex
+     * @return
+     */
+    ResultDescriptor getResultDescriptor(int columnIndex);
+    
+    /**
+     * Utility method
+     * @param ostrm
+     * @throws IOException
+     */
+    void printResultDescriptors(OutputStream ostrm) throws IOException;
 }

@@ -31,6 +31,7 @@ import org.apache.tuscany.das.rdb.test.CompoundKeyTests;
 import org.apache.tuscany.das.rdb.test.ConverterTests;
 import org.apache.tuscany.das.rdb.test.CorrectedDefectTests;
 import org.apache.tuscany.das.rdb.test.CrudWithChangeHistory;
+import org.apache.tuscany.das.rdb.test.DynamicResultDescriptorTests;
 import org.apache.tuscany.das.rdb.test.ExceptionTests;
 import org.apache.tuscany.das.rdb.test.GeneratedCommandTests;
 import org.apache.tuscany.das.rdb.test.GeneratedId;
@@ -109,6 +110,7 @@ public final class AllCommonTests {
         suite.addTest(new TestSuite(TransactionTests.class));
         suite.addTest(new TestSuite(MultiSchemaTests.class));
     
+        suite.addTest(new TestSuite(DynamicResultDescriptorTests.class));
         //$JUnit-END$
         return suite;
     }

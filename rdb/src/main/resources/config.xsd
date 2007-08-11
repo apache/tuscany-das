@@ -130,6 +130,7 @@
       <xsd:attribute name="managed" type="xsd:boolean" default="true"/>
    </xsd:complexType>
    <xsd:complexType name="ResultDescriptor">
+      <xsd:attribute name="columnIndex" type="xsd:int" default="-1"/>
       <xsd:attribute name="columnName" type="xsd:string"/>
       <xsd:attribute name="tableName" type="xsd:string"/>
       <xsd:attribute name="schemaName" type="xsd:string"/>      

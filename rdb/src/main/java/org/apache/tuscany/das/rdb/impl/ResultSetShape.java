@@ -79,14 +79,14 @@ public class ResultSetShape {
     }
 
     //JIRA-952
-    public ResultSetShape(List resultDescriptor, Config model) {
+    protected ResultSetShape(List resultDescriptor, Config model) {
         TypeHelper helper = TypeHelper.INSTANCE;
         int size = resultDescriptor.size();
         columns = new String[size];
         tables = new String[size];
         types = new Type[size];
         schema = new String[size];
-
+        
         for (int i = 0; i < size; i++) {
             ResultDescriptor desc = (ResultDescriptor) resultDescriptor.get(i);
             if(model.isDatabaseSchemaNameSupported()){

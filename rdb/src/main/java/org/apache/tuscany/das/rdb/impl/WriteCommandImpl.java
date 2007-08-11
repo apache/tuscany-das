@@ -18,10 +18,14 @@
  */
 package org.apache.tuscany.das.rdb.impl;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.tuscany.das.rdb.config.Config;
+import org.apache.tuscany.das.rdb.config.ResultDescriptor;
 
 import commonj.sdo.DataObject;
 
@@ -31,6 +35,36 @@ public abstract class WriteCommandImpl extends CommandImpl {
         super(sqlString);
     }
 
+    public void setResultDescriptors(List resultDescriptorList){
+    	//ignore , applicable for ReadCommand only
+    }
+    
+    public List getResultDescriptors(){
+    	//ignore, applicable for ReadCommand only
+    	return null;
+    }
+    
+    public void addResultDescriptor(ResultDescriptor resultDescriptor){
+    	//ignore
+    }
+    
+
+    public ResultDescriptor removeResultDescriptor(int index){
+    	return null;
+    }
+    
+    public ResultDescriptor removeResultDescriptor(ResultDescriptor resultDescriptor){
+    	return null;
+    }
+    
+    public ResultDescriptor getResultDescriptor(int index){
+    	return null;
+    }
+    
+    public void printResultDescriptors(OutputStream ostrm) throws IOException{
+    //ignore	
+    }
+    
     public void execute() {
 
         boolean success = false;
