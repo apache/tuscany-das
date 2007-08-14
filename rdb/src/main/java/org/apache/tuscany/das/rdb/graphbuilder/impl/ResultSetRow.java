@@ -21,7 +21,10 @@ package org.apache.tuscany.das.rdb.graphbuilder.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -78,20 +81,94 @@ public class ResultSetRow {
             }
             table.addData(metadata.getColumnPropertyName(i), metadata.isPKColumn(i), data);
         }
-
+        
+        checkResultSetMissesPK();
     }
 
+    //get all table names involved in current result set
+    //can not use metadata.getAllTablePropertyNames()
+    //as it gives table names for all tables from Config
+    public Collection getAllTableNamesForRS(){
+    	Collection allTableNamesForRS = new HashSet();
+    	for (int i = 1; i <= metadata.getResultSetSize(); i++) {
+    		allTableNamesForRS.add(metadata.getTablePropertyName(i));
+    	}
+    	return allTableNamesForRS;
+    }
+    	
+    //case when result set omits PK column, take care of compound PKs too
+    public void checkResultSetMissesPK(){
+        boolean tableRSHasPK;
+        Collection allTableNames = getAllTableNamesForRS();
+        Iterator itr = allTableNames.iterator();
+        while(itr.hasNext()){
+        	tableRSHasPK = false;
+        	String currentTableName = (String)itr.next();
+        	HashSet pks = metadata.getAllPKsForTable(currentTableName);
+        	HashSet pksInRS = new HashSet();
+        	for(int j=1; j<=metadata.getResultSetSize(); j++){
+            	if(currentTableName.equals(metadata.getTablePropertyName(j)) &&
+            			metadata.isPKColumn(j) ){
+            		pksInRS.add(metadata.getColumnPropertyName(j));
+            	}
+            }
+        	
+        	//if pks null, means its classic case when all cols should be PKs
+        	if(pks == null){
+        		tableRSHasPK = true;
+        	}        	
+        	//case when there were cols in cfg but could not find any PK in it and no ID column in cfg 
+        	else if(pks != null && pks.size()==1 && pks.contains("")){
+        		tableRSHasPK = false;        		
+        	}        	
+        	else if(pks != null && pksInRS.size() == pks.size()){        		
+        		Iterator itr1 = pks.iterator();
+        		int indx=0;
+        		while(itr1.hasNext()){
+        			if(!pksInRS.contains((String)itr1.next())){
+        				indx++;			
+        			}
+        		}
+        		
+	        	if(indx == 0){
+	        		if (this.logger.isDebugEnabled()) {
+	        			this.logger.debug("has PK TRUE - matched");	
+	        		}	        		
+	        		tableRSHasPK = true;	
+	        	}else{
+	        		if (this.logger.isDebugEnabled()) {
+	        			this.logger.debug("has PK FALSE- mismatched");	
+	        		}	        		
+	        		tableRSHasPK = false;
+	        	}
+        	}
+        	else{
+        		if (this.logger.isDebugEnabled()) {
+        			this.logger.debug("has PK FALSE - rest all cases");	
+        		}
+        	}        	
+        	
+        	//Default is TRUE(from TableData), so consider only FALSE case
+            if(!tableRSHasPK){
+            	TableData table = getRawData(currentTableName);
+            	table.setValidPrimaryKey(tableRSHasPK);
+            }
+        }
+        
+        //for testing
+		if (this.logger.isDebugEnabled()) {
+	        for (int i = 1; i <= metadata.getResultSetSize(); i++) {
+	        	TableData table = getRawData(metadata.getTablePropertyName(i));
+	        	this.logger.debug("table "+table.getTableName()+" hasValidPK "+table.hasValidPrimaryKey());
+	        }			
+		}
+    }
+    
     public void processRecursiveRow(ResultSet rs) throws SQLException {
         this.allTableData = new ArrayList();
         int i = 1;
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug("");
-        }
 
         while (i <= metadata.getResultSetSize()) {
-            if (this.logger.isDebugEnabled()) {
-                this.logger.debug("");
-            }
             TableData table = new TableData(metadata.getTablePropertyName(i));
             this.allTableData.add(table);
 
@@ -117,6 +194,8 @@ public class ResultSetRow {
                 i++;
             }
         }
+        
+        checkResultSetMissesPK();        
     }
 
     /**

@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
 import commonj.sdo.DataObject;
 
 /**
- * 
+ *
  * A ResultSetProcessor is used to transform the data in a ResultSet into a set of inter-related EDataObjects.
  */
 public class ResultSetProcessor {
@@ -58,12 +58,12 @@ public class ResultSetProcessor {
 
     /**
      * Process the ResultSet. For each row in the ResultSet, a
-     * 
-     * @link ResultSetRow object will be created to represent the row as a set of EDataObjects. Then, 
+     *
+     * @link ResultSetRow object will be created to represent the row as a set of EDataObjects. Then,
      * the relevant relationships will be constructed
      *       between each object in the
      * @link ResultSetRow.
-     * 
+     *
      * @param start
      * @param end
      */
@@ -110,23 +110,41 @@ public class ResultSetProcessor {
         while (tables.hasNext()) {
             TableData rawDataFromRow = (TableData) tables.next();
 
-            if (!rawDataFromRow.hasValidPrimaryKey()) {
-                continue;
+            if (!rawDataFromRow.hasValidPrimaryKey() ||
+            		(rawDataFromRow.hasNullPrimaryKey() && !rawDataFromRow.isTableEmpty())) {//some PK null , but other data present
+            	//continue; - need to throw exception as anyway the result will give a wrong impression
+            	//when any one table in result set misses PK column or has null value in PK column
+            	throw new RuntimeException("Table "+rawDataFromRow.getTableName()+" in query does not include Primary Key "+
+            			"column or has null value in it, can not proceed!");
             }
 
             String tableName = rawDataFromRow.getTableName();
             DataObject tableObject = registry.get(tableName, rawDataFromRow.getPrimaryKeyValues());
-            if (tableObject == null) {
+            if (tableObject == null
+            		&& !rawDataFromRow.hasNullPrimaryKey()) {//2nd check for null data in PK,
+            	//as TableData.addData() - hasValidPrimaryKey=false is commented for a reason
+            	//with this, DataObjs with null PK will not be added to registry and tableObjects
                 tableObject = doMaker.createAndAddDataObject(rawDataFromRow, resultMetadata);
 
                 if (this.logger.isDebugEnabled()) {
-                    this.logger.debug("Putting table " + tableName + " with PK " 
+                    this.logger.debug("Putting table " + tableName + " with PK "
                             + rawDataFromRow.getPrimaryKeyValues() + " into registry");
                 }
 
                 registry.put(tableName, rawDataFromRow.getPrimaryKeyValues(), tableObject);
             }
-            tableObjects.put(tableName, tableObject);
+            else{
+                if (this.logger.isDebugEnabled()) {
+                    this.logger.debug("Not Null tableObject or NULL PK");
+                }
+            }
+
+            if(tableObject != null){
+            	if (this.logger.isDebugEnabled()) {
+                    this.logger.debug("Do not allow any Null tableObject in tableObjects");
+                }
+            	tableObjects.put(tableName, tableObject);
+            }
         }
 
         tableObjects.processRelationships();

@@ -6,15 +6,15 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 package org.apache.tuscany.das.rdb.test;
 
@@ -23,7 +23,7 @@ import java.sql.SQLException;
 
 import org.apache.tuscany.das.rdb.Command;
 import org.apache.tuscany.das.rdb.DAS;
-import org.apache.tuscany.das.rdb.test.company.CompanyFactory;
+import org.apache.tuscany.das.rdb.test.companynoid.CompanynoidFactory;
 import org.apache.tuscany.das.rdb.test.customer.CustomerFactory;
 import org.apache.tuscany.das.rdb.test.data.BookData;
 import org.apache.tuscany.das.rdb.test.data.CompanyData;
@@ -103,7 +103,7 @@ public class ExceptionTests extends DasTest {
             DAS.FACTORY.createDAS(getConfig("NonExistingFile.xml"));
             fail("Error should be thrown");
         } catch (RuntimeException e) {
-            assertEquals("Cannot load configuration from a null InputStream. Possibly caused " 
+            assertEquals("Cannot load configuration from a null InputStream. Possibly caused "
                     + "by an incorrect config xml file name", e.getMessage());
         }
     }
@@ -136,13 +136,13 @@ public class ExceptionTests extends DasTest {
     }
 
     public void testMismatchedDataObjectModel() throws SQLException {
-        SDOUtil.registerStaticTypes(CompanyFactory.class);
-        DAS das = DAS.FACTORY.createDAS(getConfig("companyMappingWithConverters.xml"), getConnection());
+        SDOUtil.registerStaticTypes(CompanynoidFactory.class);
+        DAS das = DAS.FACTORY.createDAS(getConfig("companynoidMappingWithConverters.xml"), getConnection());
         Command read = das.createCommand("select * from company");
         try {
             read.executeQuery();
         } catch (RuntimeException ex) {
-            assertEquals("Type CompanyType does not contain a property named ID", ex.getMessage());
+            assertEquals("Type CompanynoidType does not contain a property named ID", ex.getMessage());
         }
     }
 

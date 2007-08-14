@@ -28,6 +28,7 @@ import org.apache.tuscany.das.rdb.DAS;
 import org.apache.tuscany.das.rdb.test.customer.Customer;
 import org.apache.tuscany.das.rdb.test.customer.CustomerFactory;
 import org.apache.tuscany.das.rdb.test.data.CustomerData;
+import org.apache.tuscany.das.rdb.test.data.OrderData;
 import org.apache.tuscany.das.rdb.test.framework.DasTest;
 import org.apache.tuscany.sdo.util.SDOUtil;
 
@@ -47,6 +48,7 @@ public class ConverterTests extends DasTest {
     protected void setUp() throws Exception {
         super.setUp();
         new CustomerData(getAutoConnection()).refresh();
+        new OrderData(getAutoConnection()).refresh();
     }
 
     protected void tearDown() throws Exception {

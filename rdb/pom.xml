@@ -93,6 +93,16 @@
 				</goals>
 			    </execution>
 			    <execution>
+				<id>companynoid</id>
+				<configuration>
+				    <schemaFile>${basedir}/src/test/resources/companynoid.xsd</schemaFile>
+				    <noUnsettable>true</noUnsettable>
+				</configuration>
+				<goals>
+				    <goal>generate</goal>
+				</goals>
+			    </execution>			    
+			    <execution>
 				<id>company</id>
 				<configuration>
 				    <schemaFile>${basedir}/src/test/resources/company.xsd</schemaFile>
@@ -150,6 +160,16 @@
 				    <goal>generate</goal>
 				</goals>
 			    </execution>
+			    <execution>
+				<id>companynoid</id>
+				<configuration>
+				    <schemaFile>${basedir}/src/test/resources/companynoid.xsd</schemaFile>
+				    <noUnsettable>true</noUnsettable>
+				</configuration>
+				<goals>
+				    <goal>generate</goal>
+				</goals>
+			    </execution>			    
 			    <execution>
 				<id>company</id>
 				<configuration>
@@ -225,5 +245,9 @@
 
 
 </project>
+
+
+
+
 
 

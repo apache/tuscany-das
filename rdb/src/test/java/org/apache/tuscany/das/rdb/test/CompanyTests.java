@@ -52,9 +52,9 @@ public class CompanyTests extends DasTest {
         DAS das = DAS.FACTORY.createDAS(getConfig("companyMapping.xml"), getConnection());
 
         // Build the select command
-        Command selectCommand = das.createCommand("select COMPANY.NAME, " 
-                + "EMPLOYEE.NAME, EMPLOYEE.SN, EMPLOYEE.MANAGER, "
-                + "DEPARTMENT.NAME, DEPARTMENT.LOCATION, DEPARTMENT.DEPNUMBER from COMPANY, DEPARTMENT, EMPLOYEE "
+        Command selectCommand = das.createCommand("select COMPANY.ID, COMPANY.NAME, " 
+                + "EMPLOYEE.ID, EMPLOYEE.NAME, EMPLOYEE.SN, EMPLOYEE.MANAGER, "
+                + "DEPARTMENT.ID, DEPARTMENT.NAME, DEPARTMENT.LOCATION, DEPARTMENT.DEPNUMBER from COMPANY, DEPARTMENT, EMPLOYEE "
                 + "where COMPANY.ID=DEPARTMENT.COMPANYID and DEPARTMENT.ID=EMPLOYEE.DEPARTMENTID");
 
         // Get the graph
@@ -77,9 +77,9 @@ public class CompanyTests extends DasTest {
         DAS das = DAS.FACTORY.createDAS(getConfig("companyMappingWithConverters.xml"), getConnection());
         SDOUtil.registerStaticTypes(CompanyFactory.class);
         // Build the select command
-        Command selectCommand = das.createCommand("select COMPANY.NAME, " 
-                + "EMPLOYEE.NAME, EMPLOYEE.SN, EMPLOYEE.MANAGER, "
-                + "DEPARTMENT.NAME, DEPARTMENT.LOCATION, DEPARTMENT.DEPNUMBER from COMPANY, DEPARTMENT, EMPLOYEE "
+        Command selectCommand = das.createCommand("select COMPANY.ID, COMPANY.NAME, " 
+                + "EMPLOYEE.ID, EMPLOYEE.NAME, EMPLOYEE.SN, EMPLOYEE.MANAGER, "
+                + "DEPARTMENT.ID, DEPARTMENT.NAME, DEPARTMENT.LOCATION, DEPARTMENT.DEPNUMBER from COMPANY, DEPARTMENT, EMPLOYEE "
                 + "where COMPANY.ID=DEPARTMENT.COMPANYID and DEPARTMENT.ID=EMPLOYEE.DEPARTMENTID");
 
         // Get the graph

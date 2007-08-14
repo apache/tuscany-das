@@ -23,6 +23,7 @@ import java.util.Iterator;
 import org.apache.tuscany.das.rdb.Command;
 import org.apache.tuscany.das.rdb.DAS;
 import org.apache.tuscany.das.rdb.test.data.BookData;
+import org.apache.tuscany.das.rdb.test.data.CustomerData;
 import org.apache.tuscany.das.rdb.test.framework.DasTest;
 
 import commonj.sdo.DataObject;
@@ -33,6 +34,7 @@ public class AliasTests extends DasTest {
     
         super.setUp();
         new BookData(getAutoConnection()).refresh();
+        new CustomerData(getAutoConnection()).refresh();
     }
 
     /**

@@ -36,6 +36,8 @@ public class TableData {
 
     private boolean hasValidPrimaryKey = true;
 
+    private boolean hasNullPrimaryKey = false;
+    
     public TableData(String tableName) {
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Creating TableData for table " + tableName);
@@ -49,15 +51,21 @@ public class TableData {
             this.logger.debug("Adding column " + columnName + " with value " + data);
         }
 
-        columnData.put(columnName, data);
+        if(data != null)
+        	columnData.put(columnName, data);
         if (isPrimaryKeyColumn) {
             if (data == null) {
                 if (this.logger.isDebugEnabled()) {
                     this.logger.debug("Column " + columnName + " is a primary key column and is null");
                 }
-                hasValidPrimaryKey = false;
+                //hasValidPrimaryKey = false; - if uncommented and JIRA-1464, RecursiveTests.testReadEngineParts() will fail
             }
-            primaryKey.add(data);
+            if(data != null){
+            	primaryKey.add(data);
+            }
+            else{
+            	hasNullPrimaryKey = true;
+            }
         }
     }
 
@@ -79,4 +87,16 @@ public class TableData {
     public boolean hasValidPrimaryKey() {
         return hasValidPrimaryKey;
     }
+    
+    public void setValidPrimaryKey(boolean hasValidPK){
+    	this.hasValidPrimaryKey = hasValidPK;
+    }
+    
+    public boolean isTableEmpty(){
+    	return columnData.keySet().isEmpty();
+    }
+    
+    public boolean hasNullPrimaryKey(){
+    	return this.hasNullPrimaryKey;
+    }    
 }

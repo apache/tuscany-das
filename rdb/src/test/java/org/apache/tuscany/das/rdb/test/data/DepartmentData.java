@@ -26,12 +26,12 @@ import org.apache.tuscany.das.rdb.test.framework.TestDataWithExplicitColumns;
 
 public class DepartmentData extends TestDataWithExplicitColumns {
 
-    private static int[] columnTypes = {Types.VARCHAR, Types.VARCHAR, Types.VARCHAR};
+    private static int[] columnTypes = {Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.INTEGER};
 
-    private static Object[][] deptData = {{"Advanced Technologies", "NY", "123" },
-                                          {"New Technologies", "CA", "125" }};
+    private static Object[][] deptData = {{"Advanced Technologies", "NY", "123", new Integer(1) },
+                                          {"New Technologies", "CA", "125", new Integer(2) }};
 
-    private static String[] deptColumns = {"NAME", "LOCATION", "DEPNUMBER"};
+    private static String[] deptColumns = {"NAME", "LOCATION", "DEPNUMBER", "COMPANYID"};
 
     public DepartmentData(Connection connection) {
         super(connection, deptData, deptColumns, columnTypes);

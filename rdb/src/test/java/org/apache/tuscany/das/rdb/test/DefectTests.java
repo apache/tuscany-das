@@ -77,9 +77,10 @@ public class DefectTests extends DasTest {
         insert.execute();
 
         // Verify
-        Command select = das.createCommand("Select * from conmgt.serverstatus where statusid = 316405209");
+        Command select = das.createCommand("Select * from conmgt.serverstatus where statusid = 1");
         DataObject root = select.executeQuery();
-        assertEquals(1, root.getList("conmgt.serverstatus").size());
+                
+        assertEquals(1, root.getList("SERVERSTATUS").size());
 
     }
 
@@ -89,7 +90,9 @@ public class DefectTests extends DasTest {
      * should throw a better error than NPE
      */
 
-    public void testReadUpdateWithNoPKColumns() throws Exception {
+    //now with JIRA-1464 , we will get exception in select itself , so can not reach upto
+    //applyChanges
+    /*public void testReadUpdateWithNoPKColumns() throws Exception {
         
         DAS das = DAS.FACTORY.createDAS(getConfig("BooksConfig.xml"),getConnection());
         // Read a book instance
@@ -106,7 +109,7 @@ public class DefectTests extends DasTest {
         } catch (NullPointerException ex) {
             fail("We should do better than an NPE");
         }
-    }
+    }*/
     
 
 }

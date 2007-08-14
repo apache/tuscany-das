@@ -28,6 +28,7 @@
         <xsd:sequence>
           <xsd:element maxOccurs="unbounded" name="departments" type="company:DepartmentType"/>
         </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:int"/>
         <xsd:attribute name="name" type="xsd:string"/>
         <xsd:attribute name="employeeOfTheMonth" type="xsd:IDREF" ecore:reference="EmployeeType"/>
       </xsd:complexType>
@@ -36,13 +37,16 @@
         <xsd:sequence>
           <xsd:element maxOccurs="unbounded" name="employees" type="company:EmployeeType"/>
         </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:int"/>        
         <xsd:attribute name="name" type="xsd:string"/>
         <xsd:attribute name="location" type="xsd:string"/>
         <xsd:attribute name="number" type="xsd:int"/>
       </xsd:complexType>
       <xsd:complexType name="EmployeeType">
+        <xsd:attribute name="id" type="xsd:int"/>      
         <xsd:attribute name="name" type="xsd:string"/>
         <xsd:attribute name="SN" type="xsd:ID"/>
         <xsd:attribute name="manager" type="xsd:boolean"/>
       </xsd:complexType>
     </xsd:schema>
+

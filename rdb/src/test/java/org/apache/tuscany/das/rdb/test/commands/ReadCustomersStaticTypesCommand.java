@@ -24,6 +24,8 @@ import org.apache.tuscany.das.rdb.config.ConfigFactory;
 import org.apache.tuscany.das.rdb.config.Table;
 import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
 import org.apache.tuscany.das.rdb.impl.ReadCommandImpl;
+import org.apache.tuscany.das.rdb.test.customer.CustomerFactory;
+import org.apache.tuscany.sdo.util.SDOUtil;
 
 public class ReadCustomersStaticTypesCommand extends ReadCommandImpl {
 
@@ -51,6 +53,7 @@ public class ReadCustomersStaticTypesCommand extends ReadCommandImpl {
         CONFIG.getTable().add(t);
 
         CONFIG.setDataObjectModel("http:///org.apache.tuscany.das.rdb.test/customer.xsd");
+        SDOUtil.registerStaticTypes(CustomerFactory.class);
     }
 
     public ReadCustomersStaticTypesCommand() {

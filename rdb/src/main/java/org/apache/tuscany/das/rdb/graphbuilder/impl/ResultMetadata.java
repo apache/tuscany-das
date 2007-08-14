@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +55,8 @@ public class ResultMetadata {
 
     private Converter[] converters;
 
+    private Map tableToPrimaryKeysMap = new HashMap();
+    
     //JIRA-952
     public ResultMetadata(ResultSet rs, MappingWrapper cfgWrapper, ResultSetShape shape) throws SQLException {
 
@@ -70,6 +73,7 @@ public class ResultMetadata {
 
         Map impliedRelationships = new HashMap();
         String schemaName = "";
+        String idSpell = null;
         for (int i = 1; i <= resultSetShape.getColumnCount(); i++) {
             String tableName = resultSetShape.getTableName(i);
              schemaName = resultSetShape.getSchemaName(i);
@@ -86,8 +90,9 @@ public class ResultMetadata {
             }
             String columnName = resultSetShape.getColumnName(i);
 
-            if (columnName.indexOf("_ID") >= 0) {
-            	String colName = "";
+            String colName = "";
+            if (columnName.regionMatches(true, columnName.length()-3, "_ID", 0, 3)) {
+            	idSpell = columnName.substring(columnName.length()-3, columnName.length());            	
             	if(this.configWrapper.getConfig().isDatabaseSchemaNameSupported()){
             		colName = schemaName+"."+columnName;
             		impliedRelationships.put(colName, schemaName+"."+tableName);
@@ -128,12 +133,16 @@ public class ResultMetadata {
             }
             properties.add(propertyName);
             tableToPropertyMap.put(typeName, properties);
+            
         }
-
+        
+        //System.out.println("tableToPropertyMap "+tableToPropertyMap);
+        fillTableToPrimaryKeysMap();
+        
         Iterator i = impliedRelationships.keySet().iterator();
         while (i.hasNext()) {
             String columnName = (String) i.next();
-            String pkTableName = columnName.substring(0, columnName.indexOf("_ID"));
+            String pkTableName = columnName.substring(0, columnName.indexOf(idSpell));//_id, _Id, _iD, _ID anything
             String fkTableName = (String) impliedRelationships.get(columnName);
             List pkTableProperties = (List) tableToPropertyMap.get(pkTableName);
             if ((pkTableProperties != null) && (pkTableProperties.contains("ID"))) {
@@ -152,9 +161,71 @@ public class ResultMetadata {
                 }
             }
         }
-
     }
 
+    //Now fill tableToPrimaryKeysMap.Complete for whichever tables are there in tableToPrimaryKeysMap,
+    //Also case of implied PK and it is not there in SELECT, provide way to still fill it in
+    //tableToPrimaryKeysMap - the column should be present in Config (though not defed as PK)
+    //And consider the classic case, when we assume all columns to be PKs - when no info
+    //in config for table or "all columns"
+    private void fillTableToPrimaryKeysMap(){
+	    Iterator itr = tableToPropertyMap.keySet().iterator();
+	    while(itr.hasNext()){
+	    	String curTableName = (String)itr.next();
+	    	boolean treatAllPKs = false;//flag for, when all cols need to be treated as PKs
+	    	
+	    	if(tableToPrimaryKeysMap.containsKey(curTableName)){
+	    		continue;//don't keep refilling same hashset for each ResultMetadata constructor,
+	    	}
+	    	
+	    	List columnsForTable = null;
+	    	if(configWrapper.getTableByTypeName(curTableName) != null) {
+	    		 columnsForTable = configWrapper.getTableByTypeName(curTableName).getColumn();        		 
+	    	}
+	    	else if(configWrapper.getTable(curTableName) != null){
+			 columnsForTable = configWrapper.getTable(curTableName).getColumn();
+			 configWrapper.getTable(curTableName).setTypeName(curTableName);//keep configWrapper consistent with Type info
+	    	}
+	    	else{
+	    		treatAllPKs = true;//can not find table/type, need to consider all columns as PKs
+	    	}
+	    	
+	    	if(columnsForTable != null){
+	            for(int ii=0; ii<columnsForTable.size(); ii++){
+	            	Column curCol = (Column)columnsForTable.get(ii);
+	            	
+	            	if(curCol.isPrimaryKey() || curCol.getColumnName().equalsIgnoreCase("ID")){//need to compare col name
+	            		//with ID as that is the one from dbms metadata or resul set shape metadata
+	            		//but when putting in map, need to put property and if not present then column
+	    	            Collection pks = (Collection) tableToPrimaryKeysMap.get(curTableName);
+	    	            if(pks == null){
+	    	            	pks = new HashSet();
+	    	            }
+	
+	    	            if(curCol.getPropertyName() != null){
+	    	            	pks.add(curCol.getPropertyName());
+	    	            }
+	    	            else{
+	        	            pks.add(curCol.getColumnName());
+	        	            curCol.setPropertyName(curCol.getColumnName());//make config consistent
+	        	            if(!((Collection)tableToPropertyMap.get(curTableName)).contains(curCol.getColumnName())){
+	        	            	((Collection)tableToPropertyMap.get(curTableName)).add(curCol.getColumnName());
+	        	            }
+	    	            }
+	    	            tableToPrimaryKeysMap.put(curTableName, pks);	        	            		
+	            	}
+	            }        		
+	    	}
+	    	else{
+	    		treatAllPKs = true;//table present in cfg , but no cols
+	    	}
+	    	
+	    	if(treatAllPKs){
+	    		tableToPrimaryKeysMap.put(curTableName, null);//case when all columns are considered PKs
+	    	}
+	    }
+    }
+    
     private Converter loadConverter(String converterName) {
         if (converterName != null) {
 
@@ -208,6 +279,17 @@ public class ResultMetadata {
         return tableToPropertyMap.keySet();
     }
 
+    public HashSet getAllPKsForTable(String tableName){
+    	if(tableToPrimaryKeysMap.containsKey(tableName))
+    		return (HashSet)tableToPrimaryKeysMap.get(tableName);
+    	else{
+    		HashSet tmpHashSet = new HashSet();
+    		tmpHashSet.add("");//case when there were cols in cfg but could not find any PK in it and no ID column in cfg/result set
+    		return tmpHashSet;
+    	}
+    		
+    }
+    
     public String toString() {
 
         StringBuffer result = new StringBuffer(super.toString());
