@@ -25,13 +25,25 @@ import javax.naming.ldap.LdapContext;
 import org.apache.tuscany.das.ldap.constants.DASConstants;
 import org.apache.tuscany.das.ldap.schema.constants.AttributeTypeConstants;
 
+/**
+ * The Class MetaContextCreator.
+ */
 public class MetaContextCreator
 implements 
 DASConstants,
 AttributeTypeConstants
 {
+    /**
+     * Create a meta context below the provided parent context.
+     * 
+     * @param metaParentContext the context
+     * 
+     * @return the ldap context
+     * 
+     * @throws NamingException the naming exception
+     */
     public static LdapContext create(
-        LdapContext context) throws NamingException
+        LdapContext metaParentContext) throws NamingException
     {
         String rdn   = 
             CN + "=" + META_CONTEXT_NAME;
@@ -40,13 +52,13 @@ AttributeTypeConstants
         {
             return 
             ( LdapContext ) 
-            context.lookup( rdn );
+            metaParentContext.lookup( rdn );
         }
         catch(Exception e)
         {
             return
             ( LdapContext )
-            context.
+            metaParentContext.
             createSubcontext( rdn );
         }
     }
