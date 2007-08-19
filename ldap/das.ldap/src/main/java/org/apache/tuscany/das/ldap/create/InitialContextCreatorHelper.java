@@ -36,50 +36,66 @@ ObjectClassConstants,
 SchemaObjectClassConstants, 
 AttributeTypeConstants
 {
+
     /**
-     * Lookup the subcontext and if it does not exist,
-     * create it.
+     * Creates the sub context if it does not already exist.
      * 
-     * @param ldapContext the dir context
-     * @param subContext the sub context
+     * @param ldapContext the ldap context
+     * @param subContextRDN the sub context
+     * @param attributes the attributes
      * 
-     * @return the dir context
+     * @return the ldap context
      * 
      * @throws NamingException the naming exception
      */
     public static LdapContext createSubContext(
         LdapContext ldapContext, 
-        String subContext,
+        String subContextRDN,
         Attributes attributes) 
     throws NamingException
     {
         try
         {
-            ldapContext = ( LdapContext ) ldapContext.lookup( subContext );
+            ldapContext = 
+                ( LdapContext ) 
+                ldapContext.
+                lookup( subContextRDN );
         }
         catch ( NamingException e )
         {
             if (attributes == null)
             {
-                ldapContext = ( LdapContext ) ldapContext.createSubcontext( subContext );                
+                ldapContext = 
+                    ( LdapContext )
+                    ldapContext.
+                    createSubcontext( subContextRDN );                
             }
             else
             {
-                ldapContext = ( LdapContext ) ldapContext.createSubcontext( subContext, attributes );
+                ldapContext = 
+                    ( LdapContext ) 
+                    ldapContext.
+                    createSubcontext( 
+                        subContextRDN, 
+                        attributes );
             }
         }
         return ldapContext;
     }
 
     /**
-     * Creates the authority context.
+     * Creates the authority context.  Authority 
+     * means the Authority component of a URL.  
+     * For example if the authority is "example.com",
+     * then the authority context will be "cn=example, cn=com".
      * 
+     * @param ldapContext the ldap context
      * @param authorityTokens the authority tokens
-     * @param ldapContext the directory context
      * 
-     * @return the dir context
+     * @return the ldap context
      * 
      * @throws NamingException the naming exception
+     * 
      */
     public static LdapContext createAuthorityContext(
     		LdapContext ldapContext, 
@@ -98,26 +114,30 @@ AttributeTypeConstants
     
     /**
      * Creates the path context.
+     * Path means the path component of a URL.  
+     * For example if the authority is "example.com/users/accounts",
+     * then the path context will be "cn=accounts, cn=users".  The full
+     * model namespaced context will be "cn=accounts, cn=users, cn=example, cn=com"
      * 
-     * @param ldapContext the dir context
+     * @param authorityContext the ldap context
      * @param pathTokens the path tokens
      * 
-     * @return the dir context
+     * @return the ldap context
      * 
      * @throws NamingException the naming exception
      */
     public static LdapContext createPathContext(
-    		LdapContext ldapContext, 
+        LdapContext authorityContext, 
         String[] pathTokens) 
     throws NamingException
     {
         for (int i = 1; i < (pathTokens.length); i++)
         {
             String subContext = CN + "=" + pathTokens[i];
-            ldapContext = (LdapContext) createSubContext( 
-            		ldapContext, 
+            authorityContext = (LdapContext) createSubContext( 
+            		authorityContext, 
             		subContext, null );
         }
-        return ldapContext;
+        return authorityContext;
     }
 }
