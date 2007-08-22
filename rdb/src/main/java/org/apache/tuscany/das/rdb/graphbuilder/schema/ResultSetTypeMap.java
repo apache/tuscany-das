@@ -109,13 +109,13 @@ public class ResultSetTypeMap {
                 return helper.getType("commonj.sdo", "Date");
 
             case Types.CLOB:
-                return helper.getType("commonj.sdo", "Clob");
+                return helper.getType("commonj.sdo", "Object");
 
             case Types.BLOB:
                 return helper.getType("commonj.sdo", "Bytes");
 
             case Types.ARRAY:
-                return helper.getType("commonj.sdo", "Array");
+                return helper.getType("commonj.sdo", "Object");
 
             case Types.DISTINCT:
             case Types.STRUCT:

@@ -164,7 +164,10 @@ public class DatabaseSetup extends TestSetup {
             "DROP TABLE DASTEST3.ORDERDETAILSDESC", "DROP TABLE DASTEST1.ORDERDETAILS",
             "DROP TABLE DASTEST1.EMPLOYEE",
             "DROP TABLE SINGER",
-            "DROP TABLE SONG"            
+            "DROP TABLE SONG",            
+            "DROP TABLE DASTEST1.EMPLOYEE",
+            "DROP TABLE DOCUMENTS_IMAGES"
+
         };
 
         for (int i = 0; i < statements.length; i++) {
@@ -272,6 +275,8 @@ public class DatabaseSetup extends TestSetup {
             //JIRA-952 end
             s.execute(getCreateSinger());
             s.execute(getCreateSong());            
+            s.execute(getCreateDocumentsImages());
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -487,7 +492,8 @@ public class DatabaseSetup extends TestSetup {
                 + " NOT NULL,"+ getStringColumn("DESCR", 20)+", PRIMARY KEY (ID))";
     }
     //JIRA-952 end
-    // /////////////////
+    // //////////////
+
     protected String getCreateSinger() {
     	return "CREATE TABLE SINGER ("+ getIntegerColumn("ID") + " NOT NULL, " +
     		getStringColumn("NAME", 20) +" )";
@@ -499,6 +505,19 @@ public class DatabaseSetup extends TestSetup {
     		getIntegerColumn("SINGERID") + " )";
     }
     
+
+    protected String getCreateDocumentsImages() {
+    	return "CREATE TABLE DOCUMENTS_IMAGES (ID INT, TEXT CLOB(64K),PIC BLOB(16M))";
+    }
+    
+
+
+
+
+
+
+
+
     protected String getForeignKeyConstraint(String pkTable, String pkColumn, String foreignKey) {
         StringBuffer buffer = new StringBuffer();
         buffer.append("CONSTRAINT FK1 FOREIGN KEY (");
