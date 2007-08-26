@@ -67,7 +67,7 @@
                         <manifest> 
                     <mainClass>org.apache.tuscany.samples.das.customer.CustomerClient</mainClass> 
                     <addClasspath>true</addClasspath> 
-                    <classpathPrefix>../../lib/</classpathPrefix> 
+                    <!-- classpathPrefix>../../lib/</classpathPrefix --> 
                    </manifest> 
 
                     </archive>
