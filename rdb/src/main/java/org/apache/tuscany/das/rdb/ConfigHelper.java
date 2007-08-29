@@ -18,6 +18,7 @@
  */
 package org.apache.tuscany.das.rdb;
 
+import java.io.InputStream;
 import java.util.Vector;
 
 import org.apache.tuscany.das.rdb.config.Column;
@@ -27,6 +28,7 @@ import org.apache.tuscany.das.rdb.config.ConfigFactory;
 import org.apache.tuscany.das.rdb.config.Relationship;
 import org.apache.tuscany.das.rdb.config.Table;
 import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
+import org.apache.tuscany.das.rdb.util.ConfigUtil;
 
 /**
  * A ConfigHelper is used as an aid in programmatic construction of Config instances.
@@ -50,6 +52,16 @@ public class ConfigHelper {
         configWrapper = new MappingWrapper(config);
     }
 
+    /**
+     * Constructor that receives a Config stream
+     * This is usefull to extend a config file
+     * @param configStream The configuration stream
+     */
+    public ConfigHelper(InputStream configStream) {
+        this.config = ConfigUtil.loadConfig(configStream);
+        configWrapper = new MappingWrapper(config);
+    }
+    
     /**
      * Constructor that receives a Config object
      * @param config The configuration object
