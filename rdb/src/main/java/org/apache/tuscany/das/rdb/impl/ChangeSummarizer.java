@@ -18,7 +18,6 @@
  */
 package org.apache.tuscany.das.rdb.impl;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;

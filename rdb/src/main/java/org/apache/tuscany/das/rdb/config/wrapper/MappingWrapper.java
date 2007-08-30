@@ -298,7 +298,7 @@ public class MappingWrapper {
 
     	for(int i=0; i<columns.size(); i++){
     		QualifiedColumn currColumns = (QualifiedColumn)columns.get(i);
-    		String	currSchemaName = ((QualifiedColumn)columns.get(i)).getSchemaName();
+    		String	currSchemaName = currColumns.getSchemaName();
     		    		
     		if(!currSchemaName.equals(expectedSchemaName)){
     			throw new RuntimeException("Columns in one side of relationship can not be from different schema");
