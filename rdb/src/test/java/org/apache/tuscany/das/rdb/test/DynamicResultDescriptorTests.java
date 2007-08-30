@@ -143,7 +143,6 @@ public class DynamicResultDescriptorTests extends DasTest {
         select.setResultDescriptors(resultDescriptorList);
         try{
         	root = select.executeQuery();
-        	System.out.println(((DataObject)root.getList("CUSTOMER").get(0)).getString("LASTNAME"));
         	fail("Expected exception");
         }catch(Exception e){
         	assertTrue(e instanceof ClassCastException);

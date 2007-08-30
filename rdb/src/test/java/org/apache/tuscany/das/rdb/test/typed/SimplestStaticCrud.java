@@ -22,13 +22,16 @@ import java.io.InputStream;
 import java.util.Collection;
 
 import org.apache.tuscany.das.rdb.Command;
+import org.apache.tuscany.das.rdb.ConfigHelper;
 import org.apache.tuscany.das.rdb.DAS;
+import org.apache.tuscany.das.rdb.merge.impl.GraphMerger;
 import org.apache.tuscany.das.rdb.test.customer.CustomerFactory;
 import org.apache.tuscany.das.rdb.test.data.CustomerData;
 import org.apache.tuscany.das.rdb.test.framework.DasTest;
-import org.apache.tuscany.sdo.util.SDOUtil;
 
 import commonj.sdo.DataObject;
+import commonj.sdo.helper.HelperContext;
+import commonj.sdo.impl.HelperProvider;
 
 /**
  */
@@ -42,7 +45,8 @@ public class SimplestStaticCrud extends DasTest {
     public void testRead() throws Exception {
         InputStream mapping = getClass().getClassLoader().getResourceAsStream("basicStaticCustomer.xml");
         DAS das = DAS.FACTORY.createDAS(mapping, getConnection());
-        SDOUtil.registerStaticTypes(CustomerFactory.class);
+        HelperContext context = HelperProvider.getDefaultContext();
+        CustomerFactory.INSTANCE.register(context);
 
         Command select = das.createCommand("Select ID, LASTNAME, ADDRESS from CUSTOMER where LASTNAME = ?");
         select.setParameter(1, "Williams");

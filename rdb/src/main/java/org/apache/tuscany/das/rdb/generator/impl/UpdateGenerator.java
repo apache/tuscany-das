@@ -86,7 +86,7 @@ public final class UpdateGenerator extends BaseGenerator {
             appendFieldSet(statement, idx > 1, c.getColumnName());
             String propertyName = c.getPropertyName() == null ? c.getColumnName() : c.getPropertyName();
             parameters.add(createManagedParameter(tableWrapper, 
-                    changedObject.getProperty(propertyName), idx++));
+                    changedObject.getInstanceProperty(propertyName), idx++));
         }
         
         statement.append(" where ");

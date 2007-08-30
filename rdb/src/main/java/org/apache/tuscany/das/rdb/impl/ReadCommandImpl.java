@@ -30,7 +30,7 @@ import org.apache.tuscany.das.rdb.config.impl.ResultDescriptorImpl;
 import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
 import org.apache.tuscany.das.rdb.graphbuilder.impl.GraphBuilderMetadata;
 import org.apache.tuscany.das.rdb.graphbuilder.impl.ResultSetProcessor;
-import org.apache.tuscany.sdo.util.SDOUtil;
+import org.apache.tuscany.sdo.api.SDOUtil;
 
 import commonj.sdo.ChangeSummary;
 import commonj.sdo.DataGraph;

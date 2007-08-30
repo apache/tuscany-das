@@ -31,7 +31,9 @@ import org.apache.tuscany.das.rdb.test.data.CustomerData;
 import org.apache.tuscany.das.rdb.test.data.OrderData;
 import org.apache.tuscany.das.rdb.test.data.OrderDetailsData;
 import org.apache.tuscany.das.rdb.test.framework.DasTest;
-import org.apache.tuscany.sdo.util.SDOUtil;
+
+import commonj.sdo.helper.HelperContext;
+import commonj.sdo.impl.HelperProvider;
 
 public class ExceptionTests extends DasTest {
 
@@ -81,7 +83,8 @@ public class ExceptionTests extends DasTest {
     }
 
     public void testMissingMapping() throws Exception {
-        SDOUtil.registerStaticTypes(CustomerFactory.class);
+    	HelperContext context = HelperProvider.getDefaultContext();
+    	CustomerFactory.INSTANCE.register(context);
         DAS das = DAS.FACTORY.createDAS(getConfig("staticCustomer.xml"), getConnection());
         Command readCustomers = das.createCommand("select * from CUSTOMER where ID = 1");
 
@@ -136,7 +139,8 @@ public class ExceptionTests extends DasTest {
     }
 
     public void testMismatchedDataObjectModel() throws SQLException {
-        SDOUtil.registerStaticTypes(CompanynoidFactory.class);
+    	HelperContext context = HelperProvider.getDefaultContext();
+    	CompanynoidFactory.INSTANCE.register(context);    	
         DAS das = DAS.FACTORY.createDAS(getConfig("companynoidMappingWithConverters.xml"), getConnection());
         Command read = das.createCommand("select * from company");
         try {

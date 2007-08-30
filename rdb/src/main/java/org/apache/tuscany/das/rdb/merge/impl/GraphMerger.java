@@ -23,14 +23,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 import org.apache.tuscany.das.rdb.config.Config;
 import org.apache.tuscany.das.rdb.config.wrapper.QualifiedColumn;
 import org.apache.tuscany.das.rdb.graphbuilder.impl.MultiTableRegistry;
 import org.apache.tuscany.das.rdb.graphbuilder.impl.TableRegistry;
 import org.apache.tuscany.sdo.impl.ChangeSummaryImpl;
-import org.apache.tuscany.sdo.util.SDOUtil;
+import org.apache.tuscany.sdo.api.SDOUtil;
 
 import commonj.sdo.ChangeSummary;
 import commonj.sdo.DataGraph;
@@ -38,6 +38,7 @@ import commonj.sdo.DataObject;
 import commonj.sdo.Property;
 import commonj.sdo.Type;
 import commonj.sdo.helper.TypeHelper;
+import commonj.sdo.impl.HelperProvider;
 
 public class GraphMerger {
 
@@ -68,10 +69,17 @@ public class GraphMerger {
         }
 
         String uri = "http:///org.apache.tuscany.das.rdb/das";
-        TypeHelper typeHelper = SDOUtil.createTypeHelper();
-        Type rootType = SDOUtil.createType(typeHelper, uri + "/DataGraphRoot", "DataGraphRoot", false);
-
-        List types = SDOUtil.getTypes(typeHelper, config.getDataObjectModel());
+        TypeHelper typeHelper = HelperProvider.getDefaultContext().getTypeHelper();
+        Type rootType = null;
+        rootType = typeHelper.getType(uri + "/DataGraphRoot", "DataGraphRoot");
+        if(rootType == null){
+        	rootType = SDOUtil.createType(HelperProvider.getDefaultContext(), uri + "/DataGraphRoot", "DataGraphRoot", false);
+        	if (logger.isDebugEnabled()) {
+        		logger.debug("GraphMerger.emptyGraph():creating type for "+uri);
+        	}        	
+        }
+        
+        List types = SDOUtil.getTypes(HelperProvider.getDefaultContext(), config.getDataObjectModel());
         if (types == null) {
             throw new RuntimeException("SDO Types have not been registered for URI " + config.getDataObjectModel());
         }
@@ -79,9 +87,15 @@ public class GraphMerger {
         Iterator i = types.iterator();
         while (i.hasNext()) {
             Type type = (Type) i.next();
-            Property property = SDOUtil.createProperty(rootType, type.getName(), type);
-            SDOUtil.setContainment(property, true);
-            SDOUtil.setMany(property, true);
+            Property property = rootType.getProperty(type.getName());
+            if( !(property != null && 
+               (property.getType().isDataType()== type.isDataType()) &&
+               (property.isContainment() == true) &&
+               (property.isMany() == true)) ){
+	            property = SDOUtil.createProperty(rootType, type.getName(), type);
+	            SDOUtil.setContainment(property, true);
+	            SDOUtil.setMany(property, true);
+            }
         }
 
         // Create the DataGraph
@@ -179,7 +193,9 @@ public class GraphMerger {
             while (objects.hasNext()) {
                 DataObject object = (DataObject) objects.next();
                 Object pk = object.get(getPrimaryKeyName(object));
-                logger.finest("Adding object with pk " + pk + " to registry");
+                if (logger.isDebugEnabled()) {
+                	logger.debug("Adding object with pk " + pk + " to registry");
+                }
                 registry.put(object.getType().getName(), Collections.singletonList(pk), object);
             }
         }
@@ -204,7 +220,9 @@ public class GraphMerger {
     		column = new QualifiedColumn(key);
     	}
         
-        logger.finest("Adding " + column.getTableName() + " " + column.getColumnName() + " to keys");
+    	if (logger.isDebugEnabled()) {
+    		logger.debug("Adding " + column.getTableName() + " " + column.getColumnName() + " to keys");	
+    	}
         keys.put(column.getTableName(), column.getColumnName());
     }
 }

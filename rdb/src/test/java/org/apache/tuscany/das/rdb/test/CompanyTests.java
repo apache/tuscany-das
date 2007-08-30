@@ -30,9 +30,10 @@ import org.apache.tuscany.das.rdb.test.data.DepEmpData;
 import org.apache.tuscany.das.rdb.test.data.DepartmentData;
 import org.apache.tuscany.das.rdb.test.data.EmployeeData;
 import org.apache.tuscany.das.rdb.test.framework.DasTest;
-import org.apache.tuscany.sdo.util.SDOUtil;
 
 import commonj.sdo.DataObject;
+import commonj.sdo.helper.HelperContext;
+import commonj.sdo.impl.HelperProvider;
 
 public class CompanyTests extends DasTest {
 
@@ -75,7 +76,8 @@ public class CompanyTests extends DasTest {
     public void testSimpleStatic() throws Exception {
 
         DAS das = DAS.FACTORY.createDAS(getConfig("companyMappingWithConverters.xml"), getConnection());
-        SDOUtil.registerStaticTypes(CompanyFactory.class);
+        HelperContext context = HelperProvider.getDefaultContext();
+        CompanyFactory.INSTANCE.register(context);
         // Build the select command
         Command selectCommand = das.createCommand("select COMPANY.ID, COMPANY.NAME, " 
                 + "EMPLOYEE.ID, EMPLOYEE.NAME, EMPLOYEE.SN, EMPLOYEE.MANAGER, "

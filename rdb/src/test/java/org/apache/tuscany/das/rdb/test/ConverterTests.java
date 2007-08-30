@@ -30,10 +30,10 @@ import org.apache.tuscany.das.rdb.test.customer.CustomerFactory;
 import org.apache.tuscany.das.rdb.test.data.CustomerData;
 import org.apache.tuscany.das.rdb.test.data.OrderData;
 import org.apache.tuscany.das.rdb.test.framework.DasTest;
-import org.apache.tuscany.sdo.util.SDOUtil;
 
 import commonj.sdo.DataObject;
-
+import commonj.sdo.helper.HelperContext;
+import commonj.sdo.impl.HelperProvider;
 /**
  * Tests the Converter framwork
  */
@@ -124,7 +124,8 @@ public class ConverterTests extends DasTest {
 
     public void testInvalidConverter2() throws Exception {
 
-        SDOUtil.registerStaticTypes(CustomerFactory.class);
+    	HelperContext context = HelperProvider.getDefaultContext();
+    	CustomerFactory.INSTANCE.register(context);
         DAS das = DAS.FACTORY.createDAS(getConfig("InvalidConverter.xml"), getConnection());
 
         // Build the select command to read a specific customer and related

@@ -30,9 +30,10 @@ import org.apache.tuscany.das.rdb.test.customer.CustomerFactory;
 import org.apache.tuscany.das.rdb.test.data.CustomerData;
 import org.apache.tuscany.das.rdb.test.data.OrderData;
 import org.apache.tuscany.das.rdb.test.framework.DasTest;
-import org.apache.tuscany.sdo.util.SDOUtil;
 
 import commonj.sdo.DataObject;
+import commonj.sdo.helper.HelperContext;
+import commonj.sdo.impl.HelperProvider;
 
 public class GraphMergeTests extends DasTest {
 
@@ -46,7 +47,8 @@ public class GraphMergeTests extends DasTest {
 
     public void testCreateEmptyGraph() throws Exception {
         String typeUri = "http:///org.apache.tuscany.das.rdb.test/customer.xsd";
-        SDOUtil.registerStaticTypes(CustomerFactory.class);
+        HelperContext context = HelperProvider.getDefaultContext();
+        CustomerFactory.INSTANCE.register(context);  
         ConfigHelper helper = new ConfigHelper();
         helper.setDataObjectModel(typeUri);
         DataObject graph = new GraphMerger().emptyGraph(helper.getConfig());
@@ -57,7 +59,8 @@ public class GraphMergeTests extends DasTest {
 
     public void testCreateEmptyGraphAndAddCustomer() throws Exception {
         String typeUri = "http:///org.apache.tuscany.das.rdb.test/customer.xsd";
-        SDOUtil.registerStaticTypes(CustomerFactory.class);
+        HelperContext context = HelperProvider.getDefaultContext();
+        CustomerFactory.INSTANCE.register(context);
         ConfigHelper helper = new ConfigHelper();
         helper.setDataObjectModel(typeUri);
         helper.addTable("CUSTOMER", "Customer");

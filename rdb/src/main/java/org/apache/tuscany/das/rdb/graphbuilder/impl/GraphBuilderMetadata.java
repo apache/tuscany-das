@@ -27,21 +27,24 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.apache.tuscany.das.rdb.config.Config;
 import org.apache.tuscany.das.rdb.config.Relationship;
 import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
 import org.apache.tuscany.das.rdb.impl.ResultSetShape;
-import org.apache.tuscany.sdo.util.DataObjectUtil;
-import org.apache.tuscany.sdo.util.SDOUtil;
+import org.apache.tuscany.sdo.api.SDOUtil;
 
 import commonj.sdo.Property;
 import commonj.sdo.Type;
-import commonj.sdo.helper.TypeHelper;
+import commonj.sdo.helper.HelperContext;
+import commonj.sdo.impl.HelperProvider;
 
 /**
  */
 public class GraphBuilderMetadata {
 
+	private final Logger logger = Logger.getLogger(GraphBuilderMetadata.class);
+	
     private MappingWrapper configWrapper;
 
     private final Collection resultSets = new ArrayList();
@@ -50,7 +53,7 @@ public class GraphBuilderMetadata {
 
     private Type rootType;
 
-    private TypeHelper typeHelper = SDOUtil.createTypeHelper();
+    private HelperContext defaultHelperContext = HelperProvider.getDefaultContext();
 
     public GraphBuilderMetadata(Collection results, Config model, ResultSetShape shape) throws SQLException {
         this.configWrapper = new MappingWrapper(model);
@@ -107,11 +110,12 @@ public class GraphBuilderMetadata {
 
     private void createDynamicTypes() {
 
-        DataObjectUtil.initRuntime();
+        Type root = SDOUtil.createType(defaultHelperContext, getDefaultURI(), "DataGraphRoot", false);
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("GBMD.createDynamicTypes():created Type for "+getDefaultURI());
+		}
 
-        Type root = SDOUtil.createType(typeHelper, getDefaultURI(), "DataGraphRoot", false);
-
-        Iterator iter = getResultMetadata().iterator();
+		Iterator iter = getResultMetadata().iterator();
         while (iter.hasNext()) {
 
             ResultMetadata resultMetadata = (ResultMetadata) iter.next();
@@ -120,12 +124,14 @@ public class GraphBuilderMetadata {
             Iterator names = resultMetadata.getAllTablePropertyNames().iterator();
             while (names.hasNext()) {
                 String tableName = (String) names.next();
-
                 if (root.getProperty(tableName) == null) {
-                    Type tableType = SDOUtil.createType(typeHelper, getDefaultURI(), tableName, false);
+                    Type tableType = SDOUtil.createType(defaultHelperContext, getDefaultURI(), tableName, false);
                     Property property = SDOUtil.createProperty(root, tableName, tableType);
                     SDOUtil.setMany(property, true);
                     SDOUtil.setContainment(property, true);
+                    if (this.logger.isDebugEnabled()) {
+               			this.logger.debug("GBMD.createDynamicTypes():CREATING NEW TABLE TYPE & PROPERTY :"+tableName);
+               		}                    
                 }
             }
 
@@ -216,9 +222,10 @@ public class GraphBuilderMetadata {
      * 
      */
     private void createDynamicRoot() {
-        Type root = SDOUtil.createType(typeHelper, getDefaultURI() + "/DataGraphRoot", "DataGraphRoot", false);
+        Type root = SDOUtil.createType(defaultHelperContext, getDefaultURI() + "/DataGraphRoot", "DataGraphRoot", false);
 
-        List types = SDOUtil.getTypes(typeHelper, typeURI);
+        List types = getDefinedTypes();
+        
         if (types == null) {
             throw new RuntimeException("SDO Types have not been registered for URI " + typeURI);
         }
@@ -234,12 +241,35 @@ public class GraphBuilderMetadata {
     }
 
     public List getDefinedTypes() {
+    	List types = null;
+    	List defaultTypes = null;
         if (this.typeURI == null) {
-            return SDOUtil.getTypes(typeHelper, getDefaultURI());
+        	types = SDOUtil.getTypes(defaultHelperContext, getDefaultURI());
+        	defaultTypes = SDOUtil.getTypes(defaultHelperContext, getDefaultURI());
+        	if(defaultTypes != null){
+	            if(types == null) {
+	            	types = defaultTypes;
+	            }
+	            else {
+	            	types.addAll(defaultTypes);	
+	            }
+        	}
+            return types;
         } 
             
-        List types = SDOUtil.getTypes(typeHelper, typeURI);
-        types.add(rootType);
+        types = SDOUtil.getTypes(defaultHelperContext, typeURI);        
+        defaultTypes = SDOUtil.getTypes(defaultHelperContext, typeURI);
+        if(defaultTypes != null){
+	        if(types == null) {
+	        	types = defaultTypes;
+	        }
+	        else {
+	        	types.addAll(defaultTypes);	
+	        }   
+        }
+        
+        if(rootType != null)
+        	types.add(rootType);
         return types;
         
     }

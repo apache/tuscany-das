@@ -28,9 +28,10 @@ import org.apache.tuscany.das.rdb.test.customer.CustomerFactory;
 import org.apache.tuscany.das.rdb.test.data.CustomerData;
 import org.apache.tuscany.das.rdb.test.data.OrderData;
 import org.apache.tuscany.das.rdb.test.framework.DasTest;
-import org.apache.tuscany.sdo.util.SDOUtil;
 
 import commonj.sdo.DataObject;
+import commonj.sdo.helper.HelperContext;
+import commonj.sdo.impl.HelperProvider;
 
 public class TopDown extends DasTest {
 
@@ -49,7 +50,8 @@ public class TopDown extends DasTest {
 
         Command select = das.getCommand("Customer and Orders");
 
-        SDOUtil.registerStaticTypes(CustomerFactory.class);
+        HelperContext context = HelperProvider.getDefaultContext();
+        CustomerFactory.INSTANCE.register(context);
 
         // Parameterize the command
         select.setParameter(1, new Integer(1));
