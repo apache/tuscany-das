@@ -37,7 +37,6 @@ import org.apache.tuscany.sdo.api.SDOUtil;
 import commonj.sdo.Property;
 import commonj.sdo.Type;
 import commonj.sdo.helper.HelperContext;
-import commonj.sdo.helper.TypeHelper;
 import commonj.sdo.impl.HelperProvider;
 
 /**
@@ -56,7 +55,6 @@ public class GraphBuilderMetadata {
 
     private HelperContext defaultHelperContext = HelperProvider.getDefaultContext();
     private HelperContext helperContext = HelperProvider.getInstance().getDefaultContext(); 
-    private TypeHelper typeHelper = helperContext.getTypeHelper();
  
 
     public GraphBuilderMetadata(Collection results, Config model, ResultSetShape shape) throws SQLException {
