@@ -56,7 +56,6 @@ public final class UpdateGenerator extends BaseGenerator {
         Type type = changedObject.getType();
         TableWrapper tableWrapper = new TableWrapper(table);
         StringBuffer statement = new StringBuffer("update ");
-        //JIRA-952
         if(mapping.getConfig().isDatabaseSchemaNameSupported()){
         	statement.append(table.getSchemaName()+"."+table.getTableName());
         }
@@ -225,5 +224,4 @@ public final class UpdateGenerator extends BaseGenerator {
         ParameterImpl param = new ParameterImpl();
         return fillParameter(param, table, property, idx);
     }
-
 }

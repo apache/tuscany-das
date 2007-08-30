@@ -37,6 +37,7 @@ import org.apache.tuscany.sdo.api.SDOUtil;
 import commonj.sdo.Property;
 import commonj.sdo.Type;
 import commonj.sdo.helper.HelperContext;
+import commonj.sdo.helper.TypeHelper;
 import commonj.sdo.impl.HelperProvider;
 
 /**
@@ -54,6 +55,9 @@ public class GraphBuilderMetadata {
     private Type rootType;
 
     private HelperContext defaultHelperContext = HelperProvider.getDefaultContext();
+    private HelperContext helperContext = HelperProvider.getInstance().getDefaultContext(); 
+    private TypeHelper typeHelper = helperContext.getTypeHelper();
+ 
 
     public GraphBuilderMetadata(Collection results, Config model, ResultSetShape shape) throws SQLException {
         this.configWrapper = new MappingWrapper(model);
@@ -110,7 +114,7 @@ public class GraphBuilderMetadata {
 
     private void createDynamicTypes() {
 
-        Type root = SDOUtil.createType(defaultHelperContext, getDefaultURI(), "DataGraphRoot", false);
+        Type root = SDOUtil.createType(helperContext, getDefaultURI(), "DataGraphRoot", false);
 		if (this.logger.isDebugEnabled()) {
 			this.logger.debug("GBMD.createDynamicTypes():created Type for "+getDefaultURI());
 		}
@@ -125,7 +129,7 @@ public class GraphBuilderMetadata {
             while (names.hasNext()) {
                 String tableName = (String) names.next();
                 if (root.getProperty(tableName) == null) {
-                    Type tableType = SDOUtil.createType(defaultHelperContext, getDefaultURI(), tableName, false);
+                    Type tableType = SDOUtil.createType(helperContext, getDefaultURI(), tableName, false);
                     Property property = SDOUtil.createProperty(root, tableName, tableType);
                     SDOUtil.setMany(property, true);
                     SDOUtil.setContainment(property, true);
@@ -222,7 +226,7 @@ public class GraphBuilderMetadata {
      * 
      */
     private void createDynamicRoot() {
-        Type root = SDOUtil.createType(defaultHelperContext, getDefaultURI() + "/DataGraphRoot", "DataGraphRoot", false);
+        Type root = SDOUtil.createType(helperContext, getDefaultURI() + "/DataGraphRoot", "DataGraphRoot", false);
 
         List types = getDefinedTypes();
         
@@ -244,7 +248,7 @@ public class GraphBuilderMetadata {
     	List types = null;
     	List defaultTypes = null;
         if (this.typeURI == null) {
-        	types = SDOUtil.getTypes(defaultHelperContext, getDefaultURI());
+        	types = SDOUtil.getTypes(helperContext, getDefaultURI());
         	defaultTypes = SDOUtil.getTypes(defaultHelperContext, getDefaultURI());
         	if(defaultTypes != null){
 	            if(types == null) {
@@ -257,7 +261,7 @@ public class GraphBuilderMetadata {
             return types;
         } 
             
-        types = SDOUtil.getTypes(defaultHelperContext, typeURI);        
+        types = SDOUtil.getTypes(helperContext, typeURI);        
         defaultTypes = SDOUtil.getTypes(defaultHelperContext, typeURI);
         if(defaultTypes != null){
 	        if(types == null) {
