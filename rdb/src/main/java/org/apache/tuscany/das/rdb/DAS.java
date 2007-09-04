@@ -18,6 +18,8 @@
  */
 package org.apache.tuscany.das.rdb;
 
+import java.sql.Connection;
+
 import org.apache.tuscany.das.rdb.impl.DASFactoryImpl;
 
 import commonj.sdo.DataObject;
@@ -64,4 +66,9 @@ public interface DAS {
      */
     Command createCommand(String sql);
 
+    /**
+     * Make connection available for user to control transaction externally
+     * @return
+     */
+    Connection getConnection();
 }

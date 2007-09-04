@@ -87,8 +87,7 @@ public class DASImpl implements DAS {
                 throw new RuntimeException("Invalid kind of command: " + kind);
             }
 
-        }
-
+        }        
     }
 
     public DASImpl(Config inConfig, Connection inConnection) {
@@ -111,7 +110,7 @@ public class DASImpl implements DAS {
      * @see org.apache.tuscany.das.rdb.CommandGroup#getApplyChangesCommand()
      */
     public ApplyChangesCommandImpl getApplyChangesCommand() {
-        ApplyChangesCommandImpl cmd = new ApplyChangesCommandImpl(configWrapper, getConnection());
+        ApplyChangesCommandImpl cmd = new ApplyChangesCommandImpl(configWrapper, getConnectionFromConfig());
         return cmd;
     }
 
@@ -125,7 +124,7 @@ public class DASImpl implements DAS {
             throw new RuntimeException("CommandGroup has no command named: " + name);
         }
         CommandImpl cmd = (CommandImpl) commands.get(name);
-        cmd.setConnection(getConnection(), configWrapper.getConfig());
+        cmd.setConnection(getConnectionFromConfig(), configWrapper.getConfig());
         return cmd;
     }
 
@@ -133,7 +132,7 @@ public class DASImpl implements DAS {
         this.connection = connection;
     }
 
-    public Connection getConnection() {
+    private Connection getConnectionFromConfig() {
         if (connection == null) {
             initializeConnection();
         }
@@ -142,6 +141,7 @@ public class DASImpl implements DAS {
 
     private void initializeConnection() {
         Config config = configWrapper.getConfig();
+        
         if (config == null || config.getConnectionInfo() == null ||
             (config.getConnectionInfo().getDataSource() == null && config.getConnectionInfo().getConnectionProperties() == null)) {
             throw new RuntimeException("No connection has been provided and no data source has been specified");
@@ -258,15 +258,15 @@ public class DASImpl implements DAS {
     }
 
     /**
-     * If the config has connection properties then we are "managing" the connection via DataSource
+     * If the DAS is managing connection, let it close it, else not
      */
     private boolean managingConnections() {
 
-        if (configWrapper.getConfig().getConnectionInfo().getDataSource() == null) {
-            return false;
+        if (configWrapper.getConfig().getConnectionInfo().isManagedtx()) {
+            return true;
         }
 
-        return true;
+        return false;
 
     }
 
@@ -302,7 +302,7 @@ public class DASImpl implements DAS {
                 throw new RuntimeException("SQL => " + sql + " is not valid");
         }
 
-        returnCmd.setConnection(getConnection(), config.getConfig());
+        returnCmd.setConnection(getConnectionFromConfig(), config.getConfig());
         return returnCmd;
     }
 
@@ -310,4 +310,24 @@ public class DASImpl implements DAS {
         getApplyChangesCommand().execute(root);
     }
 
+    public Connection getConnection() {
+    	getConnectionFromConfig();
+    	//connection created from DAS but tx management by client
+    	if(this.configWrapper.getConfig() != null && 
+    	   this.configWrapper.getConfig().getConnectionInfo() != null &&
+    	   !this.configWrapper.getConfig().getConnectionInfo().isManagedtx()){
+    		return this.connection;
+    	}
+    	//connection from client
+    	else if(this.configWrapper.getConfig() == null ||
+    			this.configWrapper.getConfig().getConnectionInfo() == null ||
+    			(this.configWrapper.getConfig().getConnectionInfo().getDataSource()==null &&
+    			 this.configWrapper.getConfig().getConnectionInfo().getConnectionProperties()==null)){
+    		return this.connection;
+    	}
+    	//connection from DAS and tx management by DAS
+    	else{
+    		throw new RuntimeException("DAS is controlling transaction, can not expose Connection!");
+    	}    	
+    }    
 }
