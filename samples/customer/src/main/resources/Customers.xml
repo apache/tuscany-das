@@ -27,31 +27,17 @@
 			loginTimeout="600000"/>
 	</ConnectionInfo>
 	
-	<!--Uncomment below for db2 test-->
-	<!--<ConnectionInfo dataSource="java:comp/env/jdbc/dastest"
-				contextAvailable="false">
-		<ConnectionProperties 
-			dataSourceClass="COM.ibm.db2.jdbc.DB2DataSource"
-			user="amita"
-			password="14-174-58-79-82-202-237-108-121-203-238-10-54-180-181-42"
-			key="193-155-248-97-234-56-100-241"
-			databaseName="DASTEST"
-			loginTimeout="600000">
-		</ConnectionProperties>
-	</ConnectionInfo>-->
-		
 	<!--Uncomment below for MySQL test-->
-	<!--<ConnectionInfo dataSource="java:comp/env/jdbc/dastest"
-				contextAvailable="false">
+	<!-- 
+	<ConnectionInfo>
 		<ConnectionProperties 
-			dataSourceClass="com.mysql.jdbc.jdbc2.optional.MysqlDataSource"
-			user="root"
-			password="192-8-16-141-148-100-119-119"
-			key="193-155-248-97-234-56-100-241"
-			databaseName="DASTEST"
-			loginTimeout="600000">
-		</ConnectionProperties>
-	</ConnectionInfo>-->
+			driverClass="com.mysql.jdbc.Driver"
+			databaseURL="jdbc:mysql://localhost/dastest"
+			userName="dastest"
+			password="dastest"
+			loginTimeout="600000"/>
+	</ConnectionInfo>
+	-->
 			
     <Command name="AllCustomers" SQL="select * from CUSTOMER" kind="Select"/>
 
