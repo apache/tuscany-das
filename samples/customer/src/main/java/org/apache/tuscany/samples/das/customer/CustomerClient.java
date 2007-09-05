@@ -23,138 +23,58 @@ import java.util.List;
 
 import org.apache.tuscany.das.rdb.Command;
 import org.apache.tuscany.das.rdb.DAS;
-import org.apache.tuscany.das.rdb.config.Config;
-import org.apache.tuscany.das.rdb.util.ConfigUtil;
-import org.apache.tuscany.samples.das.databaseSetup.DB2Setup;
-import org.apache.tuscany.samples.das.databaseSetup.DerbySetup;
-import org.apache.tuscany.samples.das.databaseSetup.MySQLSetup;
 
 import commonj.sdo.DataObject;
 
 public class CustomerClient {
+    private static final String DEFAULT_CUSTOMER_CONFIG = "CustomersConfig.xml";
+    
 	private DAS das = null;
-	public static final String DERBY = "derby";
-	public static final String MYSQL = "mysql";
-	public static final String DB2 = "db2";
-	
-	private CustomerClient(){		
+    private final String configFile;
+    
+    /**
+     * Default constructor
+     *
+     */
+	public CustomerClient(){	
+        this.configFile = DEFAULT_CUSTOMER_CONFIG;
 	}
-
-	/**If database is present connect to it and create necessary tables, procedures, data etc.
-	 * If database is not present create database and then create the above elements. Create database
-	 * is implemented for MySQL and Derby (not for IBM DB2).
-	 */
-	
-	protected boolean checkIfDBPresent(String dbType, String dbName, String user, String password){
-    	try {
-        	if(dbType.equals(DERBY)){
-        		new DerbySetup(dbName+"-"+user+"-"+password);
-        	}
-        	
-        	if(dbType.equals(DB2)){
-        		new DB2Setup(dbName+"-"+user+"-"+password);
-        	}
-        	
-        	if(dbType.equals(MYSQL)){
-        		new MySQLSetup(dbName+"-"+user+"-"+password);
-        	}
-        	
-        } catch(Exception e){
-        	e.printStackTrace();
-        }
-        
-        return true;
+    
+    /**
+     * Constructor receiving the das config file to be used
+     * @param configFile DAS configuration file
+     */
+    public CustomerClient(String configFile) {
+        this.configFile = configFile;
     }
-	
-	private void init(String configFile){
-		try{
-			this.das = DAS.FACTORY.createDAS(getConfig(configFile));
-		}catch(Exception e){
-			e.printStackTrace();
-		}	
-	}
-	
-	public static void main(String[] args){
-		String configFile = "Customers.xml";//this can be from input params too as below
-		
-		if(args != null && args.length >0){
-			configFile = args[0];
-		}
-		
-		CustomerClient cclient = new CustomerClient();
-		
-		Config config = ConfigUtil.loadConfig(cclient.getClass().getClassLoader().getResourceAsStream(configFile));
-		
-		String dbType = null;
-		String dbURL = null;
-		String user = null;
-		String password = null;
-		
-		if(config.getConnectionInfo().getConnectionProperties().getDriverClass().indexOf(DERBY) != -1){
-			dbType = DERBY;
-		}
-		
-		if(config.getConnectionInfo().getConnectionProperties().getDriverClass().indexOf(MYSQL) != -1){
-			dbType = MYSQL;
-		}
-		
-		if(config.getConnectionInfo().getConnectionProperties().getDriverClass().indexOf(DB2) != -1){
-			dbType = DB2;
-		}
-	
-		//get connection info from config
-		dbURL = config.getConnectionInfo().getConnectionProperties().getDatabaseURL();
-		user = config.getConnectionInfo().getConnectionProperties().getUserName();
-		password = config.getConnectionInfo().getConnectionProperties().getPassword();
-		
-		System.out.println("connection info from config***************");
-		System.out.println("dbName:"+dbURL+" user:"+user+" password:"+password);
-		System.out.println("******************************************");
-		//dt create/connect/create schema
-		cclient.checkIfDBPresent(dbType, dbURL, user, password);
+    
+    /**
+     * Helper method to get a stream from the customer config file 
+     * @param fileName
+     * @return
+     */
+    protected InputStream getConfig(String fileName) {
+        return getClass().getClassLoader().getResourceAsStream(fileName);
+    }
+    
+    /**
+     * Get a reference to DAS, initialize it if necessary
+     * @return DAS reference
+     */
+    protected DAS getDAS() {
+        if (this.das == null ) {
+            this.das = DAS.FACTORY.createDAS(getConfig(this.configFile));
+        }
+        return this.das;
+    }
 
-		//get das handle
-		cclient.init(configFile);
-		
-		//test select
-		System.out.println("Result:select all customers");
-		printList(cclient.getCustomers());
-		
-		//test insert
-		System.out.println("Result:insert new customer");
-		cclient.addCustomer();
-		printList(cclient.getCustomers());
-		
-		//test update
-		System.out.println("Result:update first customer");
-		cclient.changeFirstCustomerName();
-		printList(cclient.getCustomers());
-		
-		//test delete
-		System.out.println("Result:delete last customer");
-		cclient.deleteCustomer();
-		printList(cclient.getCustomers());
-	}
-
-	/**
-	 * display result 
-	 * @param customers
-	 */
-	public static void printList(List customers){
-		for(int i=0; i<customers.size(); i++){
-			System.out.println("   ID:"+(((DataObject)customers.get(i)).getInt("ID"))+
-						" LASTNAME:"+(((DataObject)customers.get(i)).getString("LASTNAME"))+ 
-						" ADDRESS:"+(((DataObject)customers.get(i)).getString("ADDRESS")));
-		}
-	}
 	
 	/**
 	 * select
 	 * @return
 	 */
     public final List getCustomers() {
-
-        Command read = das.getCommand("AllCustomers");
+        Command read = this.getDAS().getCommand("AllCustomers");
         DataObject root = read.executeQuery();
         return root.getList("CUSTOMER");
     }
@@ -164,7 +84,7 @@ public class CustomerClient {
      *
      */
     public final void addCustomer() {
-        Command read = das.getCommand("AllCustomers");
+        Command read = this.getDAS().getCommand("AllCustomers");
         DataObject root = read.executeQuery();
 
         DataObject newCustomer = root.createDataObject("CUSTOMER");
@@ -180,7 +100,7 @@ public class CustomerClient {
      *
      */
     public final void deleteCustomer() {
-        Command readAll = das.getCommand("AllCustomers");
+        Command readAll = this.getDAS().getCommand("AllCustomers");
         DataObject root = readAll.executeQuery();
 
         List allCustomers = root.getList("CUSTOMER");
@@ -199,7 +119,7 @@ public class CustomerClient {
      *
      */
     public final void changeFirstCustomerName() {
-        Command readAll = das.getCommand("AllCustomers");
+        Command readAll = this.getDAS().getCommand("AllCustomers");
         DataObject root = readAll.executeQuery();
 
         DataObject firstCustomer = root.getDataObject("CUSTOMER[1]");
@@ -207,21 +127,71 @@ public class CustomerClient {
         
         das.applyChanges(root);
     }
-        
+
+    /**
+     * display result 
+     * @param customers
+     */
+    public static void printList(List customers){
+        for(int i=0; i<customers.size(); i++){
+            System.out.println("   ID:"+(((DataObject)customers.get(i)).getInt("ID"))+
+                        " LASTNAME:"+(((DataObject)customers.get(i)).getString("LASTNAME"))+ 
+                        " ADDRESS:"+(((DataObject)customers.get(i)).getString("ADDRESS")));
+        }
+    }
+    
     /**
      * cleanup
      *
      */
     public void releaseResources() {
         das.releaseResources();
-    }
-
-    /**Utilities
-     * 
-     * @param fileName
-     * @return
-     */
-    private InputStream getConfig(String fileName) {
-        return getClass().getClassLoader().getResourceAsStream(fileName);
+    }   
+    
+    /**
+     * Main customer application
+     */    
+    public static void main(String[] args){
+        String customerConfigFile = "CustomersConfig.xml"; //this can be from input params too as below
+        
+        if(args != null && args.length >0){
+            customerConfigFile = args[0];
+        }
+        
+        
+        //initialize customer database using helper class
+        CustomerDatabaseInitializer dbInitializer = new CustomerDatabaseInitializer(customerConfigFile);
+        try {
+            dbInitializer.Initialize();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        
+        
+        //perform customer operations using DAS
+        CustomerClient customerClient = new CustomerClient(customerConfigFile);        
+        //test select
+        System.out.println();
+        System.out.println("Result:select all customers");
+        printList(customerClient.getCustomers());
+        
+        //test insert
+        System.out.println();
+        System.out.println("Result:insert new customer");
+        customerClient.addCustomer();
+        printList(customerClient.getCustomers());
+        
+        //test update
+        System.out.println();
+        System.out.println("Result:update first customer");
+        customerClient.changeFirstCustomerName();
+        printList(customerClient.getCustomers());
+        
+        //test delete
+        System.out.println();
+        System.out.println("Result:delete last customer");
+        customerClient.deleteCustomer();
+        printList(customerClient.getCustomers());
     }
 }
