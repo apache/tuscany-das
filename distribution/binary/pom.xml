@@ -40,20 +40,20 @@
 
        <dependency>
           <groupId>org.apache.tuscany.das.samples</groupId>
-          <artifactId>tuscany-das-sample-companyweb</artifactId>
+          <artifactId>tuscany-das-sample-company-webapp</artifactId>
           <version>${das.version}</version>
           <type>war</type>
       </dependency>        
 
        <dependency>
           <groupId>org.apache.tuscany.das.samples</groupId>
-          <artifactId>tuscany-das-sample-customer-j2se</artifactId>
+          <artifactId>tuscany-das-sample-customer</artifactId>
           <version>${das.version}</version>
       </dependency>        
 
        <dependency>
           <groupId>org.apache.tuscany.das.samples</groupId>
-          <artifactId>sample-ajax-das</artifactId>
+          <artifactId>tuscany-das-sample-advanced-webapp</artifactId>
           <version>${das.version}</version>
           <type>war</type>
       </dependency>        

@@ -25,9 +25,9 @@
         <version>1.0-incubating-SNAPSHOT</version>
     </parent>
 
-    <artifactId>tuscany-das-sample-customer-j2se</artifactId>
+    <artifactId>tuscany-das-sample-customer</artifactId>
     <packaging>jar</packaging>
-    <name>Tuscany DAS J2SE Customer Sample</name>
+    <name>Tuscany DAS Customer Sample</name>
     <description>Sample use of RDB DAS in a J2SE application</description>
 
     <dependencies>

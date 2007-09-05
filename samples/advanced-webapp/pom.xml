@@ -23,10 +23,10 @@
     </parent>
 	
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>sample-ajax-das</artifactId>
+    <artifactId>tuscany-das-sample-advanced-webapp</artifactId>
     <packaging>war</packaging>
-    <name>Tuscany DAS Ajax Sample</name>
-    <description>Sample demo of RDB DAS features in a Web application using Ajax</description>
+    <name>Tuscany DAS Advanced Sample</name>
+    <description>Advanced DAS web applicaiton Sample based on Ajax</description>
 
     <dependencies>
 		
@@ -80,7 +80,7 @@
     
     <!-- this will place the java source files inside the war -->
         <build>
-            <finalName>sample-ajax-das</finalName>
+            <finalName>sample-advanced-webapp</finalName>
             <sourceDirectory>src/main/java</sourceDirectory>
             <resources>
                 <resource>

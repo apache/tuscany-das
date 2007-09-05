@@ -59,8 +59,8 @@
         <property name="tuscany.sdo.acceptance.version" value='incubating-M1' />
 
 <!--KJW  Define location of canned Derby database -->
-        <property name="tuscany.acceptance.das.samples.companyweb.dir" value='../../companyweb' />
-        <property name="tuscany.acceptance.das.samples.sampleajaxdas.dir" value='../../sample-ajax-das' />
+        <property name="tuscany.acceptance.das.samples.companyweb.dir" value='../../company-webapp' />
+        <property name="tuscany.acceptance.das.samples.advancedweb.dir" value='../../advanced-webapp' />
 
         <property name="tuscany.maven.repos.dir" value='${user.home}\.m2\repository' />
         <condition property="isWindows">
@@ -151,7 +151,7 @@
                         <fileset dir="${tuscany.maven.repos.dir}">
                                 <patternset refid="tuscany.acceptance.tc.specsdoimpl" />
                         </fileset>
-                        <fileset dir="${tuscany.acceptance.das.samples.sampleajaxdas.dir}">
+                        <fileset dir="${tuscany.acceptance.das.samples.advancedweb.dir}">
                                 <include name="**/*.war" />
                         </fileset>                        
                         <fileset dir="${tuscany.maven.repos.dir}">
@@ -172,7 +172,7 @@
                         <fileset dir="${tuscany.acceptance.das.samples.companyweb.dir}">
                                 <include name="**/*.war" />
                         </fileset>
-                        <fileset dir="${tuscany.acceptance.das.samples.sampleajaxdas.dir}">
+                        <fileset dir="${tuscany.acceptance.das.samples.advancedweb.dir}">
                                 <include name="**/*.war" />
                         </fileset>                         
                         <!-- lresende - using the right name on the build now, don't need to clean up -->
@@ -192,7 +192,7 @@
                         <fileset dir="${tuscany.acceptance.das.samples.companyweb.dir}">
                                 <include name="**/dastest/**" />
                         </fileset>
-                        <fileset dir="${tuscany.acceptance.das.samples.sampleajaxdas.dir}">
+                        <fileset dir="${tuscany.acceptance.das.samples.advancedweb.dir}">
                                 <include name="**/ajaxdastest/**" />
                         </fileset>
                 </copy -->

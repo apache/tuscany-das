@@ -25,7 +25,7 @@
         <version>1.0-incubating-SNAPSHOT</version>
     </parent>
 
-    <artifactId>tuscany-das-sample-companyweb</artifactId>
+    <artifactId>tuscany-das-sample-company-webapp</artifactId>
     <packaging>war</packaging>
     <name>Tuscany DAS Company Sample</name>
     <description>Sample use of RDB DAS in a Web application</description>
@@ -61,7 +61,7 @@
 
     <!-- this will place the java source files inside the war -->
     <build>
-        <finalName>sample-companyweb</finalName>
+        <finalName>sample-company-webapp</finalName>
         <sourceDirectory>src/main/java</sourceDirectory>
         <resources>
             <resource>

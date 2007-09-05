@@ -48,9 +48,13 @@
          <include>**/*.*</include>
       </includes>
       <excludes>
+         <exclude>**/ldap/**</exclude>
          <exclude>**/target/**</exclude>
+         <exclude>**/.settings/**</exclude>
          <exclude>**/**.mdl</exclude>
          <exclude>**/derby.log</exclude>
+         <exclude>**/.project</exclude>
+         <exclude>**/.classpath</exclude>
       </excludes>
       <fileMode>0644</fileMode>
     </fileSet>

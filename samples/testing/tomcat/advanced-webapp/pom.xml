@@ -25,7 +25,7 @@
         <version>1.0-incubating-SNAPSHOT</version>
     </parent>
 
-    <artifactId>tuscany-das-samples-testing-tomcatsampleajaxdas</artifactId>
+    <artifactId>tuscany-das-samples-testing-tomcat-advanced-webapp</artifactId>
     <packaging>jar</packaging>
     <name>Tuscany Testing Ajax DAS Web Sample</name>
     <description>Testing Tomcat Ajax DAS end user test</description>

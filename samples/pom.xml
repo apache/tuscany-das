@@ -32,8 +32,8 @@
 
     <modules>
         <module>dbconfig</module>
-        <module>companyweb</module>
-        <module>sample-ajax-das</module>
+        <module>company-webapp</module>
+        <module>advanced-webapp</module>
         <module>customer</module>
     </modules>
 </project>

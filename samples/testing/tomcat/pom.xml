@@ -30,8 +30,8 @@
     <name>Tuscany Testing in Tomcat</name>
 
     <modules>
-        <module>companyweb</module>
-        <module>sample-ajax-das</module>        
+        <module>company-webapp</module>
+        <module>advanced-webapp</module>        
     </modules>
 
     <build>

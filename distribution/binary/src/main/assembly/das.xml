@@ -50,14 +50,14 @@
         <files>
             <!-- include readme for companyweb sample -->
             <file>
-               <source>../../samples/companyweb/readme.htm</source>
-               <outputDirectory>tuscany-das-${das.version}/samples/companyweb</outputDirectory>
+               <source>../../samples/company-webapp/readme.htm</source>
+               <outputDirectory>tuscany-das-${das.version}/samples/company-webapp</outputDirectory>
                <fileMode>0644</fileMode>
             </file>
             <!-- include companyweb sample -->
             <file>
-               <source>../../samples/companyweb/target/sample-companyweb.war</source>
-               <outputDirectory>tuscany-das-${das.version}/samples/companyweb</outputDirectory>
+               <source>../../samples/company-webapp/target/sample-company-webapp.war</source>
+               <outputDirectory>tuscany-das-${das.version}/samples/company-webapp</outputDirectory>
                <fileMode>0644</fileMode>
             </file>
 
@@ -65,14 +65,14 @@
             
             <!-- include readme for ajax das sample -->
             <file>
-               <source>../../samples/sample-ajax-das/readme.htm</source>
-               <outputDirectory>tuscany-das-${das.version}/samples/sample-ajax-das</outputDirectory>
+               <source>../../samples/advanced-webapp/readme.htm</source>
+               <outputDirectory>tuscany-das-${das.version}/samples/advanced-webapp</outputDirectory>
                <fileMode>0644</fileMode>
             </file>
             <!-- include ajax das sample -->
             <file>
-               <source>../../samples/sample-ajax-das/target/sample-ajax-das.war</source>
-               <outputDirectory>tuscany-das-${das.version}/samples/sample-ajax-das</outputDirectory>
+               <source>../../samples/advanced-webapp/target/sample-advanced-webapp.war</source>
+               <outputDirectory>tuscany-das-${das.version}/samples/advanced-webapp</outputDirectory>
                <fileMode>0644</fileMode>
             </file>
             

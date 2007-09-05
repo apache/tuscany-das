@@ -38,7 +38,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlRadioButtonInput;
 import com.gargoylesoftware.htmlunit.html.HtmlSelect;
 
 public class AjaxDasTestCase extends TestCase {
-    public static final String testUrl = "http://localhost:8080/sample-ajax-das";
+    public static final String testUrl = "http://localhost:8080/sample-advanced-webapp";
 
     protected WebClient _webClient;
     protected URL _url;

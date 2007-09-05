@@ -28,7 +28,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
 
 public class DasTestCase extends TestCase {
-    public static final String testUrl = "http://localhost:8080/sample-companyweb/";
+    public static final String testUrl = "http://localhost:8080/sample-company-webapp/";
 
     protected WebClient _webClient;
     protected URL _url;
