@@ -164,9 +164,6 @@ public class DatabaseSetup extends TestSetup {
             "DROP TABLE DASTEST3.ORDERDETAILSDESC", "DROP TABLE DASTEST1.ORDERDETAILS",
             "DROP TABLE DASTEST1.EMPLOYEE",
             "DROP TABLE SINGER",
-            "DROP TABLE BANKACCOUNT",
-            "DROP TABLE DEPARTMENTS",
-            "DROP TABLE EMPLOYEES",
             "DROP TABLE SONG",            
             "DROP TABLE DASTEST1.EMPLOYEE",
             "DROP TABLE DOCUMENTS_IMAGES"
@@ -277,10 +274,7 @@ public class DatabaseSetup extends TestSetup {
             s.execute(getCreateDASTEST3OrderDetailsDesc());            
             //JIRA-952 end
             s.execute(getCreateSinger());
-            s.execute(getCreateSong());
-            s.execute(getCreateDepartments());
-            s.execute(getCreateBankAccount());
-            s.execute(getCreateEmployees());
+            s.execute(getCreateSong());            
             s.execute(getCreateDocumentsImages());
 
         } catch (SQLException e) {
@@ -360,13 +354,6 @@ public class DatabaseSetup extends TestSetup {
                 + getIntegerColumn("DEPARTMENTID") + ")";
     }
 
-    protected String getCreateEmployees() {
-        return "CREATE TABLE EMPLOYEES (" + getIntegerColumn("ID") + " PRIMARY KEY NOT NULL " 
-            + getGeneratedKeyClause() + ","
-                + getStringColumn("NAME", 30) + "," + getStringColumn("SN", 10) + ", MANAGER SMALLINT, " 
-                + getIntegerColumn("DEPARTMENTID") + ")";
-    }
-
     protected String getCreateDepartment() {
         return "CREATE TABLE DEPARTMENT (" + getIntegerColumn("ID") + " PRIMARY KEY NOT NULL " 
             + getGeneratedKeyClause() + ", "
@@ -375,13 +362,6 @@ public class DatabaseSetup extends TestSetup {
                 + getIntegerColumn("COMPANYID") + ")";
     }
 
-    protected String getCreateDepartments() {
-        return "CREATE TABLE DEPARTMENTS (" + getIntegerColumn("ID") + " PRIMARY KEY NOT NULL , "
-                + getStringColumn("NAME", 30) + "," + getStringColumn("LOCATION", 30) + ", " 
-                + getStringColumn("DEPNUMBER", 10) + ","
-                + getIntegerColumn("COMPANYID") + ")";
-    }
-    
     protected String getCreateBook() {
         return "CREATE TABLE BOOK (" + getIntegerColumn("BOOK_ID") + " PRIMARY KEY NOT NULL, " 
             + getStringColumn("NAME", 50) + ","
@@ -533,12 +513,7 @@ public class DatabaseSetup extends TestSetup {
 
 
 
-    protected String getCreateBankAccount() {
-    	return "CREATE TABLE BANKACCOUNT ("+ getIntegerColumn("ID") + " , " +
-		getIntegerColumn("SSN") + ", "+
-		getIntegerColumn("BALANCE") + " )";    	
-    }
-    
+
 
 
 
