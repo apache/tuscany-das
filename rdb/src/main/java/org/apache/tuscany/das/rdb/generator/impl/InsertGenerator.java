@@ -31,7 +31,8 @@ import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
 import org.apache.tuscany.das.rdb.config.wrapper.RelationshipWrapper;
 import org.apache.tuscany.das.rdb.config.wrapper.TableWrapper;
 import org.apache.tuscany.das.rdb.impl.InsertCommandImpl;
-import org.apache.tuscany.das.rdb.impl.ParameterImpl;
+import org.apache.tuscany.das.rdb.impl.ParameterExtendedImpl;
+import org.apache.tuscany.das.rdb.impl.SDODataTypeHelper;
 import org.apache.tuscany.das.rdb.util.CollectionsUtil;
 
 import commonj.sdo.DataObject;
@@ -109,9 +110,10 @@ public final class InsertGenerator extends BaseGenerator {
         Iterator params = parameters.iterator();
         for (int idx = 1; params.hasNext(); idx++) {
             Property property = (Property) params.next();
-            ParameterImpl p = new ParameterImpl();
+            ParameterExtendedImpl p = new ParameterExtendedImpl();
             p.setName(property.getName());
             p.setType(property.getType());
+            p.setColumnType(SDODataTypeHelper.columnTypeForSDOType(property.getType()));
             p.setConverter(getConverter(table.getConverter(property.getName())));
             p.setIndex(idx);
             cmd.addParameter(p);

@@ -32,7 +32,8 @@ import org.apache.tuscany.das.rdb.config.wrapper.TableWrapper;
 import org.apache.tuscany.das.rdb.impl.CollisionParameter;
 import org.apache.tuscany.das.rdb.impl.ManagedParameterImpl;
 import org.apache.tuscany.das.rdb.impl.OptimisticWriteCommandImpl;
-import org.apache.tuscany.das.rdb.impl.ParameterImpl;
+import org.apache.tuscany.das.rdb.impl.ParameterExtendedImpl;
+import org.apache.tuscany.das.rdb.impl.SDODataTypeHelper;
 import org.apache.tuscany.das.rdb.impl.UpdateCommandImpl;
 
 import commonj.sdo.ChangeSummary;
@@ -123,7 +124,7 @@ public final class UpdateGenerator extends BaseGenerator {
                 if (value == null) {                   
                     statement.append(" is null");                    
                 } else {
-                    ParameterImpl param = createCollisionParameter(tableWrapper, changedProperty, idx++);
+                	ParameterExtendedImpl param = createCollisionParameter(tableWrapper, changedProperty, idx++);
                     statement.append(" = ?");
                     param.setValue(value);
                     parameters.add(param);
@@ -144,7 +145,7 @@ public final class UpdateGenerator extends BaseGenerator {
         
         Iterator params = parameters.iterator();
         while (params.hasNext()) {           
-            updateCommand.addParameter((ParameterImpl) params.next());
+        	updateCommand.addParameter((ParameterExtendedImpl) params.next());
         }
            
         if (this.logger.isDebugEnabled()) {
@@ -200,28 +201,28 @@ public final class UpdateGenerator extends BaseGenerator {
         return changes;
     }
 
-    private ParameterImpl fillParameter(ParameterImpl param, TableWrapper table, Property property, int idx) {
+    private ParameterExtendedImpl fillExtendedParameter(ParameterExtendedImpl param, TableWrapper table, Property property, int idx) {
         param.setName(property.getName());
         param.setType(property.getType());
         param.setConverter(getConverter(table.getConverter(property.getName())));
         if (idx != -1) {
             param.setIndex(idx);
         }
-
+        param.setColumnType(SDODataTypeHelper.columnTypeForSDOType(property.getType()));
         return param;
     }
-    private ParameterImpl createCollisionParameter(TableWrapper tableWrapper, Property property, int i) {
-        ParameterImpl param = new CollisionParameter();
-        return fillParameter(param, tableWrapper, property, i);
+    private ParameterExtendedImpl createCollisionParameter(TableWrapper tableWrapper, Property property, int i) {
+    	ParameterExtendedImpl param = new CollisionParameter();
+    	return fillExtendedParameter(param, tableWrapper, property, i);
     }
     
-    private ParameterImpl createManagedParameter(TableWrapper table, Property property, int idx) {
-        ParameterImpl param = new ManagedParameterImpl();
-        return fillParameter(param, table, property, idx);
+    private ParameterExtendedImpl createManagedParameter(TableWrapper table, Property property, int idx) {
+    	ParameterExtendedImpl param = new ManagedParameterImpl();
+    	return fillExtendedParameter(param, table, property, idx);
     }
 
-    private ParameterImpl createParameter(TableWrapper table, Property property, int idx) {
-        ParameterImpl param = new ParameterImpl();
-        return fillParameter(param, table, property, idx);
+    private ParameterExtendedImpl createParameter(TableWrapper table, Property property, int idx) {
+    	ParameterExtendedImpl param = new ParameterExtendedImpl();
+    	return fillExtendedParameter(param, table, property, idx);
     }
 }

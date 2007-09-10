@@ -74,13 +74,13 @@ public class DASImpl implements DAS {
                 (org.apache.tuscany.das.rdb.config.Command) i.next();
             String kind = commandConfig.getKind();
             if (kind.equalsIgnoreCase("select")) {
-                commands.put(commandConfig.getName(), new ReadCommandImpl(commandConfig.getSQL(), configWrapper, commandConfig.getResultDescriptor()));
+                commands.put(commandConfig.getName(), new ReadCommandImpl(commandConfig, configWrapper, commandConfig.getResultDescriptor()));
             } else if (kind.equalsIgnoreCase("update")) {
-                commands.put(commandConfig.getName(), new UpdateCommandImpl(commandConfig.getSQL()));
+                commands.put(commandConfig.getName(), new UpdateCommandImpl(commandConfig));
             } else if (kind.equalsIgnoreCase("insert")) {
-                commands.put(commandConfig.getName(), new InsertCommandImpl(commandConfig.getSQL(), new String[0]));
+                commands.put(commandConfig.getName(), new InsertCommandImpl(commandConfig, new String[0]));
             } else if (kind.equalsIgnoreCase("delete")) {
-                commands.put(commandConfig.getName(), new DeleteCommandImpl(commandConfig.getSQL()));
+                commands.put(commandConfig.getName(), new DeleteCommandImpl(commandConfig));
             } else if (kind.equalsIgnoreCase("procedure")) {
                 commands.put(commandConfig.getName(), new SPCommandImpl(commandConfig.getSQL(), configWrapper, commandConfig.getParameter()));
             } else {

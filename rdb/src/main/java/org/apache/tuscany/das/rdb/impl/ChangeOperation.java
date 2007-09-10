@@ -60,8 +60,8 @@ public abstract class ChangeOperation {
 
         Iterator i = writeCommand.getParameters().iterator();
         while (i.hasNext()) {
-            ParameterImpl parm = (ParameterImpl) i.next();
-
+        	ParameterExtendedImpl parm = (ParameterExtendedImpl) i.next();
+            
             if (this.logger.isDebugEnabled()) {
                 this.logger.debug("setting " + parm.getName() + " to " + dObject.get(parm.getName()));
             }

@@ -18,7 +18,7 @@
  */
 package org.apache.tuscany.das.rdb.impl;
 
-public class CollisionParameter extends ParameterImpl {
+public class CollisionParameter extends ParameterExtendedImpl {
 
     private boolean isSet;
 

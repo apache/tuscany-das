@@ -63,6 +63,23 @@ public interface Command {
     Object getParameter(int index);
 
     /**
+     * 
+     * @param name Name of parameter - should match exact name of database table column 
+     * as appearing in Command
+     * @param value 
+     * 		the value of the parameter
+     */
+    void setParameter(String name, Object value);
+    
+    /**
+     * 
+     * @param name
+     * 			the name of the parameter - should match exact name of database table column
+     * @return  the value of the parameter
+     */
+    Object getParameter(String name);
+    
+    /**
      * Returns the value of the database-generated key. This method is specific 
      * to an "insert" command and will be valid only after the command has
      * been executed.

@@ -47,7 +47,7 @@ public class Statement {
         this.queryString = sqlString;
     }
 
-    public List executeQuery(Parameters parameters) throws SQLException {
+    public List executeQuery(ParametersExtendedImpl parameters) throws SQLException {
 
         PreparedStatement ps = getPreparedStatement(new String[0]);
         ps = setParameters(ps, parameters);
@@ -56,20 +56,20 @@ public class Statement {
         return Collections.singletonList(rs);
     }
 
-    public List executeCall(Parameters parameters) throws SQLException {
+    public List executeCall(ParametersExtendedImpl parameters) throws SQLException {
 
         CallableStatement cs = jdbcConnection.prepareCall(queryString);
 
-        Iterator inParams = parameters.inParams().iterator();
+        Iterator inParams = parameters.getInParameters().iterator();
         while (inParams.hasNext()) {
-            ParameterImpl param = (ParameterImpl) inParams.next();
+        	ParameterExtendedImpl param = (ParameterExtendedImpl) inParams.next();
             cs.setObject(param.getIndex(), param.getValue());
         }
 
         // register out parameters
-        Iterator outParams = parameters.outParams().iterator();
+        Iterator outParams = parameters.getOutParameters().iterator();
         while (outParams.hasNext()) {
-            ParameterImpl param = (ParameterImpl) outParams.next();
+        	ParameterExtendedImpl param = (ParameterExtendedImpl) outParams.next();
             if (this.logger.isDebugEnabled()) {
                 this.logger.debug("Registering parameter " + param.getName());
             }
@@ -87,9 +87,9 @@ public class Statement {
             results.add(cs.getResultSet());
         }
 
-        Iterator i = parameters.outParams().iterator();
+        Iterator i = parameters.getOutParameters().iterator();
         while (i.hasNext()) {
-            ParameterImpl param = (ParameterImpl) i.next();
+        	ParameterExtendedImpl param = (ParameterExtendedImpl) i.next();
             param.setValue(cs.getObject(param.getIndex()));
         }
 
@@ -97,19 +97,19 @@ public class Statement {
 
     }
 
-    public void executeUpdateCall(Parameters parameters) throws SQLException {
+    public void executeUpdateCall(ParametersExtendedImpl parameters) throws SQLException {
         CallableStatement cs = jdbcConnection.prepareCall(queryString);
 
-        Iterator inParams = parameters.inParams().iterator();
+        Iterator inParams = parameters.getInParameters().iterator();
         while (inParams.hasNext()) {
-            ParameterImpl param = (ParameterImpl) inParams.next();
+        	ParameterExtendedImpl param = (ParameterExtendedImpl) inParams.next();
             cs.setObject(param.getIndex(), param.getValue());
         }
 
         // register out parameters
-        Iterator outParams = parameters.outParams().iterator();
+        Iterator outParams = parameters.getOutParameters().iterator();
         while (outParams.hasNext()) {
-            ParameterImpl param = (ParameterImpl) outParams.next();
+        	ParameterExtendedImpl param = (ParameterExtendedImpl) outParams.next();
 
             if (this.logger.isDebugEnabled()) {
                 this.logger.debug("Registering parameter " + param.getName());
@@ -120,19 +120,19 @@ public class Statement {
 
         cs.execute();
 
-        Iterator out = parameters.outParams().iterator();
+        Iterator out = parameters.getOutParameters().iterator();
         while (out.hasNext()) {
-            ParameterImpl param = (ParameterImpl) out.next();
+        	ParameterExtendedImpl param = (ParameterExtendedImpl) out.next();
             param.setValue(cs.getObject(param.getIndex()));
         }
 
     }
 
-    public int executeUpdate(Parameters parameters, String[] generatedKeys) throws SQLException {
+    public int executeUpdate(ParametersExtendedImpl parameters, String[] generatedKeys) throws SQLException {
         return executeUpdate(getPreparedStatement(generatedKeys), parameters);
     }
 
-    public int executeUpdate(Parameters parameters) throws SQLException {
+    public int executeUpdate(ParametersExtendedImpl parameters) throws SQLException {
         return executeUpdate(parameters, new String[0]);
     }
 
@@ -140,14 +140,14 @@ public class Statement {
      * TODO - We need to look at using specific ps.setXXX methods when a type
      * has been specified and try setObject otherwise.
      */
-    private int executeUpdate(PreparedStatement ps, Parameters parameters) throws SQLException {
+    private int executeUpdate(PreparedStatement ps, ParametersExtendedImpl parameters) throws SQLException {
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Executing statement " + queryString);
         }
 
-        Iterator i = parameters.inParams().iterator();
+        Iterator i = parameters.getInParameters().iterator();
         while (i.hasNext()) {
-            ParameterImpl param = (ParameterImpl) i.next();
+        	ParameterExtendedImpl param = (ParameterExtendedImpl) i.next();
 
             Object value = param.getValue();
             if (this.logger.isDebugEnabled()) {
@@ -172,10 +172,10 @@ public class Statement {
         return ps.executeUpdate();
     }
 
-    protected PreparedStatement setParameters(PreparedStatement ps, Parameters parameters) throws SQLException {
-        Iterator i = parameters.inParams().iterator();
+    protected PreparedStatement setParameters(PreparedStatement ps, ParametersExtendedImpl parameters) throws SQLException {
+        Iterator i = parameters.getInParameters().iterator();
         while (i.hasNext()) {
-            ParameterImpl param = (ParameterImpl) i.next();
+        	ParameterExtendedImpl param = (ParameterExtendedImpl) i.next();
             ps.setObject(param.getIndex(), param.getValue());
         }
         return ps;

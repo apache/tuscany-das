@@ -41,6 +41,7 @@ import org.apache.tuscany.das.rdb.test.KennelTests;
 import org.apache.tuscany.das.rdb.test.MissingPKTests;
 import org.apache.tuscany.das.rdb.test.LOBTests;
 import org.apache.tuscany.das.rdb.test.MultiSchemaTests;
+import org.apache.tuscany.das.rdb.test.NamedParameterTests;
 import org.apache.tuscany.das.rdb.test.OCCTests;
 import org.apache.tuscany.das.rdb.test.OneToOneRelationshipTests;
 import org.apache.tuscany.das.rdb.test.OperationOrderingTests;
@@ -116,6 +117,7 @@ public final class AllCommonTests {
 
         suite.addTest(new TestSuite(DynamicResultDescriptorTests.class));
         suite.addTest(new TestSuite(LOBTests.class));
+        suite.addTest(new TestSuite(NamedParameterTests.class));
         //$JUnit-END$
         return suite;
     }

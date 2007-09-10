@@ -20,9 +20,25 @@
 <Config xmlns="http:///org.apache.tuscany.das.rdb/config.xsd"> 
 
   <Table tableName="CUSTOMER">
-	  <create sql="isnert into customer blah values (?, ?, ?)" parameters="ID LASTNAME ADDRESS"/>
-	  <update sql="udpate customer blah set lastname = ?, address = ? where ID = ?" parameters="LASTNAME ADDRESS ID"/>
-      <delete sql="dleete from customer blah where ID = ?" parameters="ID"/>
+	  <create sql="isnert into customer blah values (?, ?, ?)" >
+	  	<Parameters>
+		  	<Parameter name="ID" index="1"/>
+		  	<Parameter name="LASTNAME" index="2"/>
+		  	<Parameter name="ADDRESS" index="3"/>		  			  	
+	  	 </Parameters>	  
+	  </create>
+	  <update sql="udpate customer blah set lastname = ?, address = ? where ID = ?" >
+	  	<Parameters>
+		  	<Parameter name="ID" index="3"/>
+		  	<Parameter name="LASTNAME" index="1"/>
+		  	<Parameter name="ADDRESS" index="2"/>		  			  	
+	  	 </Parameters>
+	  </update>
+      <delete sql="dleete from customer blah where ID = ?" >
+	  	<Parameters>
+		  	<Parameter name="ID" index="1"/>
+	  	 </Parameters>      
+      </delete>
      
     <Column columnName="ID" primaryKey="true"/>
     <Column columnName="LASTNAME"/>

@@ -20,9 +20,16 @@ package org.apache.tuscany.das.rdb.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
+import java.util.List;
 
+import org.apache.tuscany.das.rdb.config.Command;
 import org.apache.tuscany.das.rdb.config.Config;
 import org.apache.tuscany.das.rdb.config.ConfigFactory;
+import org.apache.tuscany.das.rdb.config.Create;
+import org.apache.tuscany.das.rdb.config.Delete;
+import org.apache.tuscany.das.rdb.config.Parameter;
+import org.apache.tuscany.das.rdb.config.Update;
 
 import commonj.sdo.helper.HelperContext;
 import commonj.sdo.helper.XMLHelper;
@@ -57,4 +64,67 @@ public final class ConfigUtil {
         }
     }
 
+    public static String getParameters(Create createCommand) {
+    	List parameters = createCommand.getParameters().getParameter();
+    	if(parameters != null) {
+	    	Iterator itr = parameters.iterator();
+	    	StringBuffer serializedParameters = new StringBuffer();
+	    	
+	    	while(itr.hasNext()) {
+	    		serializedParameters.append(((Parameter)itr.next()).getName()+" ");
+	    	}
+	    	return serializedParameters.toString().trim();
+    	}
+    	else {
+    		return null;
+    	}
+    }
+    
+    public static String getParameters(Update updateCommand) {
+    	List parameters = updateCommand.getParameters().getParameter();
+    	if(parameters != null) {
+	    	Iterator itr = parameters.iterator();
+	    	StringBuffer serializedParameters = new StringBuffer();
+	    	
+	    	while(itr.hasNext()) {
+	    		serializedParameters.append(((Parameter)itr.next()).getName()+" ");
+	    	}
+	    	return serializedParameters.toString().trim();
+    	}
+    	else {
+    		return null;
+    	}
+    }
+    
+    public static String getParameters(Delete deleteCommand) {
+    	List parameters = deleteCommand.getParameters().getParameter();
+    	if(parameters != null) {
+	    	Iterator itr = parameters.iterator();
+	    	StringBuffer serializedParameters = new StringBuffer();
+	    	
+	    	while(itr.hasNext()) {
+	    		serializedParameters.append(((Parameter)itr.next()).getName()+" ");
+	    	}
+	    	return serializedParameters.toString().trim();
+    	}
+    	else {
+    		return null;
+    	}
+    }
+    
+    public static String getParameters(Command command) {
+    	List parameters = command.getParameter();
+    	if(parameters != null) {
+	    	Iterator itr = parameters.iterator();
+	    	StringBuffer serializedParameters = new StringBuffer();
+	    	
+	    	while(itr.hasNext()) {
+	    		serializedParameters.append(((Parameter)itr.next()).getName()+" ");
+	    	}
+	    	return serializedParameters.toString().trim();
+    	}
+    	else {
+    		return null;
+    	}
+    }    
 }

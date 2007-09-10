@@ -21,6 +21,7 @@ package org.apache.tuscany.das.rdb.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.tuscany.das.rdb.Command;
@@ -32,12 +33,10 @@ public abstract class CommandImpl extends BaseCommandImpl implements Command {
     
     protected Statement statement;
 
-    protected Parameters parameters = new Parameters();
-
-   
+    protected ParametersExtendedImpl parameters = new ParametersExtendedImpl();
 
     protected ResultSetShape resultSetShape;
-
+    
     public CommandImpl(String sqlString) {
         statement = new Statement(sqlString);
 
@@ -56,24 +55,74 @@ public abstract class CommandImpl extends BaseCommandImpl implements Command {
 
     }
 
+    public CommandImpl(org.apache.tuscany.das.rdb.config.Command command) {
+        this(command.getSQL());
+        
+        if(command.getParameter() != null && command.getParameter().size() > 0) {
+    		Iterator itr = command.getParameter().iterator();
+    		int index = 1;
+    		while(itr.hasNext()){
+    			org.apache.tuscany.das.rdb.config.impl.ParameterImpl param = (org.apache.tuscany.das.rdb.config.impl.ParameterImpl)itr.next();
+    			if(param.getIndex() <= 0){
+    				param.setIndex(index);
+    				index++;
+    			}
+    			ParameterExtendedImpl paramExt = new ParameterExtendedImpl(param);
+    			addToParameters(paramExt);
+    		}
+    	}
+    }
+
+    private void addToParameters(ParameterExtendedImpl paramExt) {
+		this.parameters.getParameter().add(paramExt);
+		if(paramExt.getDirection().equals(ParameterExtendedImpl.IN)){
+			parameters.getInParameters().add(paramExt);
+		}
+		else{
+			parameters.getOutParameters().add(paramExt);
+		}
+    }
+    
     public abstract void execute();
 
     public abstract DataObject executeQuery();
 
     public void setParameter(int index, Object value) {
-        parameters.setParameter(index, value);
+    	ParameterExtendedImpl param = parameters.getParameter(index);
+    	if(param != null){
+    		param.setValue(value);
+    		return;
+    	}
+    		
+    	param = new ParameterExtendedImpl();
+    	param.setIndex(index);
+    	param.setValue(value);
+    	param.setDirection(ParameterExtendedImpl.IN);
+    	parameters.getParameter().add(param);
+    	parameters.getInParameters().add(param);    	    		
     }
 
-    public void addParameter(ParameterImpl param) {
-        parameters.add(param);
+    public void addParameter(ParameterExtendedImpl param) {
+    	//eliminate/replace duplicate params, index is filled, so can check it for duplicate
+    	ParameterExtendedImpl paramExt = parameters.getParameter(param.getIndex());
+    	if(paramExt != null)
+    		paramExt = new ParameterExtendedImpl(param);
+    	
+    	paramExt = parameters.getParameter(param.getIndex(), param.getDirection());
+    	if(paramExt != null){
+    		paramExt = new ParameterExtendedImpl(param);
+    		return;
+    	}
+    	
+    	addToParameters(param);
     }
 
     public List getParameters() {
-        return parameters.parameterList();
+    	return parameters.getParameter();
     }
 
     public Object getParameter(int index) {
-        return parameters.parameterWithIndex(index).getValue();
+    	return parameters.getParameter(index).getValue();
     }
 
     public void setConnection(ConnectionImpl connection) {
@@ -96,4 +145,34 @@ public abstract class CommandImpl extends BaseCommandImpl implements Command {
         statement.close();
     }
 
+    //default direction IN assumed
+    public void setParameter(String name, Object value) {
+    	ParameterExtendedImpl param = parameters.getParameter(name);
+    	if(param != null){
+			param.setValue(value);
+			return;
+    	}
+    		
+    	param = new ParameterExtendedImpl();
+    	param.setIndex(parameters.getParameter().size()+1);
+    	param.setName(name);
+    	param.setValue(value);
+    	param.setDirection(ParameterExtendedImpl.IN);
+    	parameters.getParameter().add(param);
+    	parameters.getInParameters().add(param);
+	}
+
+    //default direction IN assumed
+    public Object getParameter(String name) {
+		Iterator itr = this.parameters.getInParameters().iterator();
+		while(itr.hasNext()){
+			ParameterExtendedImpl param = ((ParameterExtendedImpl)itr.next());
+			
+			if(param.getName() != null && param.getName().equalsIgnoreCase(name)){				
+				return param.value;
+			}
+		}
+		return null;
+	}
+    
 }

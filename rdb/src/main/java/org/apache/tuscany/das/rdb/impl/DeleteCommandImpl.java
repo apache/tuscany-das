@@ -21,14 +21,17 @@ package org.apache.tuscany.das.rdb.impl;
 import org.apache.tuscany.das.rdb.config.Delete;
 
 public class DeleteCommandImpl extends WriteCommandImpl {
-
+	public DeleteCommandImpl(org.apache.tuscany.das.rdb.config.Command command) {
+		super(command);
+	}
+	
     public DeleteCommandImpl(String sqlString) {
         super(sqlString);
     }
 
     public DeleteCommandImpl(Delete delete) {
         super(delete.getSql());
-        addParameters(delete.getParameters());
+        this.addParameters(delete.getParameters());
     }
 
 }

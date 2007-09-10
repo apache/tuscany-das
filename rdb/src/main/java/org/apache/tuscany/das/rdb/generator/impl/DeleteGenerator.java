@@ -25,7 +25,8 @@ import org.apache.tuscany.das.rdb.config.Table;
 import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
 import org.apache.tuscany.das.rdb.config.wrapper.TableWrapper;
 import org.apache.tuscany.das.rdb.impl.DeleteCommandImpl;
-import org.apache.tuscany.das.rdb.impl.ParameterImpl;
+import org.apache.tuscany.das.rdb.impl.ParameterExtendedImpl;
+import org.apache.tuscany.das.rdb.impl.SDODataTypeHelper;
 import org.apache.tuscany.das.rdb.impl.SDODataTypes;
 
 public final class DeleteGenerator extends BaseGenerator {
@@ -77,9 +78,9 @@ public final class DeleteGenerator extends BaseGenerator {
         Iterator i = tw.getPrimaryKeyProperties().iterator();
         for (int idx = 1; i.hasNext(); idx++) {
             String property = (String) i.next();
-            ParameterImpl p = new ParameterImpl();
+            ParameterExtendedImpl p = new ParameterExtendedImpl();
             p.setName(property);
-            p.setType(SDODataTypes.OBJECT);
+            p.setColumnType(SDODataTypeHelper.columnTypeForSDOType(SDODataTypes.OBJECT));
             p.setConverter(getConverter(tw.getConverter(property)));
             p.setIndex(idx);
             deleteCommand.addParameter(p);

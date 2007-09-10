@@ -25,10 +25,12 @@ import org.apache.tuscany.das.rdb.config.Column;
 import org.apache.tuscany.das.rdb.config.Command;
 import org.apache.tuscany.das.rdb.config.Config;
 import org.apache.tuscany.das.rdb.config.ConfigFactory;
+import org.apache.tuscany.das.rdb.config.Parameters;
 import org.apache.tuscany.das.rdb.config.Relationship;
 import org.apache.tuscany.das.rdb.config.Table;
 import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
 import org.apache.tuscany.das.rdb.util.ConfigUtil;
+import org.apache.tuscany.das.rdb.impl.ParametersExtendedImpl;
 
 /**
  * A ConfigHelper is used as an aid in programmatic construction of Config instances.
@@ -135,19 +137,43 @@ public class ConfigHelper {
      * Add an update statement for a given table
      * @param table
      * @param statement
-     * @param parameters
+     * @param parameters String - names separated with space
      */
-    public void addUpdateStatement(Table table, String statement, String parameters) {
-        configWrapper.addUpdateStatement(table, statement, parameters);
+    public void addUpdateStatement(Table table, String statement, String parameters) {    	
+    	ParametersExtendedImpl parametersExtendedImpl = new ParametersExtendedImpl();
+    	parametersExtendedImpl.addParameters(ParametersExtendedImpl.getParameters(parameters));
+        configWrapper.addUpdateStatement(table, statement, parametersExtendedImpl);
     }
 
+    /**
+     * Add an update statement for a given table
+     * @param table
+     * @param statement
+     * @param parameters <Parameters>
+     */    
+    public void addUpdateStatement(Table table, String statement, Parameters parameters) {
+         configWrapper.addUpdateStatement(table, statement, parameters);
+     }
+    
     /**
      * Add create statement for a given table
      * @param table
      * @param statement
-     * @param parameters
+     * @param parameters String - names separated with space
      */
     public void addCreateStatement(Table table, String statement, String parameters) {
+    	ParametersExtendedImpl parametersExtendedImpl = new ParametersExtendedImpl();
+    	parametersExtendedImpl.addParameters(ParametersExtendedImpl.getParameters(parameters));    	
+        configWrapper.addCreateStatement(table, statement, parametersExtendedImpl);
+    }
+    	
+    /**
+     * Add create statement for a given table
+     * @param table
+     * @param statement
+     * @param parameters <Parameters>
+     */    
+    public void addCreateStatement(Table table, String statement, Parameters parameters) {   	
         configWrapper.addCreateStatement(table, statement, parameters);
     }
 
@@ -155,9 +181,21 @@ public class ConfigHelper {
      * Add delete statement for a given table
      * @param table
      * @param statement
-     * @param parameters
+     * @param parameters String - names separated with space
      */
     public void addDeleteStatement(Table table, String statement, String parameters) {
+    	ParametersExtendedImpl parametersExtendedImpl = new ParametersExtendedImpl();
+    	parametersExtendedImpl.addParameters(ParametersExtendedImpl.getParameters(parameters));    	
+        configWrapper.addDeleteStatement(table, statement, parametersExtendedImpl);
+    }
+
+    /**
+     * Add delete statement for a given table
+     * @param table
+     * @param statement
+     * @param parameters <Parameters>
+     */    
+    public void addDeleteStatement(Table table, String statement, Parameters parameters) {
         configWrapper.addDeleteStatement(table, statement, parameters);
     }
 

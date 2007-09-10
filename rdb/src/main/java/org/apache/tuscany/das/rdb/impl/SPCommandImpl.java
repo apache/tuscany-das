@@ -32,7 +32,7 @@ import commonj.sdo.helper.TypeHelper;
 
 public class SPCommandImpl extends ReadCommandImpl {
     private final Logger logger = Logger.getLogger(SPCommandImpl.class);
-
+   
     public SPCommandImpl(String sqlString, MappingWrapper config, List params) {
         super(sqlString, config, null);
         Iterator i = params.iterator();
@@ -45,11 +45,11 @@ public class SPCommandImpl extends ReadCommandImpl {
 
             Type sdoType = TypeHelper.INSTANCE.getType(pkg, typeName);
 
-            int direction = ParameterImpl.IN;
-            if ("OUT".equalsIgnoreCase(p.getDirection())) {
-                direction = ParameterImpl.OUT;
-            } else if ("INOUT".equalsIgnoreCase(p.getDirection())) {
-                direction = ParameterImpl.IN_OUT;
+            String direction = ParameterExtendedImpl.IN;
+            if (ParameterExtendedImpl.OUT.equalsIgnoreCase(p.getDirection())) {
+                direction = ParameterExtendedImpl.OUT;
+            } else if (ParameterExtendedImpl.IN_OUT.equalsIgnoreCase(p.getDirection())) {
+                direction = ParameterExtendedImpl.IN_OUT;
             }
             parameters.findOrCreateParameterWithIndex(p.getIndex(), direction, sdoType);
         }

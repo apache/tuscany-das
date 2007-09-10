@@ -26,6 +26,11 @@ public class InsertCommandImpl extends WriteCommandImpl {
 
     private String[] keys;
 
+    public InsertCommandImpl(org.apache.tuscany.das.rdb.config.Command command, String[] generatedKeys) {
+    	super(command);
+    	keys = generatedKeys;
+    }
+    
     public InsertCommandImpl(String sqlString, String[] generatedKeys) {
         super(sqlString);
         keys = generatedKeys;
@@ -33,7 +38,7 @@ public class InsertCommandImpl extends WriteCommandImpl {
 
     public InsertCommandImpl(Create create) {
         super(create.getSql());
-        addParameters(create.getParameters());
+        this.addParameters(create.getParameters());
         this.keys = new String[0];
     }
 

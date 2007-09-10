@@ -22,15 +22,21 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.StringTokenizer;
+import java.util.TreeMap;
 
 import org.apache.tuscany.das.rdb.config.Config;
 import org.apache.tuscany.das.rdb.config.ResultDescriptor;
+import org.apache.tuscany.das.rdb.config.impl.ParameterImpl;
+import org.apache.tuscany.das.rdb.config.Parameters;
 
 import commonj.sdo.DataObject;
 
 public abstract class WriteCommandImpl extends CommandImpl {
 
+	public WriteCommandImpl(org.apache.tuscany.das.rdb.config.Command command) {
+		super(command);
+	}
+	
     public WriteCommandImpl(String sqlString) {
         super(sqlString);
     }
@@ -109,14 +115,51 @@ public abstract class WriteCommandImpl extends CommandImpl {
         throw new RuntimeException("No generated key is available");
     }
 
-    public void addParameters(String parameters) {
-        StringTokenizer tokenizer = new StringTokenizer(parameters);
-        for (int idx = 1; tokenizer.hasMoreTokens(); idx++) {
-            ParameterImpl p = new ParameterImpl();
-            p.setName(tokenizer.nextToken());
-            p.setIndex(idx);
-            addParameter(p);
-        }
-    }
+    //it is acceptable if params having index set by caller are listed in any order in Parameters
+    //but, if index is not set by caller, the order of parameters in Parameters should be in sync
+    //with the Command string parameters
+    protected void addParameters(Parameters parameters) {
+    	List params = parameters.getParameter();
+    	if(params == null) 
+    		return;
 
+    	boolean paramsIndexed = true;
+    	TreeMap sortedParams = null;
+    	for(int i=0; i<params.size(); i++){
+    		if(((ParameterImpl)params.get(i)).getIndex() <= 0){
+    			paramsIndexed=false; //any index not set, ignore all externally set indexes and do auto indexing
+    			break;
+    		}    		
+    	}
+    
+    	//auto-indexing
+    	if(!paramsIndexed) {
+    		for(int i=0; i<params.size(); i++){
+    			ParameterExtendedImpl param = new ParameterExtendedImpl((ParameterImpl)params.get(i));
+    			param.setIndex(i+1);
+    			this.addParameter(param);
+    		}
+    		return;
+    	}
+    	else {//dont allow duplicates and check indexing with +1 increment from 1st to last param
+    		sortedParams = new TreeMap();
+    		for(int i=0; i<params.size(); i++){    			
+    			ParameterImpl existingParam = (ParameterImpl)sortedParams.put( new Integer(((ParameterImpl)params.get(i)).getIndex()), ((ParameterImpl)params.get(i)));
+    			if(existingParam != null) {
+    				throw new RuntimeException("Parameters with duplicate indexes!");
+    			}
+    		}
+
+    		if( ((Integer)sortedParams.firstKey()).intValue() + sortedParams.size() -1 != 
+    			((Integer)sortedParams.lastKey()).intValue()) {
+    			throw new RuntimeException("Parameters with improper indexes!");
+    		}
+    	}
+    	    	
+    	for(int i=0; i<params.size(); i++) {
+    		ParameterExtendedImpl param = new ParameterExtendedImpl((ParameterImpl)params.get(i));    		
+    		param.setIndex(((ParameterImpl)params.get(i)).getIndex());
+    		this.addParameter(param);
+    	}
+    }    
 }

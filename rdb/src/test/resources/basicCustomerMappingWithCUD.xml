@@ -20,9 +20,25 @@
 <Config xmlns="http:///org.apache.tuscany.das.rdb/config.xsd"> 
 
   <Table tableName="CUSTOMER">  		 
-	  <create sql="insert into customer values (?, ?, ?)" parameters="ID LASTNAME ADDRESS"/>
-	  <update sql="update customer set lastname = ?, address = ? where ID = ?" parameters="LASTNAME ADDRESS ID"/>
-      <delete sql="delete from customer where ID = ?" parameters="ID"/>
+	  <create sql="insert into customer values (?, ?, ?)" >
+	  	<Parameters>
+		  	<Parameter name="ID" index="1"/>
+		  	<Parameter name="LASTNAME" index="2"/>
+		  	<Parameter name="ADDRESS" index="3"/>		  			  	
+	  	 </Parameters>
+	  </create>
+	  <update sql="update customer set lastname = ?, address = ? where ID = ?" >
+	  	<Parameters>
+		  	<Parameter name="ID" index="3"/>
+		  	<Parameter name="LASTNAME" index="1"/>
+		  	<Parameter name="ADDRESS" index="2"/>		  			  	
+	  	 </Parameters>	  
+	  </update>
+      <delete sql="delete from customer where ID = ?" >
+	  	<Parameters>
+		  	<Parameter name="ID" index="1"/>
+	  	 </Parameters>      
+      </delete>
   </Table>
 	
 </Config>

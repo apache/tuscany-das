@@ -31,6 +31,7 @@ import org.apache.tuscany.das.rdb.test.data.BookData;
 import org.apache.tuscany.das.rdb.test.data.CustomerData;
 import org.apache.tuscany.das.rdb.test.data.OrderData;
 import org.apache.tuscany.das.rdb.test.framework.DasTest;
+import org.apache.tuscany.das.rdb.util.ConfigUtil;
 
 import commonj.sdo.DataObject;
 
@@ -353,7 +354,7 @@ public class ProgrammaticConfigTests extends DasTest {
         Table widgets = (Table) cfg.getTable().get(0);
         assertEquals("delete from widgets where id = ?", widgets.getDelete().getSql());
         assertEquals("WIDGETS", widgets.getTypeName());
-        assertEquals("ID", widgets.getDelete().getParameters());
+        assertEquals("ID", ConfigUtil.getParameters(widgets.getDelete()));
 
     }
 
@@ -371,7 +372,7 @@ public class ProgrammaticConfigTests extends DasTest {
         Table widgets = (Table) cfg.getTable().get(0);
         assertEquals("insert into widgets values (?,?)", widgets.getCreate().getSql());
         assertEquals("WIDGETS", widgets.getTypeName());
-        assertEquals("ID NAME", widgets.getCreate().getParameters());
+        assertEquals("ID NAME", ConfigUtil.getParameters(widgets.getCreate()));
 
     }
     

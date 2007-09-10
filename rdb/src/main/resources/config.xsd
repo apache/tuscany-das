@@ -77,10 +77,16 @@
       <xsd:attribute name="kind" type="xsd:string"/>
    </xsd:complexType>
    <xsd:complexType name="Parameter">     
+	  <xsd:attribute name="name" type="xsd:string"/> 
       <xsd:attribute name="columnType" type="xsd:string"/>
-      <xsd:attribute name="direction" type="xsd:string"/>
+      <xsd:attribute name="direction" type="xsd:string" default="IN"/>
       <xsd:attribute name="index" type="xsd:int"/>
    </xsd:complexType>
+	<xsd:complexType name="Parameters">
+		<xsd:sequence>
+			<xsd:element  maxOccurs="unbounded" minOccurs="0" name="Parameter" type="config:Parameter"/>
+		</xsd:sequence>
+	</xsd:complexType>   
    <xsd:complexType name="Relationship">
       <xsd:sequence>
          <xsd:element  maxOccurs="unbounded" minOccurs="0" name="KeyPair"
@@ -105,16 +111,22 @@
       <xsd:attribute name="schemaName" type="xsd:string" default=""/> 
    </xsd:complexType>
    <xsd:complexType name="Create">
+	<xsd:sequence>
+         <xsd:element  maxOccurs="1" minOccurs="0" name="Parameters" type="config:Parameters"/>
+     </xsd:sequence>   
    	  <xsd:attribute name="sql" type="xsd:string"/>
-   	  <xsd:attribute name="parameters" type="xsd:string"/>
    </xsd:complexType>
     <xsd:complexType name="Update">
+	 <xsd:sequence>
+         <xsd:element  maxOccurs="1" minOccurs="0" name="Parameters" type="config:Parameters"/>
+     </xsd:sequence>    
    	  <xsd:attribute name="sql" type="xsd:string"/>
-   	  <xsd:attribute name="parameters" type="xsd:string"/>
    </xsd:complexType>
     <xsd:complexType name="Delete">
+	  <xsd:sequence>
+         <xsd:element  maxOccurs="1" minOccurs="0" name="Parameters" type="config:Parameters"/>
+      </xsd:sequence>    
    	  <xsd:attribute name="sql" type="xsd:string"/>
-   	  <xsd:attribute name="parameters" type="xsd:string"/>
    </xsd:complexType>
    <xsd:complexType name="KeyPair">
       <xsd:attribute name="primaryKeyColumn" type="xsd:string"/>

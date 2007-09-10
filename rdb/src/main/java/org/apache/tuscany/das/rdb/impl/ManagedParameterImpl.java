@@ -20,7 +20,7 @@ package org.apache.tuscany.das.rdb.impl;
 
 import java.math.BigDecimal;
 
-public class ManagedParameterImpl extends ParameterImpl {
+public class ManagedParameterImpl extends ParameterExtendedImpl {
 
     public void setValue(Object oldValue) {
         this.value = updateValue(oldValue);

@@ -44,6 +44,15 @@ public class ReadCommandImpl extends CommandImpl {
 
     private List resultDescriptors = null;
     
+    public ReadCommandImpl(org.apache.tuscany.das.rdb.config.Command command, MappingWrapper mapping, List resultDescriptor) {
+        super(command);
+        this.configWrapper = mapping;
+        
+        if (resultDescriptor != null && !resultDescriptor.isEmpty()) {
+            this.resultSetShape = new ResultSetShape(resultDescriptor, configWrapper.getConfig());//JIRA-952
+        }
+    }
+    
     public ReadCommandImpl(String sqlString, MappingWrapper mapping, List resultDescriptor) {
         super(sqlString);
         this.configWrapper = mapping;
