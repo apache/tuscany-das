@@ -155,7 +155,7 @@ public class DBHelper {
             dbConnection = DBConnectionHelper.createConnection(dbConfig.getConnectionInfo());
             dbStatement = dbConnection.createStatement();
 
-            if (dbConfig.getTable() != null && dbConfig.getTable().size() > 0) {
+            if (dbConnection != null && dbStatement != null && dbConfig.getTable() != null && dbConfig.getTable().size() > 0) {
                 Iterator tableIterator = dbConfig.getTable().iterator();
                 while (tableIterator.hasNext()) {
                     Table table = (Table) tableIterator.next();
@@ -182,8 +182,11 @@ public class DBHelper {
             }
         } finally {
             try {
-                dbStatement.close();
-                dbConnection.close();
+                if(dbStatement != null)
+                	dbStatement.close();
+                
+                if(dbConnection != null)
+                	dbConnection.close();
             } catch (SQLException e) {
                 // ignore here
             }

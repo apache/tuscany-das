@@ -1,0 +1,449 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 10">
+<meta name=Originator content="Microsoft Word 10">
+<link rel=File-List href="readme_files/filelist.xml">
+<title>Tuscany RDB DAS Sample</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>IBM_User</o:Author>
+  <o:LastAuthor>IBM_User</o:LastAuthor>
+  <o:Revision>59</o:Revision>
+  <o:TotalTime>329</o:TotalTime>
+  <o:Created>2007-09-05T11:09:00Z</o:Created>
+  <o:LastSaved>2007-09-19T11:43:00Z</o:LastSaved>
+  <o:Pages>1</o:Pages>
+  <o:Words>593</o:Words>
+  <o:Characters>3384</o:Characters>
+  <o:Company>IBM</o:Company>
+  <o:Lines>28</o:Lines>
+  <o:Paragraphs>7</o:Paragraphs>
+  <o:CharactersWithSpaces>3970</o:CharactersWithSpaces>
+  <o:Version>10.3501</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:Compatibility>
+   <w:ApplyBreakingRules/>
+   <w:UseFELayout/>
+  </w:Compatibility>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:SimSun;
+	panose-1:2 1 6 0 3 1 1 1 1 1;
+	mso-font-alt:\5B8B\4F53;
+	mso-font-charset:134;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:3 135135232 16 0 262145 0;}
+@font-face
+	{font-family:"\@SimSun";
+	panose-1:2 1 6 0 3 1 1 1 1 1;
+	mso-font-charset:134;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:3 135135232 16 0 262145 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:SimSun;}
+h1
+	{mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:1;
+	font-size:24.0pt;
+	font-family:"Times New Roman";
+	font-weight:bold;}
+h2
+	{mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:2;
+	font-size:18.0pt;
+	font-family:"Times New Roman";
+	font-weight:bold;}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+p
+	{mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:SimSun;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0in 5.4pt 0in 5.4pt;
+	mso-para-margin:0in;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";}
+</style>
+<![endif]-->
+<meta name=CREATED content="20070704;1002817">
+<meta name=CHANGEDBY content="a a">
+<meta name=CHANGED content="20070704;2123396">
+<!-- <pre><a name="header-text">Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+&quot;License&quot;); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+&quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.   </a></pre>
+
+-->
+</head>
+
+<body lang=EN-US link=blue vlink=blue style='tab-interval:.5in'>
+
+<div class=Section1>
+
+<h1 style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'>RDB DAS Transaction Sample<o:p></o:p></span></h1>
+
+<h2 style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'><o:p>&nbsp;</o:p></span></h2>
+
+<h2 style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'>Introduction<o:p></o:p></span></h2>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'>This stand-alone sample demonstrates the RDB Data Access Service
+transaction management with external Transaction Manager. This example uses Geronimo
+<span style='mso-spacerun:yes'> </span>as the transaction manager. <o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><b><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><o:p>&nbsp;</o:p></span></b></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><b><span lang=PT-BR
+style='font-size:18.0pt;mso-ansi-language:PT-BR'>Example</span></b><span
+lang=PT-BR style='font-size:18.0pt;mso-ansi-language:PT-BR'><o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'>In this MoneyTransfer example,user entered amount will be withdrawn from
+one of his bankaccount using one call to das.applyChanges(dataGraph1) and same
+amount will<span style='mso-spacerun:yes'>  </span>be deposited to his another
+account using another call to das.applyChanges(dataGraph2). Based on whether
+user selects commit/rollback, these 2 applyChanges() will behave identically.
+i.e. both will commit or both will rollback, but partial transaction will not
+happen. Example build.xml - sets for transfer of 1200 from Account1 to Account2
+[commit].<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><b><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><o:p>&nbsp;</o:p></span></b></p>
+
+<h2 style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'>Building and Running<o:p></o:p></span></h2>
+
+<p style='margin:0in;margin-bottom:.0001pt'><b><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'> </span></span></b><span
+lang=PT-BR style='mso-ansi-language:PT-BR'>From binary distribution, <b>base
+directory</b> is {DAS_ROOT}\ samples\transaction. Refer to below settings from
+this base directory.<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'>1]BankAccounts.xml available in sample-transaction.jar, is the DAS
+config file. Note that, as transaction is externally managed, this uses
+managedtx=false setting.<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'><o:p>&nbsp;</o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'>2]MySQL server should be running. The example uses MySQL DB (with innoDB
+ON to support transaction). Database <b>dastest, </b>table <b>bankaccount</b> and
+data will be created during sample run. For this preconfigured
+BankAccountDBConfig.xml available in sample-transaction.jar, will be used. User
+needs to set correct values for url, login etc. in this.<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'><o:p>&nbsp;</o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'>3] Apache Ant latest version should be installed.Download Apache Ant
+latest version on and extract into folder &lt;apache_ant_folder&gt;. You can
+find it here: <a href="http://ant.apache.org/bindownload.cgi">http://ant.apache.org/bindownload.cgi</a>.Add
+&lt;apache_ant_folder&gt;/bin directory to your OS path variable.<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'><o:p>&nbsp;</o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'>4] From <b>base directory </b>run-<span style='mso-spacerun:yes'> 
+</span>ant<o:p></o:p></span></p>
+
+<h2 style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'><o:p>&nbsp;</o:p></span></h2>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'>The sample will run and output the following: <o:p></o:p></span></p>
+
+<div style='border:solid windowtext 1.0pt;mso-border-alt:solid windowtext .5pt;
+padding:1.0pt 4.0pt 1.0pt 4.0pt'>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'>Buildfile: build.xml<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><o:p>&nbsp;</o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'>run:<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'>     </span>[java]
+INIT database<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'>     </span>[java]
+INIT transaction manager<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'>     </span>[java]
+Wed Sep 19 17:09:42 IST 2007 DEBUG: Executing XA statement: XA START<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'> </span>0x01000000000000004bceb90109b6b0f3000000000000000000000000000000000000000000000<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'>000000000000000000000000000000000000000000000000000,0x00000000000000000000000000<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'>00000000000000000000000000000000000000000000000000000000000000000000000000000000<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'>0000000000000000000000,0x4765526f<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'>     </span>[java]
+Get a connection<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'>     </span>[java]
+Before transaction, table is:<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'>     </span>[java]<span
+style='mso-spacerun:yes'>     </span>id<span style='mso-spacerun:yes'>     
+</span>name<span style='mso-spacerun:yes'>    </span>balance<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'>     </span>[java]<span
+style='mso-spacerun:yes'>     </span>1<span style='mso-spacerun:yes'>      
+</span>John Feng<span style='mso-spacerun:yes'>       </span>1200<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'>     </span>[java]<span
+style='mso-spacerun:yes'>     </span>2<span style='mso-spacerun:yes'>      
+</span>John Feng<span style='mso-spacerun:yes'>       </span>0<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'>     </span>[java]
+Begin a transaction<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'>     </span>[java]
+Update the table - 2 accounts<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'>     </span>[java]
+*commit* the transaction<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'>     </span>[java]
+Wed Sep 19 17:09:45 IST 2007 DEBUG: Executing XA statement: XA END 0<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'>x01000000000000004bceb90109b6b0f300000000000000000000000000000000000000000000000<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'>0000000000000000000000000000000000000000000000000,0x0000000000000000000000000000<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'>00000000000000000000000000000000000000000000000000000000000000000000000000000000<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'>00000000000000000000,0x4765526f<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'>     </span>[java]
+Wed Sep 19 17:09:45 IST 2007 DEBUG: Executing XA statement: XA PREPA<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'>RE 0x01000000000000004bceb90109b6b0f30000000000000000000000000000000000000000000<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'>00000000000000000000000000000000000000000000000000000,0x000000000000000000000000<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'>00000000000000000000000000000000000000000000000000000000000000000000000000000000<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'>000000000000000000000000,0x4765526f<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'>     </span>[java]
+Wed Sep 19 17:09:45 IST 2007 DEBUG: Executing XA statement: XA COMMI<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'>T 0x01000000000000004bceb90109b6b0f300000000000000000000000000000000000000000000<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'>0000000000000000000000000000000000000000000000000000,0x0000000000000000000000000<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'>00000000000000000000000000000000000000000000000000000000000000000000000000000000<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'>00000000000000000000000,0x4765526f<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'>     </span>[java]
+After transaction, table is:<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'>     </span>[java]<span
+style='mso-spacerun:yes'>     </span>id<span style='mso-spacerun:yes'>     
+</span>name<span style='mso-spacerun:yes'>    </span>balance<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'>     </span>[java]<span
+style='mso-spacerun:yes'>     </span>1<span style='mso-spacerun:yes'>      
+</span>John Feng<span style='mso-spacerun:yes'>       </span>0<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'>     </span>[java]<span
+style='mso-spacerun:yes'>     </span>2<span style='mso-spacerun:yes'>      
+</span>John Feng<span style='mso-spacerun:yes'>       </span>1200<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'>     </span>[java]
+Cleanup<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'>     </span>[java]
+End MoneyTransfer<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'>     </span>[java]<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><o:p>&nbsp;</o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'>BUILD SUCCESSFUL<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt;border:none;mso-border-alt:solid windowtext .5pt;
+padding:0in;mso-padding-alt:1.0pt 4.0pt 1.0pt 4.0pt'><span lang=PT-BR
+style='mso-ansi-language:PT-BR'>Total time: 8 seconds<o:p></o:p></span></p>
+
+</div>
+
+<p style='margin:0in;margin-bottom:.0001pt'><b><span lang=PT-BR
+style='mso-ansi-language:PT-BR'>Observation:</span></b><span lang=PT-BR
+style='mso-ansi-language:PT-BR'> The build.xml ant file only works on DAS Java binary
+distribution.<o:p></o:p></span></p>
+
+</div>
+
+</body>
+
+</html>

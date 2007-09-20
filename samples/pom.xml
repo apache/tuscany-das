@@ -35,5 +35,6 @@
         <module>company-webapp</module>
         <module>advanced-webapp</module>
         <module>customer</module>
+        <module>transaction</module>
     </modules>
 </project>

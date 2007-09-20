@@ -58,6 +58,12 @@
           <type>war</type>
       </dependency>        
 
+       <dependency>
+          <groupId>org.apache.tuscany.das.samples</groupId>
+          <artifactId>tuscany-das-sample-transaction</artifactId>
+          <version>${das.version}</version>
+      </dependency>
+      
     </dependencies>
 
     <build>

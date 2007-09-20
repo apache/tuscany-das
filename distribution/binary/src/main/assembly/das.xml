@@ -94,6 +94,24 @@
                <outputDirectory>tuscany-das-${das.version}/samples/customer</outputDirectory>
                <fileMode>0644</fileMode>
             </file>
+            
+            <!-- include readme for transaction sample -->
+            <file>
+               <source>../../samples/transaction/readme.htm</source>
+               <outputDirectory>tuscany-das-${das.version}/samples/transaction</outputDirectory>
+               <fileMode>0644</fileMode>
+            </file>
+            <!-- include transaction sample -->
+            <file>
+               <source>../../samples/transaction/target/sample-transaction.jar</source>
+               <outputDirectory>tuscany-das-${das.version}/samples/transaction</outputDirectory>
+               <fileMode>0644</fileMode>
+            </file>
+            <file>
+               <source>../../samples/transaction/build.xml</source>
+               <outputDirectory>tuscany-das-${das.version}/samples/transaction</outputDirectory>
+               <fileMode>0644</fileMode>
+            </file>
         </files>
 
 
@@ -116,5 +134,20 @@
 	    <fileMode>0644</fileMode>
         </dependencySet>
 
+	<!-- DAS Samples - Transaction mysql dependency-->
+        <dependencySet>
+	    <outputDirectory>tuscany-das-${das.version}/samples/transaction</outputDirectory>
+	        <includes>
+	            <include>mysql:mysql-connector-java</include>
+	            <include>org.apache.geronimo.specs:geronimo-jta_1.0.1B_spec</include>
+	            <include>org.apache.geronimo.modules:geronimo-kernel</include>
+	            <include>org.apache.geronimo.modules:geronimo-transaction</include>
+	            <include>org.apache.geronimo.modules:geronimo-connector</include>
+	            <include>org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec</include>
+	            <include>org.apache.tuscany.das.samples:tuscany-das-sample-dbconfig</include>
+	            <include>commons-logging:commons-logging</include>
+	        </includes>	    
+	    <fileMode>0644</fileMode>
+        </dependencySet>
     </dependencySets>
 </assembly>
