@@ -1,0 +1,33 @@
+DAS - Data Access Services
+
+Service Data Object(SDO) provides a uniform API for handling different types of data. Data Access Service (DAS) 
+simplifies handling of data when interacting with the back-end data source and frees application developers 
+from dealing with tedious and error-prone transformation between end source types and SDO Data Object Types/properties..
+
+What's new in Apache Tuscany DAS beta2
+======================================
+
+   The main purpose of the DAS beta2 release is to fix incompatibilites that were found with SDO 1.0 release.
+
+   The following JIRAs also were fixed on DAS beta2
+   
+     - TUSCANY-986  - DAS integration with SDO 2.1 APIs
+     - TUSCANY-961  - DAS: Using deprected SDO method causes Type lookup failure
+     - TUSCANY-1353 - Exception attempting to insert rows using DAS w/DataDirect JDBC driver
+     - TUSCANY-1453 - DAS can't read or write the blob field
+     - TUSCANY-1463 - Support for Clob and Array fields
+     - TUSCANY-1462 - Consistent use of Parameters in Config
+     - TUSCANY-1464 - Wrong query results when SELECT misses PKs
+     - TUSCANY-1465 - Allow passing ResultDescriptor for dynamic Commands
+     - TUSCANY-1720 - Modify sample readmes for - steps to run sample with other databases
+
+   
+   
+Details are described below.
+
+   DAS Java beta2 is a superset of previous DAS Java M1,M2 and Beta1 releases.
+   Anything in these previous releases is also in beta2, but beta2 contains features and bug fixes not present on them.
+
+Compatibility Concerns
+
+   - SDO Static types should be regenerated based on SDO 1.0 tools.
