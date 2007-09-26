@@ -39,6 +39,20 @@
         </dependency>
         
         <dependency>
+            <groupId>org.apache.tuscany.sdo</groupId>
+            <artifactId>tuscany-sdo-impl</artifactId>
+            <version>${sdo.version}</version>
+            <scope>compile</scope>
+        </dependency>
+ 
+        <dependency>
+            <groupId>org.apache.tuscany.sdo</groupId>
+            <artifactId>tuscany-sdo-api-r2.1</artifactId>
+            <version>${sdo.version}</version>
+            <scope>compile</scope>
+        </dependency>        
+        
+        <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
             <version>10.2.2.0</version>

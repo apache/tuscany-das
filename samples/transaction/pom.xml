@@ -38,6 +38,20 @@
            <scope>compile</scope>
        </dependency>
 
+       <dependency>
+           <groupId>org.apache.tuscany.sdo</groupId>
+           <artifactId>tuscany-sdo-impl</artifactId>
+           <version>${sdo.version}</version>
+           <scope>compile</scope>
+       </dependency>
+
+       <dependency>
+           <groupId>org.apache.tuscany.sdo</groupId>
+           <artifactId>tuscany-sdo-api-r2.1</artifactId>
+           <version>${sdo.version}</version>
+           <scope>compile</scope>
+       </dependency>
+
       <dependency>
         <groupId>org.apache.tuscany.das.samples</groupId>
         <artifactId>tuscany-das-sample-dbconfig</artifactId>
@@ -62,12 +76,6 @@
           <groupId>org.apache.geronimo.specs</groupId>
           <artifactId>geronimo-jta_1.0.1B_spec</artifactId>
           <version>1.0</version>
-      </dependency>
-        
-      <dependency>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging</artifactId>
-          <version>1.1</version>
       </dependency>
       
       <dependency>
