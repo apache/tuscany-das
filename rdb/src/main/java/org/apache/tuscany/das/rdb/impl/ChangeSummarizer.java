@@ -225,11 +225,22 @@ public class ChangeSummarizer {
             while (columns.hasNext()) {
                 Column c = (Column) columns.next();
                 if (c.isPrimaryKey() && c.isGenerated()) {
-                    if (this.logger.isDebugEnabled()) {
-                        this.logger.debug("adding generated key " + t.getTableName() + "." + c.getColumnName());
-                    }
+                	//if SDO type, property is defined use it , else use dbms metadata
+                	//with this static DOs will work correct for generated keys
+                	if(t.getTypeName() != null && c.getPropertyName() != null) {
+                        if (this.logger.isDebugEnabled()) {
+                        	this.logger.debug("adding generated key " + t.getTypeName() + "." + c.getPropertyName());
+                        }
 
-                    generatedKeys.put(t.getTableName(), c.getColumnName());
+                        generatedKeys.put(t.getTypeName(), c.getPropertyName());                		
+                	} else {
+                        if (this.logger.isDebugEnabled()) {
+                            this.logger.debug("adding generated key " + t.getTableName() + "." + c.getColumnName());
+                        }
+
+                        generatedKeys.put(t.getTableName(), c.getColumnName());                		
+                	}
+
                 }
             }
         }

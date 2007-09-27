@@ -100,4 +100,72 @@ public class CompanyTests extends DasTest {
         assertEquals("John Jones", employee.getName());
     }
 
+    /**
+     * Default database setup inserts 3 records in COMPANY. This test verifies that these records have auto-gen keys
+     * 1,2,3 and the new created record has auto-gen key 4 in COMPANY.ID
+     * @throws Exception
+     */
+    public void testCreateAutoGenKeyStatic() throws Exception {
+    	//get DAS and select command
+    	DataObject root = null;
+    	
+    	DAS das = DAS.FACTORY.createDAS(getConfig("companyMappingWithConverters.xml"), getConnection());
+    	HelperContext context = HelperProvider.getDefaultContext();
+        CompanyFactory.INSTANCE.register(context);
+        Command selectCommand = das.getCommand("AllCompanies");
+        root = selectCommand.executeQuery();
+        assertEquals(3, root.getList("CompanyType").size());
+        //verify result
+        CompanyType company = (CompanyType) root.getList("CompanyType").get(0);
+        int startId = company.getId();
+        assertEquals(startId, company.getId());
+        assertEquals("ACME Publishing", company.getName());
+
+        company = (CompanyType) root.getList("CompanyType").get(1);
+        assertEquals(startId+1, company.getId());
+        assertEquals("Do-rite plumbing", company.getName());
+        
+        company = (CompanyType) root.getList("CompanyType").get(2);
+        assertEquals(startId+2, company.getId());
+        assertEquals("MegaCorp", company.getName());
+        
+        //create a new company. auto get keys set in config and supported in table creation statement
+        CompanyType newCompany = (CompanyType)root.createDataObject("CompanyType");
+        newCompany.setName("MyNewCompany");
+        das.applyChanges(root);        
+
+        assertEquals("MyNewCompany", newCompany.getName());
+        assertEquals(startId+3, newCompany.getId());
+    }
+    
+    public void testCreateAutoGenKeyDynamic() throws Exception {
+    	//get DAS and select command
+    	DataObject root = null;
+    	
+    	DAS das = DAS.FACTORY.createDAS(getConfig("basicCompanyDepartmentMapping.xml"), getConnection());
+        Command selectCommand = das.createCommand("select * from COMPANY");
+        root = selectCommand.executeQuery();
+        assertEquals(3, root.getList("COMPANY").size());
+        //verify result
+        DataObject company = (DataObject)root.getList("COMPANY").get(0);
+        int startId = company.getInt("ID");
+        assertEquals(startId, company.getInt("ID"));
+        assertEquals("ACME Publishing", company.getString("NAME"));
+
+        company = (DataObject)root.getList("COMPANY").get(1);
+        assertEquals(startId+1, company.getInt("ID"));
+        assertEquals("Do-rite plumbing", company.getString("NAME"));
+        
+        company = (DataObject)root.getList("COMPANY").get(2);
+        assertEquals(startId+2, company.getInt("ID"));
+        assertEquals("MegaCorp", company.getString("NAME"));
+        
+        //create a new company. auto get keys set in config and supported in table creation statement
+        DataObject newCompany = root.createDataObject("COMPANY");
+        newCompany.setString("NAME", "MyNewCompany");
+        das.applyChanges(root);        
+
+        assertEquals("MyNewCompany", newCompany.getString("NAME"));
+        assertEquals(startId+3, newCompany.getInt("ID"));       
+    }    
 }

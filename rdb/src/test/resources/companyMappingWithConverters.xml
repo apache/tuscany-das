@@ -18,9 +18,16 @@
   under the License.
  -->
 <Config xmlns="http:///org.apache.tuscany.das.rdb/config.xsd" dataObjectModel="org.apache.tuscany.das.rdb.test/company.xsd">
-  
+	<Command name="AllCompanies" SQL="select * from COMPANY" kind="Select">
+     <ResultDescriptor columnName="ID" tableName="COMPANY" columnType="commonj.sdo.Int"/>
+     <ResultDescriptor columnName="NAME" tableName="COMPANY" columnType="commonj.sdo.String"/>
+     <ResultDescriptor columnName="EOTMID" tableName="COMPANY" columnType="commonj.sdo.Int"/>
+    </Command>
+      
   <Table tableName="COMPANY" typeName="CompanyType">
-    <Column columnName="ID" primaryKey="true"/>
+    <Column columnName="ID" propertyName="id" primaryKey="true" generated="true"/>
+    <Column columnName="NAME" propertyName="name" />
+    <Column columnName="EOTMID" propertyName="employeeOfTheMonth"/>
   </Table>
   
   <Table tableName="DEPARTMENT" typeName="DepartmentType">
