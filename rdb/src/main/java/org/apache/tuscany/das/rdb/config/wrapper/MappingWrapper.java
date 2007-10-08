@@ -310,6 +310,10 @@ public class MappingWrapper {
         addPrimaryKey(Collections.singletonList(columnName));
     }
 
+    public void addPrimaryKey(String columnName, String propertyName) {
+        addPrimaryKey(Collections.singletonList(columnName), propertyName);
+    }
+    
     public void addPrimaryKey(List columnNames) {
 
         Iterator i = columnNames.iterator();
@@ -325,6 +329,22 @@ public class MappingWrapper {
         }
     }
 
+    public void addPrimaryKey(List columnNames, String propertyName) {
+
+        Iterator i = columnNames.iterator();
+        while (i.hasNext()) {
+            String columnName = (String) i.next();
+
+            QualifiedColumn pkColumn = null;
+           	pkColumn = new QualifiedColumn(columnName, this.config.isDatabaseSchemaNameSupported());
+            //Table t = findOrCreateTable(pkColumn.getTableName());
+            Table t = findOrCreateTable(pkColumn);
+            Column c = findOrCreateColumn(t, pkColumn.getColumnName());
+            c.setPrimaryKey(true);
+            c.setPropertyName(propertyName);
+        }
+    }
+    
     public String getTableTypeName(String tableName) {
         Table t = getTable(tableName);
         if (t == null) {

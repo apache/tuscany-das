@@ -21,6 +21,9 @@ package org.apache.tuscany.das.rdb.impl;
 import java.util.Iterator;
 import java.util.List;
 
+import commonj.sdo.DataObject;
+import commonj.sdo.helper.XMLHelper;
+
 /**
  * Manages a set of graph-change operations. This simple implementaiton can be 
  * replaced with a version that provides R/I sorting
@@ -51,19 +54,19 @@ public class Changes {
      */
     public void execute() {
 
-        Iterator i = inserts.getSortedList().iterator();
+        Iterator i = deletes.getSortedList().iterator();
+        while (i.hasNext()) {
+            ChangeOperation c = (ChangeOperation) i.next();
+            c.execute();
+        }
+
+        i = inserts.getSortedList().iterator();
         while (i.hasNext()) {
             ChangeOperation c = (ChangeOperation) i.next();
             c.execute();
         }
 
         i = updates.getSortedList().iterator();
-        while (i.hasNext()) {
-            ChangeOperation c = (ChangeOperation) i.next();
-            c.execute();
-        }
-
-        i = deletes.getSortedList().iterator();
         while (i.hasNext()) {
             ChangeOperation c = (ChangeOperation) i.next();
             c.execute();

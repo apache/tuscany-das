@@ -82,6 +82,15 @@ public class ConfigHelper {
     }
 
     /**
+     * Add PK information, with different TypeName
+     * @param columnName
+     * @param typeName
+     */
+    public void addPrimaryKey(String columnName, String propertyName) {
+        configWrapper.addPrimaryKey(columnName, propertyName);
+    }
+    
+    /**
      * Add relationship information
      * @param parentName
      * @param childName

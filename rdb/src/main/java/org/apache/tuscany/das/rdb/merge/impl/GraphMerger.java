@@ -26,6 +26,8 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import org.apache.tuscany.das.rdb.config.Config;
+import org.apache.tuscany.das.rdb.config.Table;
+import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
 import org.apache.tuscany.das.rdb.config.wrapper.QualifiedColumn;
 import org.apache.tuscany.das.rdb.graphbuilder.impl.MultiTableRegistry;
 import org.apache.tuscany.das.rdb.graphbuilder.impl.TableRegistry;
@@ -58,6 +60,13 @@ public class GraphMerger {
     //JIRA-952
     public GraphMerger(Config cfg) {
         this.config = cfg;
+    }
+    
+    public DataObject emptyGraph() {
+    	if(this.config != null)
+    		return emptyGraph(this.config);
+    	else
+    		return null;
     }
     
     // TODO Replace EMF reference with SDOUtil function when available
@@ -191,7 +200,7 @@ public class GraphMerger {
             Property p = (Property) i.next();
             Iterator objects = graph1.getList(p).iterator();
             while (objects.hasNext()) {
-                DataObject object = (DataObject) objects.next();
+                DataObject object = (DataObject) objects.next();                
                 Object pk = object.get(getPrimaryKeyName(object));
                 if (logger.isDebugEnabled()) {
                 	logger.debug("Adding object with pk " + pk + " to registry");
@@ -211,6 +220,7 @@ public class GraphMerger {
     }
 
     //JIRA-952
+    //if the table and column have SDO type name and property name use it else use database table and column name
     public void addPrimaryKey(String key) {
     	QualifiedColumn column = null;
     	if(this.config != null && this.config.isDatabaseSchemaNameSupported()){
@@ -220,9 +230,31 @@ public class GraphMerger {
     		column = new QualifiedColumn(key);
     	}
         
-    	if (logger.isDebugEnabled()) {
-    		logger.debug("Adding " + column.getTableName() + " " + column.getColumnName() + " to keys");	
+    	String tableName = column.getTableName();
+    	String columnName = column.getColumnName();
+    	String schemaName = column.getSchemaName();
+    	String qualifiedTableName = null;
+    	
+    	if(this.config != null && this.config.isDatabaseSchemaNameSupported()) {
+    		qualifiedTableName = schemaName+"."+tableName; 
+    	} else {
+    		qualifiedTableName = tableName;
     	}
-        keys.put(column.getTableName(), column.getColumnName());
+    	MappingWrapper configWrapper = new MappingWrapper(this.config);
+    	
+    	String typeName = configWrapper.getTableTypeName(qualifiedTableName);
+    	String propertyName = configWrapper.getColumnPropertyName(qualifiedTableName, columnName);
+    	
+    	if(typeName != null && propertyName != null) {
+    		if (logger.isDebugEnabled()) {
+        		logger.debug("Adding " + typeName + " " + propertyName + " to keys");	
+        	}
+            keys.put(typeName, propertyName);
+    	} else {
+        	if (logger.isDebugEnabled()) {
+        		logger.debug("Adding " + column.getTableName() + " " + column.getColumnName() + " to keys");	
+        	}
+            keys.put(column.getTableName(), column.getColumnName());    		
+    	}    	
     }
 }

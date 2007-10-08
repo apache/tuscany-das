@@ -188,4 +188,40 @@ public class GraphMergeTests extends DasTest {
         assertEquals(1, mergedGraph.getList("CUSTOMER").size());
     }
 
+    /**
+     * Mix dynamic DO from query result with static DO from customer.xsd. As long as the type and 
+     * property names are matching for both, merge can happen - fixing bug 1827- pk hashmap was not
+     * considering type and property names before.
+     * @throws Exception
+     */
+    public void testMergeUpdateSingleTable() throws Exception {
+    	//existing records
+        DAS das = DAS.FACTORY.createDAS(getConfig("CustomersOrdersConfigProps.xml"), getConnection());
+    	DataObject root = das.getCommand("all customers").executeQuery();
+    	DataObject firstCustomer = root.getDataObject("Customer[ID=1]");
+    	
+    	if(firstCustomer != null)
+    		firstCustomer.delete();//DAS will not automatic createOrReplace , so do delete here and later doing a create
+    	
+    	//create new customer using static SDO - say a service is doing it
+    	String typeUri = "http:///org.apache.tuscany.das.rdb.test/customer.xsd";
+        HelperContext context = HelperProvider.getDefaultContext();
+        CustomerFactory.INSTANCE.register(context);
+        ConfigHelper helper = new ConfigHelper();
+        helper.setDataObjectModel(typeUri);
+        helper.addTable("CUSTOMER", "Customer");
+        helper.addPrimaryKey("CUSTOMER.ID", "ID");
+
+        GraphMerger gm = new GraphMerger(helper.getConfig());
+        DataObject graph = gm.emptyGraph();
+        Customer c = (Customer) graph.createDataObject("Customer");
+        c.setID(1);
+        c.setLastName("WilliamsNew");
+        c.setAddress("400 Fourth Street");
+        
+        gm.addPrimaryKey("CUSTOMER.ID");
+        
+        DataObject root1 = gm.merge(root, ((DataObject)c).getRootObject());       
+        das.applyChanges(root1);
+    }    
 }

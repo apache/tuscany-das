@@ -88,14 +88,22 @@ public class OperationOrderingTests extends DasTest {
         String stateName = firstState.getString("NAME");
 
         List cityNames = new ArrayList();
+        DataObject[] citiesToDelete = new DataObject[firstState.getList("cities").size()];
         Iterator i = firstState.getList("cities").iterator();
+        int ii=0;
+        //if we perform delete() in while, the 2nd city of the state is not deleted.
         while (i.hasNext()) {
             DataObject firstCity = (DataObject) i.next();
             cityNames.add(firstCity.getString("NAME"));
-            firstCity.delete();
+            citiesToDelete[ii] = firstCity;
+            ii++;
         }
+        
+        for(int j=0; j<citiesToDelete.length; j++) {
+        	citiesToDelete[j].delete();
+        }
+        
         firstState.delete();
-
         das.applyChanges(root);
 
         root = select.executeQuery();
