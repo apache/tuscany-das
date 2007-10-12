@@ -91,7 +91,7 @@ public class ConnectionImpl {
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("returning useGetGeneratedKeys():"+ this.generatedKeysSupported);
         }
-        return Boolean.parseBoolean(this.generatedKeysSupported);
+        return Boolean.valueOf(this.generatedKeysSupported).booleanValue();
     }
     
     public void cleanUp() {
