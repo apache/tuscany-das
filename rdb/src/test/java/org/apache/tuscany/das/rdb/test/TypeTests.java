@@ -26,12 +26,20 @@ package org.apache.tuscany.das.rdb.test;
  * 
  */
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.tuscany.das.rdb.Command;
 import org.apache.tuscany.das.rdb.DAS;
+import org.apache.tuscany.das.rdb.impl.SDODataTypeHelper;
 import org.apache.tuscany.das.rdb.test.data.TypesData;
 import org.apache.tuscany.das.rdb.test.framework.DasTest;
+import org.apache.tuscany.sdo.api.SDOUtil;
+import org.apache.tuscany.sdo.model.impl.ModelFactoryImpl;
 
 import commonj.sdo.DataObject;
+import commonj.sdo.Type;
+import commonj.sdo.impl.HelperProvider;
 
 public class TypeTests extends DasTest {
 
@@ -86,5 +94,15 @@ public class TypeTests extends DasTest {
      assertEquals(now, ts);
      
      }*/
+    
+    public void testTypeMapping() throws Exception {
+    	 List typesList = SDOUtil.getTypes(HelperProvider.getDefaultContext(), ModelFactoryImpl.NAMESPACE_URI);
+    	 Iterator itr = typesList.iterator();
+    	 while(itr.hasNext()) {
+    		 Type sdoType = (Type)itr.next();
+    		 if(sdoType.isDataType() && !sdoType.getName().equals("ChangeSummaryType"))
+    			 assertEquals(sdoType.getURI()+"."+sdoType.getName(), SDODataTypeHelper.columnTypeForSDOType(sdoType));
+    	 }
+    } 
 
 }

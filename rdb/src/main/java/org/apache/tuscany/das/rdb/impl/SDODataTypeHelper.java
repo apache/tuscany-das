@@ -29,20 +29,28 @@ public final class SDODataTypeHelper {
     }
     
     public static String columnTypeForSDOType(Type sdoType){
-    	if(sdoType == null){
-    		return null;
+    	if(sdoType == null) {
+    		throw new RuntimeException("Null SDO Data Type!");
+    	}
+
+    	if(!sdoType.isDataType()) {
+    		throw new RuntimeException("Invalid SDO Data Type! "+sdoType.getName());
     	}
     	
     	if (sdoType == SDODataTypes.BOOLEAN) {
             return SDODataTypes.BOOLEAN_STR;
-        } else if (sdoType == SDODataTypes.STRING) {
-            return SDODataTypes.STRING_STR;
+        } else if (sdoType == SDODataTypes.BOOLEANOBJECT) {
+            return SDODataTypes.BOOLEANOBJECT_STR;
         } else if (sdoType == SDODataTypes.BYTE) {
             return SDODataTypes.BYTE_STR;
+        } else if (sdoType == SDODataTypes.BYTEOBJECT) {
+            return SDODataTypes.BYTEOBJECT_STR;
         } else if (sdoType == SDODataTypes.BYTES) {
             return SDODataTypes.BYTES_STR;
         } else if (sdoType == SDODataTypes.CHARACTER) {
             return SDODataTypes.CHARACTER_STR;
+        } else if (sdoType == SDODataTypes.CHARACTEROBJECT) {
+            return SDODataTypes.CHARACTEROBJECT_STR;
         } else if (sdoType == SDODataTypes.DATE) {
             return SDODataTypes.DATE_STR;
         } else if (sdoType == SDODataTypes.DATETIME) {
@@ -51,18 +59,28 @@ public final class SDODataTypeHelper {
             return SDODataTypes.DAY_STR;
         } else if (sdoType == SDODataTypes.DECIMAL) {
             return SDODataTypes.DECIMAL_STR;
+        }  else if (sdoType == SDODataTypes.STRING) {
+            return SDODataTypes.STRING_STR;
         } else if (sdoType == SDODataTypes.DOUBLE) {
             return SDODataTypes.DOUBLE_STR;
+        } else if (sdoType == SDODataTypes.DOUBLEOBJECT) {
+            return SDODataTypes.DOUBLEOBJECT_STR;
         } else if (sdoType == SDODataTypes.DURATION) {
             return SDODataTypes.DURATION_STR;
         } else if (sdoType == SDODataTypes.FLOAT) {
             return SDODataTypes.FLOAT_STR;
+        } else if (sdoType == SDODataTypes.FLOATOBJECT) {
+            return SDODataTypes.FLOATOBJECT_STR;
         } else if (sdoType == SDODataTypes.INT) {
             return SDODataTypes.INT_STR;
         } else if (sdoType == SDODataTypes.INTEGER) {
             return SDODataTypes.INTEGER_STR;
+        } else if (sdoType == SDODataTypes.INTOBJECT) {
+            return SDODataTypes.INTOBJECT_STR;
         } else if (sdoType == SDODataTypes.LONG) {
             return SDODataTypes.LONG_STR;
+        } else if (sdoType == SDODataTypes.LONGOBJECT) {
+            return SDODataTypes.LONGOBJECT_STR;
         } else if (sdoType == SDODataTypes.MONTH) {
             return SDODataTypes.MONTH_STR;
         } else if (sdoType == SDODataTypes.MONTHDAY) {
@@ -71,6 +89,8 @@ public final class SDODataTypeHelper {
             return SDODataTypes.OBJECT_STR;            
         } else if (sdoType == SDODataTypes.SHORT) {
             return SDODataTypes.SHORT_STR;
+        } else if (sdoType == SDODataTypes.SHORTOBJECT) {
+            return SDODataTypes.SHORTOBJECT_STR;
         } else if (sdoType == SDODataTypes.STRING) {
             return SDODataTypes.STRING_STR;
         } else if (sdoType == SDODataTypes.STRINGS) {
@@ -85,24 +105,8 @@ public final class SDODataTypeHelper {
             return SDODataTypes.YEARMONTH_STR;
         } else if (sdoType == SDODataTypes.YEARMONTHDAY) {
             return SDODataTypes.YEARMONTHDAY_STR;
-        } else if (sdoType == SDODataTypes.BOOLEANOBJECT) {
-            return SDODataTypes.BOOLEANOBJECT_STR;
-        } else if (sdoType == SDODataTypes.BYTEOBJECT) {
-            return SDODataTypes.BYTEOBJECT_STR;
-        } else if (sdoType == SDODataTypes.CHARACTEROBJECT) {
-            return SDODataTypes.CHARACTEROBJECT_STR;
-        } else if (sdoType == SDODataTypes.DOUBLEOBJECT) {
-            return SDODataTypes.DOUBLEOBJECT_STR;
-        } else if (sdoType == SDODataTypes.FLOATOBJECT) {
-            return SDODataTypes.FLOATOBJECT_STR;
-        } else if (sdoType == SDODataTypes.INTEGEROBJECT) {
-            return SDODataTypes.INTEGEROBJECT_STR;
-        } else if (sdoType == SDODataTypes.LONGOBJECT) {
-            return SDODataTypes.LONGOBJECT_STR;
-        } else if (sdoType == SDODataTypes.SHORTOBJECT) {
-            return SDODataTypes.SHORTOBJECT_STR;
         } else {
-            throw new RuntimeException("Not a valid SDO Type " + sdoType);
+            throw new RuntimeException("Invalid SDO Data Type " + sdoType.getName());
         }    	
     }
     
@@ -126,7 +130,7 @@ public final class SDODataTypeHelper {
         } else if (sdoType == SDODataTypes.DATETIME) {
             return Types.DATE;
         } else if (sdoType == SDODataTypes.DAY) {
-            return java.sql.Types.BINARY;
+            return java.sql.Types.VARCHAR;
         } else if (sdoType == SDODataTypes.DECIMAL) {
             return java.sql.Types.DECIMAL;
         } else if (sdoType == SDODataTypes.DOUBLE) {
@@ -149,8 +153,6 @@ public final class SDODataTypeHelper {
             return java.sql.Types.JAVA_OBJECT;
         } else if (sdoType == SDODataTypes.SHORT) {
             return java.sql.Types.SMALLINT;
-        } else if (sdoType == SDODataTypes.STRING) {
-            return java.sql.Types.VARCHAR;
         } else if (sdoType == SDODataTypes.STRINGS) {
             return java.sql.Types.OTHER;
         } else if (sdoType == SDODataTypes.TIME) {
@@ -173,14 +175,14 @@ public final class SDODataTypeHelper {
             return java.sql.Types.DOUBLE;
         } else if (sdoType == SDODataTypes.FLOATOBJECT) {
             return java.sql.Types.REAL;
-        } else if (sdoType == SDODataTypes.INTEGEROBJECT) {
+        } else if (sdoType == SDODataTypes.INTOBJECT) {
             return java.sql.Types.INTEGER;
         } else if (sdoType == SDODataTypes.LONGOBJECT) {
             return java.sql.Types.BIGINT;
         } else if (sdoType == SDODataTypes.SHORTOBJECT) {
             return java.sql.Types.SMALLINT;
         } else {
-            throw new RuntimeException("Not a valid SDO Type " + sdoType);
+            throw new RuntimeException("Invalid SDO Data Type " + sdoType.getName());
         }
 
     }
