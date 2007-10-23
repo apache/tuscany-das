@@ -97,7 +97,18 @@ public class ConfigHelper {
      * @return
      */
     public Relationship addRelationship(String parentName, String childName) {
-        return configWrapper.addRelationship(parentName, childName);
+        return addRelationship(parentName, childName, null);
+    }
+    
+    /**
+     * Add relationship information
+     * @param parentName
+     * @param childName
+     * @param relationshipName
+     * @return
+     */
+    public Relationship addRelationship(String parentName, String childName, String relationshipName) {
+        return configWrapper.addRelationship(parentName, childName, relationshipName);
     }
     
     /**
@@ -107,9 +118,20 @@ public class ConfigHelper {
      * @return
      */
     public Relationship addRelationship(Vector parentNames, Vector childNames) {
-        return configWrapper.addRelationship(parentNames, childNames);
+        return addRelationship(parentNames, childNames, null);
     }
 
+    /**
+     * Add relationship information
+     * @param parentNames
+     * @param childNames
+     * @param relationshipName
+     * @return
+     */
+    public Relationship addRelationship(Vector parentNames, Vector childNames, String relationshipName) {
+        return configWrapper.addRelationship(parentNames, childNames, relationshipName);
+    }
+    
     /**
      * Add table information
      * @param name

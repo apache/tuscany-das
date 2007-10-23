@@ -162,6 +162,10 @@ public class MappingWrapper {
     }
 
     public Relationship addRelationship(String parentName, String childName) {
+    	return addRelationship(parentName, childName, null); 
+    }
+    
+    public Relationship addRelationship(String parentName, String childName, String relationshipName) {
 
     	//JIRA-952
         QualifiedColumn parent = null;
@@ -179,14 +183,22 @@ public class MappingWrapper {
         Relationship r = FACTORY.createRelationship();
         //JIRA-952
         if(this.config.isDatabaseSchemaNameSupported()){        	
-            r.setName(child.getSchemaName()+"."+child.getTableName());
+        	if(relationshipName == null)
+        		r.setName(child.getSchemaName()+"."+child.getTableName());
+        	else
+        		r.setName(relationshipName);
+        	
             r.setPrimaryKeyTable(parent.getSchemaName()+"."+parent.getTableName());
             r.setForeignKeyTable(child.getSchemaName()+"."+child.getTableName());        	
         }
         else{
-        r.setName(child.getTableName());
-        r.setPrimaryKeyTable(parent.getTableName());
-        r.setForeignKeyTable(child.getTableName());
+        	if(relationshipName == null)
+        		r.setName(child.getTableName());
+        	else
+        		r.setName(relationshipName);
+        	
+	        r.setPrimaryKeyTable(parent.getTableName());
+	        r.setForeignKeyTable(child.getTableName());
         }
 
         if (this.logger.isDebugEnabled()) {
@@ -208,6 +220,10 @@ public class MappingWrapper {
     }
     
     public Relationship addRelationship(Vector parentNames, Vector childNames) {
+    	return addRelationship(parentNames, childNames, null);
+    }
+    
+    public Relationship addRelationship(Vector parentNames, Vector childNames, String relationshipName) {
         //create vector for each
         if(parentNames.size() != childNames.size()){
             throw new RuntimeException("Can not for relationship for multiple keys, different sizes");
@@ -243,18 +259,26 @@ public class MappingWrapper {
         
         Relationship r = FACTORY.createRelationship();
         //JIRA-952
-        if(this.config.isDatabaseSchemaNameSupported()){        	
-            r.setName(((QualifiedColumn)childColumns.get(0)).getSchemaName()+"."
-            		+((QualifiedColumn)childColumns.get(0)).getTableName());
+        if(this.config.isDatabaseSchemaNameSupported()){
+        	if(relationshipName == null)
+        		r.setName(((QualifiedColumn)childColumns.get(0)).getSchemaName()+"."
+        				+((QualifiedColumn)childColumns.get(0)).getTableName());
+        	else
+        		r.setName(relationshipName);
+        	
             r.setPrimaryKeyTable(((QualifiedColumn)parentColumns.get(0)).getSchemaName()+"."
             		+((QualifiedColumn)parentColumns.get(0)).getTableName());
             r.setForeignKeyTable(((QualifiedColumn)childColumns.get(0)).getSchemaName()+"."
             		+((QualifiedColumn)childColumns.get(0)).getTableName());        	
         }
         else{
-        r.setName(((QualifiedColumn)childColumns.get(0)).getTableName());
-        r.setPrimaryKeyTable(((QualifiedColumn)parentColumns.get(0)).getTableName());
-        r.setForeignKeyTable(((QualifiedColumn)childColumns.get(0)).getTableName());
+        	if(relationshipName == null)
+        		r.setName(((QualifiedColumn)childColumns.get(0)).getTableName());
+        	else
+        		r.setName(relationshipName);
+        	
+	        r.setPrimaryKeyTable(((QualifiedColumn)parentColumns.get(0)).getTableName());
+	        r.setForeignKeyTable(((QualifiedColumn)childColumns.get(0)).getTableName());
         }
 
         if (this.logger.isDebugEnabled()) {

@@ -20,16 +20,20 @@ package org.apache.tuscany.das.rdb.test;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Vector;
 
 import org.apache.tuscany.das.rdb.Command;
 import org.apache.tuscany.das.rdb.ConfigHelper;
 import org.apache.tuscany.das.rdb.DAS;
 import org.apache.tuscany.das.rdb.config.Config;
 import org.apache.tuscany.das.rdb.config.ConnectionInfo;
+import org.apache.tuscany.das.rdb.config.Relationship;
 import org.apache.tuscany.das.rdb.config.Table;
 import org.apache.tuscany.das.rdb.test.data.BookData;
 import org.apache.tuscany.das.rdb.test.data.CustomerData;
 import org.apache.tuscany.das.rdb.test.data.OrderData;
+import org.apache.tuscany.das.rdb.test.data.OrderDetailsData;
+import org.apache.tuscany.das.rdb.test.data.OrderDetailsDescriptionData;
 import org.apache.tuscany.das.rdb.test.framework.DasTest;
 import org.apache.tuscany.das.rdb.util.ConfigUtil;
 
@@ -45,6 +49,8 @@ public class ProgrammaticConfigTests extends DasTest {
         new BookData(getAutoConnection()).refresh();
         new CustomerData(getAutoConnection()).refresh();
         new OrderData(getAutoConnection()).refresh();
+        new OrderDetailsData(getAutoConnection()).refresh();
+        new OrderDetailsDescriptionData(getAutoConnection()).refresh();        
     }
 
     protected void tearDown() throws Exception {
@@ -384,4 +390,43 @@ public class ProgrammaticConfigTests extends DasTest {
             this.assertEquals ("Column PK must be qualified with a table name and optional schema name", ex.getMessage());
         }
     }
+    
+    public void testAddRelationshipWithName() throws Exception {
+        String statement = "SELECT * FROM CUSTOMER LEFT JOIN ANORDER ON CUSTOMER.ID = ANORDER.CUSTOMER_ID WHERE CUSTOMER.ID = 1";
+
+        // Read some customers and related orders
+        // Create relationship config programmatically
+        ConfigHelper helper = new ConfigHelper();
+        helper.addRelationship("CUSTOMER.ID", "ANORDER.CUSTOMER_ID", "orders");
+        DAS das = DAS.FACTORY.createDAS(helper.getConfig(), getConnection());
+        Command select = das.createCommand(statement);
+
+        DataObject root = select.executeQuery();
+        DataObject customer = root.getDataObject("CUSTOMER[1]");
+
+        assertEquals(2, customer.getList("orders").size());
+    }
+    
+    public void testAddRelationshipMultiKeyWithName() throws Exception {
+        ConfigHelper helper = new ConfigHelper();
+        Vector parentColumnNames = new Vector();
+        Vector childColumnNames = new Vector();
+
+        parentColumnNames.add(0, "ORDERDETAILS.ORDERID");
+        parentColumnNames.add(1, "ORDERDETAILS.PRODUCTID");
+
+        childColumnNames.add(0, "ORDERDETAILSDESC.ORDERID");
+        childColumnNames.add(1, "ORDERDETAILSDESC.PRODUCTID");        
+        
+        Relationship r = helper.addRelationship(parentColumnNames, childColumnNames, "ord_dets");
+
+        DAS das = DAS.FACTORY.createDAS(helper.getConfig(), getConnection());
+        Command select = das.createCommand("SELECT * FROM ORDERDETAILS LEFT JOIN ORDERDETAILSDESC ON ORDERDETAILS.ORDERID = ORDERDETAILSDESC.ORDERID " +
+                		" AND ORDERDETAILS.PRODUCTID = ORDERDETAILSDESC.PRODUCTID");
+
+        DataObject root = select.executeQuery();  
+        DataObject ordDet1 = root.getDataObject("ORDERDETAILS[1]");
+        assertEquals(2, ordDet1.getList("ord_dets").size());
+
+    }    
 }
