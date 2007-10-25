@@ -41,6 +41,7 @@ import org.apache.tuscany.das.rdb.test.data.OrderData;
 import org.apache.tuscany.das.rdb.test.framework.DasTest;
 
 import commonj.sdo.DataObject;
+import commonj.sdo.helper.XMLHelper;
 
 public class RelationshipTests extends DasTest {
 
@@ -74,8 +75,7 @@ public class RelationshipTests extends DasTest {
         Command select = das.createCommand(statement);
 
         DataObject root = select.executeQuery();
-        DataObject customer = root.getDataObject("CUSTOMER[1]");
-
+        DataObject customer = root.getDataObject("Customer[1]");
         assertEquals(2, customer.getList("orders").size());
 
     }

@@ -135,6 +135,16 @@
 				    <goal>generate</goal>
 				</goals>
 			    </execution>
+			    <execution>
+				<id>singer</id>
+				<configuration>
+				    <schemaFile>${basedir}/src/test/resources/SINGER.xsd</schemaFile>
+				    <noUnsettable>true</noUnsettable>
+				</configuration>
+				<goals>
+				    <goal>generate</goal>
+				</goals>
+			    </execution>			    
 			</executions>
 		    </plugin>
 

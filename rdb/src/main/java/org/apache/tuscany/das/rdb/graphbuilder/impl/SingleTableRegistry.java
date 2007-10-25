@@ -43,4 +43,7 @@ public class SingleTableRegistry implements TableRegistry {
         return false;
     }
 
+    public void remove(String tableName, List primaryKey) {
+    	
+    }    
 }

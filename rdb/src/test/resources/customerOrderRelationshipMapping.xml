@@ -19,10 +19,10 @@
  -->
 <Config xmlns="http:///org.apache.tuscany.das.rdb/config.xsd"> 
   
-  <Table tableName="CUSTOMER">
+  <Table tableName="CUSTOMER" typeName="Customer">
   	<Column columnName="ID" primaryKey="true"/>
   </Table>
-  <Table tableName="ANORDER">
+  <Table tableName="ANORDER" typeName="AnOrder">
   	<Column columnName="ID" primaryKey="true"/>
   </Table>
   

@@ -101,4 +101,16 @@ public class MultiTableRegistry implements TableRegistry {
 
     }
 
+    public void remove(String tableName, List primaryKey) {
+    	getPkMap(tableName).get(primaryKey);
+    	Map pkMap = (HashMap) tableNameMap.get(tableName);
+    	
+    	if(pkMap.get(primaryKey) != null) {
+    		pkMap.remove(primaryKey);	
+    	}
+    	
+    	if(pkMap.size() == 0) {
+    		tableNameMap.remove(tableName);
+    	}
+    }    
 }

@@ -42,4 +42,6 @@ public interface TableRegistry {
     void put(String tableName, List primaryKey, DataObject value);
 
     boolean contains(String name, List list);
+    
+    void remove(String tableName, List primaryKey);
 }
