@@ -71,7 +71,19 @@ public class DatabaseObject {
                     this.logger.debug("getTypeName():"+getTypeName());
                 }
                 
-                if (r.getForeignKeyTable().equals(getTypeName())) {
+                Table fkTable = mappingWrapper.getTableByTypeName(getTypeName());
+                String fkTableName = null;
+                if(fkTable != null) {                    
+                    if(mappingWrapper.getConfig().isDatabaseSchemaNameSupported()) {
+                    	fkTableName = fkTable.getSchemaName()+"."+fkTable.getTableName();
+                    } else {
+                    	fkTableName = fkTable.getTableName();
+                    }                	
+                } else {//this can happen when no <Table> in Config and Query based Dynamic Types are used during query
+                	fkTableName = getTypeName(); 
+                }
+                
+                if (r.getForeignKeyTable().equals(fkTableName)) {
                     List pairs = r.getKeyPair();
                     Iterator iter = pairs.iterator();
                     while (iter.hasNext()) {
@@ -116,11 +128,26 @@ public class DatabaseObject {
         if (parent == null) {
             return null;
         }
-        String parentKey = getParentKey(r, parameter);
-        return parent.get(parentKey);
-
+        String parentKey = getParentKey(r, parameter);//parentKey is db column name
+        
+        String parentTableName = null;
+        //as parentKey is qualified column name and not SDO property name, do conversion, when possible, thru <Config><Table>
+        tbl = mappingWrapper.getTableByTypeName(parent.getType().getName());        
+        if(tbl != null) {
+	        if(mappingWrapper.getConfig().isDatabaseSchemaNameSupported()) {
+	        	parentTableName = tbl.getSchemaName()+"."+tbl.getTableName();
+	        } else {
+	        	parentTableName = tbl.getTableName();
+	        }
+	        String parentKeyProp = mappingWrapper.getColumnPropertyName(parentTableName, parentKey);
+	        
+	        return parent.get(parentKeyProp);	        
+        } else {
+        	return parent.get(parentKey);
+        }        
     }
 
+    /*This returns table column name*/
     private String getParentKey(Relationship r, String parameter) {
         List keyPairs = r.getKeyPair();
         Iterator i = keyPairs.iterator();

@@ -574,7 +574,19 @@ public class MappingWrapper {
         return false;
     }
 
+    /*Parameter name is SDO Type name and so requires mapping in table<->type, if one is available in Config*/
     public Collection getRelationshipsByChildTable(String name) {
+    	Table table = getTableByTypeName(name);
+    	
+    	if(table != null) {
+	    	if(config.isDatabaseSchemaNameSupported()) {
+	    		name = table.getSchemaName()+"."+table.getTableName();	
+	    	} else {
+	    		name = table.getTableName();
+	    	}
+    	}
+    	//table can be null, when no <Table> in Config and Query based Dynamic Types are used during query
+    	
         List results = new ArrayList();
         if (config != null) {
             Iterator i = getConfig().getRelationship().iterator();

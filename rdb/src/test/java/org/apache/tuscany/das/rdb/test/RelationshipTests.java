@@ -28,7 +28,9 @@ import java.sql.SQLException;
 import org.apache.tuscany.das.rdb.Command;
 import org.apache.tuscany.das.rdb.ConfigHelper;
 import org.apache.tuscany.das.rdb.DAS;
+import org.apache.tuscany.das.rdb.config.Config;
 import org.apache.tuscany.das.rdb.config.Relationship;
+import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
 import org.apache.tuscany.das.rdb.test.data.CompanyData;
 import org.apache.tuscany.das.rdb.test.data.CompanyEmpData;
 import org.apache.tuscany.das.rdb.test.data.CustomerData;
@@ -238,4 +240,51 @@ public class RelationshipTests extends DasTest {
         }
     }
     
+    /*If <Table> is present in DAS Config with type and property mappings, with tableName/typeName and columnName/propertyName differing
+     * consider relationship with proper mapping*/
+    public void testRelationshipTypesAndProperties() throws Exception {
+    	//existing records
+        DAS das = DAS.FACTORY.createDAS(getConfig("CustomersOrdersRelationship.xml"), getConnection());
+        Command cmd = das.getCommand("customer and orders");
+        cmd.setParameter("ID", new Integer(1));
+        DataObject root = cmd.executeQuery();
+        DataObject firstCustomer = root.getDataObject("Customer[id=1]");
+        
+        DataObject newOrder = root.createDataObject("AnOrder");
+        newOrder.setInt("OrderId", 100);
+        newOrder.setString("PRODUCT", "MyProd");
+        
+        firstCustomer.getList("orders").add(newOrder);
+        
+        das.applyChanges(root);
+        
+        root = cmd.executeQuery();
+        firstCustomer = root.getDataObject("Customer[id=1]");
+        assertEquals(3, firstCustomer.getList("orders").size());
+    }
+    
+    /*same as testRelationshipTypesAndProperties(), except no DAS Config, and so table/type and column/property name match by default*/
+    public void testRelationshipWithProgrammaticConfig() throws Exception {
+    	//existing records
+    	ConfigHelper configHelper = new ConfigHelper();
+    	Config config = configHelper.getConfig();
+    	MappingWrapper wrapper = new MappingWrapper(config);
+    	wrapper.addRelationship("CUSTOMER.ID", "ANORDER.CUSTOMER_ID", "orders");
+    	
+        DAS das = DAS.FACTORY.createDAS(config, getConnection());
+        Command cmd = das.createCommand("select * from CUSTOMER left join ANORDER on CUSTOMER.ID = ANORDER.CUSTOMER_ID where CUSTOMER.ID = 1");
+        DataObject root = cmd.executeQuery();
+        DataObject firstCustomer = root.getDataObject("CUSTOMER[ID=1]");
+        
+        DataObject newOrder = root.createDataObject("ANORDER");
+        newOrder.setInt("ID", 100);
+        newOrder.setString("PRODUCT", "MyProd");
+        
+        firstCustomer.getList("orders").add(newOrder);
+        
+        das.applyChanges(root);
+        
+        root = cmd.executeQuery();
+        firstCustomer = root.getDataObject("CUSTOMER[ID=1]");
+    }    
 }
