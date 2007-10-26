@@ -18,17 +18,13 @@
  */
 package org.apache.tuscany.das.rdb.test.data;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Types;
-
-import javax.sql.rowset.serial.SerialBlob;
 
 import org.apache.tuscany.das.rdb.test.framework.TestDataWithExplicitColumns;
 
@@ -60,8 +56,8 @@ public class DocumentsImagesData extends TestDataWithExplicitColumns {
 				imgBytes[i] = (byte)fileImgStream.read();
 				i++;
 			}
-			SerialBlob serialBlob = new SerialBlob(imgBytes);
-			ps.setBlob(3, serialBlob);
+			Blob blob = createBlob(imgBytes);
+			ps.setBlob(3, blob);
 			ps.execute(); 
 			ps.close();
     	}catch(IOException ioe){
@@ -69,4 +65,18 @@ public class DocumentsImagesData extends TestDataWithExplicitColumns {
     		throw new RuntimeException("Could not insert data for Blob/Clob..Please check resources!"+ioe.getMessage());
     	}
     }
+    
+     private Blob createBlob(byte[] bytes) {
+        Blob blob = null;
+        Class blobClazz;
+        try {
+            blobClazz = Class.forName("javax.sql.rowset.serial.SerialBlob", true, Thread.currentThread().getContextClassLoader());
+            Constructor blobConstructor = blobClazz.getConstructor(new Class[] { bytes.getClass() });
+            blob = (Blob) blobConstructor.newInstance(new Object[] { bytes });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return blob;
+    }
+    
 }
