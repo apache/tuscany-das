@@ -39,20 +39,6 @@ public abstract class CommandImpl extends BaseCommandImpl implements Command {
     
     public CommandImpl(String sqlString) {
         statement = new Statement(sqlString);
-
-        try {
-            URL url = getClass().getResource("/xml/sdoJava.xsd");
-            if (url == null) {
-                throw new RuntimeException("Could not find resource: xml/sdoJava.xsd");
-            }
-
-            InputStream inputStream = url.openStream();
-            XSDHelper.INSTANCE.define(inputStream, url.toString());
-            inputStream.close();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-
     }
 
     public CommandImpl(org.apache.tuscany.das.rdb.config.Command command) {
