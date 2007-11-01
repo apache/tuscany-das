@@ -61,7 +61,7 @@ public class GeronimoTransactionManagerService implements TransactionManager {
 
     public void init() throws Exception {
         XidFactoryImpl factory = new XidFactoryImpl();
-        transactionManager = new TransactionManagerImpl(timeout, factory, null, null);        
+        transactionManager = new TransactionManagerImpl(timeout, factory, null);        
     }
 
     public void begin() throws NotSupportedException, SystemException {

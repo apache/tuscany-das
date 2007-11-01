@@ -32,12 +32,10 @@
 		<include name="**/*.jar"/>
 	      </fileset>
 		<pathelement location="mysql-connector-java-5.0.4.jar"/>
-		<pathelement location="commons-logging-1.1.jar"/>
-		<pathelement location="geronimo-jta_1.0.1B_spec-1.0.jar"/>
-		<pathelement location="geronimo-kernel-1.2-beta.jar"/>
-		<pathelement location="geronimo-transaction-1.2-beta.jar"/>
-		<pathelement location="geronimo-connector-1.2-beta.jar"/>
-		<pathelement location="geronimo-j2ee-connector_1.5_spec-1.0.1.jar"/>
+		<pathelement location="commons-logging-1.0.4.jar"/>
+		<pathelement location="geronimo-jta_1.1_spec-1.1.jar"/>
+		<pathelement location="geronimo-transaction-2.0.1.jar"/>
+		<pathelement location="geronimo-j2ee-connector_1.5_spec-1.1.1.jar"/>
 		<pathelement location="tuscany-das-sample-dbconfig-1.0-incubating-SNAPSHOT.jar"/>
 		<pathelement path="${test.jar}"/>
 	    </classpath>        

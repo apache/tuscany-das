@@ -139,13 +139,10 @@
 	    <outputDirectory>tuscany-das-${das.version}/samples/transaction</outputDirectory>
 	        <includes>
 	            <include>mysql:mysql-connector-java</include>
-	            <include>org.apache.geronimo.specs:geronimo-jta_1.0.1B_spec</include>
-	            <include>org.apache.geronimo.modules:geronimo-kernel</include>
-	            <include>org.apache.geronimo.modules:geronimo-transaction</include>
-	            <include>org.apache.geronimo.modules:geronimo-connector</include>
+	            <include>org.apache.geronimo.specs:geronimo-jta_1.1_spec</include>
+	            <include>org.apache.geronimo.components:geronimo-transaction</include>
 	            <include>org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec</include>
 	            <include>org.apache.tuscany.das.samples:tuscany-das-sample-dbconfig</include>
-	            <include>commons-logging:commons-logging</include>
 	        </includes>	    
 	    <fileMode>0644</fileMode>
         </dependencySet>
