@@ -28,6 +28,9 @@ import org.apache.tuscany.das.rdb.test.framework.DasTest;
 
 import commonj.sdo.DataObject;
 
+/**
+ * Test Database Connection with and without authentication required 
+ */
 public class ConnectionTests extends DasTest {
 	Properties p = null;
 	
@@ -58,7 +61,9 @@ public class ConnectionTests extends DasTest {
     	super.tearDown();
     }
 
-    /*As database is created with user, password, connection without same authentication can not look up data*/
+    /**
+     * As database is created with user, password, connection without same authentication can not look up data
+     */
     public void testConnectionUsingDriverManagerNoAuth() throws Exception {
     	try {
 	   		DAS das = DAS.FACTORY.createDAS(getConfig("connectionInfoDriverManagerNoAuth.xml"));
@@ -70,7 +75,9 @@ public class ConnectionTests extends DasTest {
 		}
     }
     
-    /*As database is created with user, password, connection with same authentication can look up data*/
+    /**
+     * As database is created with user, password, connection with same authentication can look up data
+     */
     public void testConnectionUsingDriverManagerAuth() throws Exception {
     	try {
 	   		DAS das = DAS.FACTORY.createDAS(getConfig("connectionInfoDriverManagerAuth.xml"));
