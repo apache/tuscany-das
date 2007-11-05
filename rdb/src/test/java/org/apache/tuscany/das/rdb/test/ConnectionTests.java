@@ -70,7 +70,6 @@ public class ConnectionTests extends DasTest {
 	   		das.getCommand("getBook").executeQuery();
 	   		fail("Expected exception, as DB is created with id, pwd, needs same to get data from DB!");
 		} catch(Exception e) {
-			//e.printStackTrace();
 			assertTrue(true);//Expected exception
 		}
     }
