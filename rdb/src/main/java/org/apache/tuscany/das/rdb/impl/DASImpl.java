@@ -143,19 +143,22 @@ public class DASImpl implements DAS {
     private void initializeConnection() {
         Config config = configWrapper.getConfig();
         if (config == null || config.getConnectionInfo() == null ||
-            (config.getConnectionInfo().getDataSource() == null && config.getConnectionInfo().getConnectionProperties() == null)) {
+            (config.getConnectionInfo().getDataSource() == null &&
+            		(config.getConnectionInfo().getConnectionProperties() == null || config.getConnectionInfo().getConnectionProperties().getDatabaseURL() == null
+            		|| config.getConnectionInfo().getConnectionProperties().getDriverClass() == null)) ) {
             throw new RuntimeException("No connection has been provided and no data source has been specified");
         }
 
-        if(config.getConnectionInfo().getDataSource() != null && config.getConnectionInfo().getConnectionProperties() != null){
-            throw new RuntimeException("Use either dataSource or ConnectionProperties. Can't use both !");
+        if(config.getConnectionInfo().getDataSource() != null &&
+        		(config.getConnectionInfo().getConnectionProperties() != null && config.getConnectionInfo().getConnectionProperties().getDatabaseURL() != null) ){
+            throw new RuntimeException("Use either dataSource or databaseURL. Can't use both !");
         }
 
         ConnectionInfo connectionInfo = configWrapper.getConfig().getConnectionInfo();
-        if(config.getConnectionInfo().getConnectionProperties() != null){
-            initializeDriverManagerConnection(connectionInfo);
+        if(config.getConnectionInfo().getDataSource() != null){
+        	initializeDatasourceConnection(connectionInfo);
         }else{
-            initializeDatasourceConnection(connectionInfo);
+        	initializeDriverManagerConnection(connectionInfo);
         }
 
     }
@@ -175,7 +178,18 @@ public class DASImpl implements DAS {
         try {
             DataSource ds = (DataSource) ctx.lookup(connectionInfo.getDataSource());
             try {
-                connection = ds.getConnection();
+            	try {
+	            	if(connectionInfo.getConnectionProperties() != null &&
+	            	   connectionInfo.getConnectionProperties().getUserName() != null &&
+	            	   connectionInfo.getConnectionProperties().getPassword() != null ) {
+	            		connection = ds.getConnection(connectionInfo.getConnectionProperties().getUserName(), connectionInfo.getConnectionProperties().getPassword());
+	            	} else {
+	            		connection = ds.getConnection();
+	            	}
+            	}catch(Exception e) {
+            		connection = ds.getConnection();
+            	}
+
                 if (connection == null) {
                     throw new RuntimeException("Could not obtain a Connection from DataSource");
                 }

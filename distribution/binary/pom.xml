@@ -64,6 +64,12 @@
           <version>${das.version}</version>
       </dependency>
       
+       <dependency>
+          <groupId>org.apache.tuscany.das.samples</groupId>
+          <artifactId>tuscany-das-sample-dataSource</artifactId>
+          <version>${das.version}</version>
+      </dependency>
+      
     </dependencies>
 
     <build>

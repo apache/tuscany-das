@@ -1,0 +1,301 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 10">
+<meta name=Originator content="Microsoft Word 10">
+<link rel=File-List href="readme_files/filelist.xml">
+<title>Tuscany RDB DAS Sample</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>IBM_User</o:Author>
+  <o:LastAuthor>IBM_USER</o:LastAuthor>
+  <o:Revision>77</o:Revision>
+  <o:TotalTime>374</o:TotalTime>
+  <o:Created>2007-09-05T11:09:00Z</o:Created>
+  <o:LastSaved>2007-11-02T19:30:00Z</o:LastSaved>
+  <o:Pages>1</o:Pages>
+  <o:Words>330</o:Words>
+  <o:Characters>1883</o:Characters>
+  <o:Company>IBM</o:Company>
+  <o:Lines>15</o:Lines>
+  <o:Paragraphs>4</o:Paragraphs>
+  <o:CharactersWithSpaces>2209</o:CharactersWithSpaces>
+  <o:Version>10.6830</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:Compatibility>
+   <w:ApplyBreakingRules/>
+  </w:Compatibility>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:SimSun;
+	panose-1:2 1 6 0 3 1 1 1 1 1;
+	mso-font-alt:\5B8B\4F53;
+	mso-font-charset:134;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:3 135135232 16 0 262145 0;}
+@font-face
+	{font-family:"\@SimSun";
+	panose-1:2 1 6 0 3 1 1 1 1 1;
+	mso-font-charset:134;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:3 135135232 16 0 262145 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:SimSun;}
+h1
+	{mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:1;
+	font-size:24.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	font-weight:bold;}
+h2
+	{mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:2;
+	font-size:18.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	font-weight:bold;}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+p
+	{mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:SimSun;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0in 5.4pt 0in 5.4pt;
+	mso-para-margin:0in;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";}
+</style>
+<![endif]-->
+<meta name=CREATED content="20070704;1002817">
+<meta name=CHANGEDBY content="a a">
+<meta name=CHANGED content="20070704;2123396">
+<!-- <pre><a name="header-text">Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+&quot;License&quot;); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+&quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.   </a></pre>
+
+-->
+</head>
+
+<body lang=EN-US link=blue vlink=blue style='tab-interval:.5in'>
+
+<div class=Section1>
+
+<h1 style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'>RDB DAS Data Source Sample<o:p></o:p></span></h1>
+
+<h2 style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'><o:p>&nbsp;</o:p></span></h2>
+
+<h2 style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'>Introduction<o:p></o:p></span></h2>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'>This stand-alone sample demonstrates the RDB Data Access Service using
+DataSource with authentication information from DAS Config. <o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><b><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><o:p>&nbsp;</o:p></span></b></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><b><span lang=PT-BR
+style='font-size:18.0pt;mso-ansi-language:PT-BR'>Example</span></b><span
+lang=PT-BR style='font-size:18.0pt;mso-ansi-language:PT-BR'><o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'>In this example, user is expected to have JNDI provider jars in the classpath
+e.g. fscontext.jar and providerutil.jar from <a href="http://java.sun.com/">http://java.sun.com</a>.<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR;mso-bidi-font-weight:bold'>Three arguments expected in sequence are 1)
+DAS Config file name available in source path,<span style='mso-spacerun:yes'> 
+</span>2) database name, 3) INITIAL_CONTEXT_FACTORY e.g. <b>com.sun.jndi.fscontext.RefFSContextFactory.
+</b>These<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR;mso-bidi-font-weight:bold'>Are provided in build.xml ant script that
+comes along with the sample.<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><b><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><o:p>&nbsp;</o:p></span></b></p>
+
+<h2 style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'>Building and Running<o:p></o:p></span></h2>
+
+<p style='margin:0in;margin-bottom:.0001pt'><b><span lang=PT-BR
+style='mso-ansi-language:PT-BR'><span style='mso-spacerun:yes'> </span></span></b><span
+lang=PT-BR style='mso-ansi-language:PT-BR'>From binary distribution, <b>base
+directory</b> is {DAS_ROOT}\ samples\dataSource. Refer to below settings from
+this base directory.<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'>1] connectionInfoDataSourceAuth.xml available in sample-dataSource.jar,
+is the DAS config file. <span style='mso-spacerun:yes'> </span>It references a
+MySQL database name “dastest” and authentication info – root/mypwd. User can
+expand<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'>the sample and change the xml file to suit his environment – like database
+name, id, pwd. He needs to do consistent changes in {DAS_ROOT}\
+samples\dataSource\build.xml for input arguments too.<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'><o:p>&nbsp;</o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'>2]MySQL server should be running. The example uses MySQL DB. Database <b>dastest,
+</b>table <b>BOOK </b>and data will be created during sample run. <o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'><o:p>&nbsp;</o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'>3] Apache Ant latest version should be installed.Download Apache Ant
+latest version on and extract into folder &lt;apache_ant_folder&gt;. You can
+find it here: <a href="http://ant.apache.org/bindownload.cgi">http://ant.apache.org/bindownload.cgi</a>.Add
+&lt;apache_ant_folder&gt;/bin directory to your OS path variable.<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'><o:p>&nbsp;</o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'>4]<span style='mso-spacerun:yes'>  </span>Place required JNDI jar files
+in {DAS_ROOT}\ lib<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'><o:p>&nbsp;</o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'>5] From <b>base directory </b>run-<span style='mso-spacerun:yes'> 
+</span>ant<o:p></o:p></span></p>
+
+<h2 style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='font-size:
+12.0pt;mso-ansi-language:PT-BR;font-weight:normal;mso-bidi-font-weight:bold'><o:p>&nbsp;</o:p></span></h2>
+
+<h2 style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='font-size:
+12.0pt;mso-ansi-language:PT-BR;font-weight:normal;mso-bidi-font-weight:bold'>The
+sample first creates and initilizes DataSource for database “dastest”. It also
+registers the DataSource in InitialContext. In the test part, DAS Config is
+used by DAS runtime to obtain connection based on<o:p></o:p></span></h2>
+
+<h2 style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='font-size:
+12.0pt;mso-ansi-language:PT-BR;font-weight:normal;mso-bidi-font-weight:bold'>DataSource
+available in InitialContext using userId, password. <span
+style='mso-spacerun:yes'> </span>Using this connection it fetches and displays
+data from BOOK table.<o:p></o:p></span></h2>
+
+<h2 style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='font-size:
+12.0pt;mso-ansi-language:PT-BR;font-weight:normal;mso-bidi-font-weight:bold'><o:p>&nbsp;</o:p></span></h2>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span lang=PT-BR style='mso-ansi-language:
+PT-BR'>The sample will run and output the following: <o:p></o:p></span></p>
+
+<div style='border:solid windowtext 1.0pt;mso-border-alt:solid windowtext .5pt;
+padding:1.0pt 4.0pt 1.0pt 4.0pt'>
+
+<p class=MsoNormal style='mso-layout-grid-align:none;text-autospace:none;
+border:none;mso-border-alt:solid windowtext .5pt;padding:0in;mso-padding-alt:
+1.0pt 4.0pt 1.0pt 4.0pt'><span style='font-size:10.0pt;font-family:"Courier New";
+mso-fareast-font-family:"Times New Roman";color:black'>Books in store:1</span><span
+style='font-size:10.0pt;font-family:"Courier New";mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='mso-layout-grid-align:none;text-autospace:none;
+border:none;mso-border-alt:solid windowtext .5pt;padding:0in;mso-padding-alt:
+1.0pt 4.0pt 1.0pt 4.0pt'><span style='font-size:10.0pt;font-family:"Courier New";
+mso-fareast-font-family:"Times New Roman";color:black'>1<span
+style='mso-spacerun:yes'>    </span>StoryBook1</span><span style='font-size:
+10.0pt;font-family:"Courier New";mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='mso-layout-grid-align:none;text-autospace:none;
+border:none;mso-border-alt:solid windowtext .5pt;padding:0in;mso-padding-alt:
+1.0pt 4.0pt 1.0pt 4.0pt'><span style='font-size:10.0pt;font-family:"Courier New";
+mso-fareast-font-family:"Times New Roman";color:black'>Success!</span><span
+style='font-size:10.0pt;font-family:"Courier New";mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
+
+</div>
+
+<p style='margin:0in;margin-bottom:.0001pt'><o:p>&nbsp;</o:p></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><b><span lang=PT-BR
+style='mso-ansi-language:PT-BR'>Observation:</span></b><span lang=PT-BR
+style='mso-ansi-language:PT-BR'> The build.xml ant file only works on DAS Java
+binary distribution.<o:p></o:p></span></p>
+
+</div>
+
+</body>
+
+</html>

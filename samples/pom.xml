@@ -36,5 +36,6 @@
         <module>advanced-webapp</module>
         <module>customer</module>
         <module>transaction</module>
+        <module>dataSource</module>
     </modules>
 </project>

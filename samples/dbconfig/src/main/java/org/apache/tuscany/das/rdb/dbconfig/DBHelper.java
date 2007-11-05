@@ -6,15 +6,15 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 
 package org.apache.tuscany.das.rdb.dbconfig;
@@ -37,7 +37,7 @@ public class DBHelper {
 
     /**
      * Constructor
-     * 
+     *
      * @param DBConfig
      */
     protected DBHelper(DBConfig dbConfig) {
@@ -49,7 +49,7 @@ public class DBHelper {
 
     /**
      * Check if tables specified in Config exist
-     * 
+     *
      * @return true if all specified tables exist, false otherwise
      */
     protected boolean isDatabaseReady() {
@@ -77,12 +77,13 @@ public class DBHelper {
                 }
             }
         } catch (SQLException e) {
+        	bResult = false;
             if (logger.isDebugEnabled()) {
                 this.logger.log(Level.DEBUG, "Error retrieving database metadata", e);
             }
         } finally {
             try {
-                dbConnection.close();
+                if(dbConnection != null) dbConnection.close();
             } catch (SQLException e) {
                 // ignore here
             }
@@ -91,7 +92,7 @@ public class DBHelper {
         if (logger.isDebugEnabled()) {
             this.logger.log(Level.DEBUG, CLASS_NAME + "isDatabaseReady() exit");
         }
-        
+
         return bResult;
     }
 
@@ -184,7 +185,7 @@ public class DBHelper {
             try {
                 if(dbStatement != null)
                 	dbStatement.close();
-                
+
                 if(dbConnection != null)
                 	dbConnection.close();
             } catch (SQLException e) {
