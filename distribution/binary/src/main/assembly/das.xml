@@ -112,24 +112,6 @@
                <outputDirectory>tuscany-das-${das.version}/samples/transaction</outputDirectory>
                <fileMode>0644</fileMode>
             </file>
-            
-            <!-- include readme for dataSource sample -->
-            <file>
-               <source>../../samples/dataSource/readme.htm</source>
-               <outputDirectory>tuscany-das-${das.version}/samples/dataSource</outputDirectory>
-               <fileMode>0644</fileMode>
-            </file>
-            <!-- include dataSource sample -->
-            <file>
-               <source>../../samples/dataSource/target/sample-dataSource.jar</source>
-               <outputDirectory>tuscany-das-${das.version}/samples/dataSource</outputDirectory>
-               <fileMode>0644</fileMode>
-            </file>
-            <file>
-               <source>../../samples/dataSource/build.xml</source>
-               <outputDirectory>tuscany-das-${das.version}/samples/dataSource</outputDirectory>
-               <fileMode>0644</fileMode>
-            </file>            
         </files>
 
 
@@ -165,13 +147,5 @@
 	    <fileMode>0644</fileMode>
         </dependencySet>
         
-	<!-- DAS Samples - dataSource mysql dependency-->
-        <dependencySet>
-	    <outputDirectory>tuscany-das-${das.version}/samples/dataSource</outputDirectory>
-	        <includes>
-	            <include>mysql:mysql-connector-java</include>
-	        </includes>	    
-	    <fileMode>0644</fileMode>
-        </dependencySet>        
     </dependencySets>
 </assembly>
