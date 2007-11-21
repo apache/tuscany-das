@@ -166,8 +166,8 @@ public class DatabaseSetup extends TestSetup {
             "DROP TABLE SINGER",
             "DROP TABLE SONG",            
             "DROP TABLE DASTEST1.EMPLOYEE",
-            "DROP TABLE DOCUMENTS_IMAGES"
-
+            "DROP TABLE DOCUMENTS_IMAGES", 
+            "DROP TABLE PRODUCT", "DROP TABLE PRODUCTSPEC",
         };
 
         for (int i = 0; i < statements.length; i++) {
@@ -260,6 +260,8 @@ public class DatabaseSetup extends TestSetup {
             s.execute(getCreateKennel());
             s.execute(getCreateVisit());
             s.execute(getCreateOrderDetailsDesc());//JIRA-841
+            s.execute(getCreateProduct());//no autogen ids
+            s.execute(getCreateProductSpec());//no autogen ids
             
             //JIRA-952 start
             s.execute(getCreateDASTEST1Customer());
@@ -397,6 +399,18 @@ public class DatabaseSetup extends TestSetup {
         return "CREATE TABLE CONMGT.SERVERSTATUS (STATUSID INTEGER PRIMARY KEY NOT NULL " + getGeneratedKeyClause()
                 + "  (START WITH 1 ,INCREMENT BY 1), MANAGEDSERVERID INTEGER NOT NULL, TIMESTAMP TIMESTAMP NOT NULL)";
 
+    }
+
+    protected String getCreateProduct() {
+
+        return "CREATE TABLE PRODUCT (ID INTEGER PRIMARY KEY NOT NULL "
+                + "  , "+getStringColumn("NAME", 50) + ")";    	
+    }
+    
+    protected String getCreateProductSpec() {
+
+        return "CREATE TABLE PRODUCTSPEC (ID INTEGER PRIMARY KEY NOT NULL "
+                +", "+ getIntegerColumn("PRODUCT_ID")   +", "+getStringColumn("NAME", 50) + ")";    	
     }
 
     // Dog Kennel Schema

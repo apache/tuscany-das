@@ -50,5 +50,20 @@
       	<KeyPair primaryKeyColumn="ID" foreignKeyColumn="EOTMID" />
   	</Relationship>
 			
+	<Command name="get spec with product" 
+		SQL="select * from PRODUCT left outer join PRODUCTSPEC on PRODUCT.ID = PRODUCTSPEC.PRODUCT_ID where PRODUCT.NAME= ?" kind = "Select"/>
+
+	<Table tableName="PRODUCT">
+    	<Column columnName="ID" primaryKey="true" generated="false"/>
+  	</Table>
+  
+  	<Table tableName="PRODUCTSPEC">
+  	  	<Column columnName="ID" primaryKey="true" generated="false"/>
+  	</Table>	
+	  	
+	<Relationship name="prodspec" primaryKeyTable="PRODUCT" foreignKeyTable="PRODUCTSPEC" many="false" keyRestricted="true">
+      	<KeyPair primaryKeyColumn="ID" foreignKeyColumn="PRODUCT_ID" />
+  	</Relationship>
+						
 </Config>
 			

@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.tuscany.das.rdb.config.Column;
+import org.apache.tuscany.das.rdb.config.Relationship;
 import org.apache.tuscany.das.rdb.config.Table;
 import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
 import org.apache.tuscany.das.rdb.config.wrapper.RelationshipWrapper;
@@ -35,6 +36,7 @@ import org.apache.tuscany.das.rdb.impl.OptimisticWriteCommandImpl;
 import org.apache.tuscany.das.rdb.impl.ParameterExtendedImpl;
 import org.apache.tuscany.das.rdb.impl.SDODataTypeHelper;
 import org.apache.tuscany.das.rdb.impl.UpdateCommandImpl;
+import org.apache.tuscany.das.rdb.util.CollectionsUtil;
 
 import commonj.sdo.ChangeSummary;
 import commonj.sdo.DataObject;
@@ -180,7 +182,10 @@ public final class UpdateGenerator extends BaseGenerator {
                }
             } else {
                 Property ref = setting.getProperty();
-                if (!ref.isMany()) {
+                
+                Relationship relationship = config.getRelationshipByReference(ref);
+                if ((ref.getOpposite() != null && ref.getOpposite().isMany()) 
+                        || (hasState(tw, relationship, obj))) {
                     RelationshipWrapper r = new RelationshipWrapper(config.getRelationshipByReference(ref));
 
                     Iterator keys = r.getForeignKeys().iterator();
@@ -188,19 +193,31 @@ public final class UpdateGenerator extends BaseGenerator {
                         String key = (String) keys.next();
                         String keyProperty = config.getColumnPropertyName(tw.getTableName(), key);
                         Property keyProp = obj.getType().getProperty(keyProperty);
-                        if ( keyProp == null ) 
+                        if ( keyProp == null ) {
                             throw new RuntimeException("Invalid foreign key column: " + key);
+                        }
                         if (changes.add(keyProp) == false) {
                             throw new RuntimeException("Foreign key properties should not be set when the corresponding relationship has changed");
                         }
                     }
                 }
-
             }
         }
         return changes;
     }
 
+    private boolean hasState(TableWrapper tw, Relationship rel, DataObject changedObject) {
+        if (!rel.isMany()) {
+            RelationshipWrapper rw = new RelationshipWrapper(rel);
+            if ((rel.getForeignKeyTable().equals(tw.getTableName())) 
+                    && (CollectionsUtil.disjoint(tw.getPrimaryKeyProperties(), rw.getForeignKeys()))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
     private ParameterExtendedImpl fillExtendedParameter(ParameterExtendedImpl param, TableWrapper table, Property property, int idx) {
         param.setName(property.getName());
         param.setType(property.getType());
