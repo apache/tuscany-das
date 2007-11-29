@@ -157,9 +157,9 @@ public class DBHelper {
             dbStatement = dbConnection.createStatement();
 
             if (dbConnection != null && dbStatement != null && dbConfig.getTable() != null && dbConfig.getTable().size() > 0) {
-                Iterator tableIterator = dbConfig.getTable().iterator();
-                while (tableIterator.hasNext()) {
-                    Table table = (Table) tableIterator.next();
+            	//reverse order to take care of dropping child tables before parent tables.
+            	for(int i=dbConfig.getTable().size()-1; i>-1; i--) {
+            		Table table = (Table) dbConfig.getTable().get(i);
 
                     if (table.getSQLCreate() != null && table.getSQLCreate().length() > 0) {
                         if (logger.isDebugEnabled()) {
@@ -174,8 +174,8 @@ public class DBHelper {
                                 this.logger.log(Level.DEBUG, "Error droping table '" + table.getName() + "'", e);
                             }
                         }
-                    }
-                }
+                    }            		
+            	}
             }
         } catch (SQLException e) {
             if (logger.isDebugEnabled()) {
