@@ -1,0 +1,75 @@
+                                                               <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.    
+  -->
+
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<meta content="text/css" http-equiv="Content-Style-Type"><title>Tuscany DAS Tools</title>
+
+<style type="text/css" media="all">
+@import url("../../css/maven-base.css");
+@import url("../../css/maven-theme.css");
+@import url("../../css/site.css");
+</style>
+<link rel="stylesheet" href="./css/print.css" type="text/css" media="print"></head>
+
+<body>
+<h2>Tuscany DAS Tools</h2>
+<h3>Building DAS Tools</h3>
+
+DBToXSDGenerator provides utility methods for use when DB Schema is available and SDO Model xsds are not. This <br>
+utility will help build SDO Model xsds based on DB Schema. These xsds can be supplied to Data Access Service <br>
+like (RDB-DAS) to have SDO <-> DB data exchange. <br>
+
+ <br>
+ <ul>
+  <li>getModelFileFromDB(dbInfoFile); - connect to database and convert DB Schema to XSD Model XSDs </li>
+  <li>getModelFileFromSchemaFile(schemaFileName, SDOModelFileName); - no DB Connection needed, but need Apache Torque output of DB schema file </li>
+  <li>getSchemaFileFromDB(dbInfoFile); - connect to database and use Apache Torque to get DB Schema xml file </li>
+</ul>
+  
+To build the Tuscany DAS DBToXSDGenerator tool, perform the following steps <br>
+<ul>
+<li> Ensure that the environment variable JAVA_HOME is set to point to an installation of Java 1.4 JDK      </li>
+<li> --->To run as a maven plugin, run the command "mvn" </li>
+<li> --->To run as a standalone tool, call the above listed methods from DBToXSDGenerator </li>
+</ul>
+
+<b>Assumption</b> Database exists and contains required tables, constraints.<br>
+
+<ul  style="border-right-style: solid; border-left-style: solid; border-top-style: solid; border-bottom-style: solid">
+ <b>Example dbInfoFile</b><br>
+ &lt;Config xmlns="http:///org.apache.tuscany.das.rdb/config.xsd"&gt; <br>
+<br>
+    &lt;!--Uncomment below for derby test--&gt;<br>
+	&lt;ConnectionInfo&gt;<br>
+		&nbsp;&nbsp;&lt;ConnectionProperties<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;driverClass="org.apache.derby.jdbc.EmbeddedDriver"<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;databaseURL="jdbc:derby:target/dastest"<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;schemaName = "APP"<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;loginTimeout="600000"/&gt;<br>
+	&lt;/ConnectionInfo&gt;<br><br>
+	&lt;OutFiles<br>
+		&nbsp;&nbsp;schemaFile="target/dbSchema.txt"<br>
+		&nbsp;&nbsp;modelFile="target/schemaModel.xsd"<br>
+	/&gt;<br>
+&lt;/Config&gt;
+</ul>
+</body></html>
