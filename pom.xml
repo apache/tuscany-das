@@ -141,6 +141,7 @@
                 <module>rdb</module>
                 <module>samples</module>
                 <module>tools</module>
+                <module>plugin</module>
             </modules>
         </profile>
         
@@ -150,6 +151,7 @@
                 <module>rdb</module>
                 <module>samples</module>
                 <module>tools</module>
+                <module>plugin</module>
                 <module>distribution/binary</module>
                 <module>distribution/source</module>
             </modules>

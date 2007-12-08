@@ -34,22 +34,52 @@ public class DBToXSDGenerator {
 	/**
 	 * If user supplies schemaFileName and modelFileName will use it instead of the one from DBToSchemaFile.
 	 * schemaFile should exist. If modelFileName is null, will use STDOUT.
-	 * @param schemaFileName then one with Torque output
+	 * @param schemaFileName the result of Torque output
 	 * @throws Exception
 	 */
 	public static void getModelFileFromSchemaFile(String schemaFileName, String modelFileName) throws Exception {
+		if(schemaFileName == null || schemaFileName.trim().equals("")) {
+			throw new RuntimeException("Null or empty schemaFileName");
+		}
+		
 		SchemaFileToXSD.convert(schemaFileName, modelFileName);
 	}
 	
 	/**
+	 * If user supplies schemaFileName and modelFileName through ModelXSDGenOption, will use it instead of 
+	 * the one from DBToSchemaFile. schemaFile should exist. If modelFileName is null, will use STDOUT.
+	 * @param ModelXSDGenOption 
+	 * @throws Exception
+	 */
+	public static void getModelFileFromSchemaFile(ModelXSDGenOption mo) throws Exception {
+		getModelFileFromSchemaFile(mo.getSchemaFile(), mo.getModelFile());
+	}
+	
+	/**
 	 * All in one
-	 * @param dbInfoFileName
+	 * @param dbInfoFileName e.g. DBConnectionConfig.xml
 	 * @throws Exception
 	 */
 	public static void getModelFileFromDB(String dbInfoFileName) throws Exception {
 		DBToSchemaFile.read(dbInfoFileName);
 		DBToSchemaFile.schemaFileFromDB();
-		getModelFileFromSchemaFile(DBToSchemaFile.getSchemaFileName(), DBToSchemaFile.getModelFileName());
+		getModelFileFromSchemaFile(DBToSchemaFile.getMo());
+	}
+	
+	/**
+	 * Useful for plugin
+	 */
+	public static void getModelFileFromDB(ModelXSDGenOption mo) throws Exception {
+		if(mo.getSchemaFile() == null || mo.getSchemaFile().trim().equals("") || 
+			mo.getDriverClass() == null || mo.getDriverClass().trim().equals("") || 
+			mo.getDatabaseURL() == null || mo.getDatabaseURL().trim().equals("") ||
+			mo.getSchemaName() == null || mo.getSchemaName().trim().equals("")) {
+			throw new RuntimeException("Required inputs missing - check driverClass, url, schemaName, schemaFile!");
+		}
+		
+		DBToSchemaFile.setMo(mo);	
+		DBToSchemaFile.schemaFileFromDB();
+		getModelFileFromSchemaFile(DBToSchemaFile.getMo().getSchemaFile(), DBToSchemaFile.getMo().getModelFile());
 	}
 	
     protected static InputStream getStream(String fileName) {

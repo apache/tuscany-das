@@ -40,9 +40,12 @@ like (RDB-DAS) to have SDO <-> DB data exchange. <br>
 
  <br>
  <ul>
-  <li>getModelFileFromDB(dbInfoFile); - connect to database and convert DB Schema to XSD Model XSDs </li>
-  <li>getModelFileFromSchemaFile(schemaFileName, SDOModelFileName); - no DB Connection needed, but need Apache Torque output of DB schema file </li>
-  <li>getSchemaFileFromDB(dbInfoFile); - connect to database and use Apache Torque to get DB Schema xml file </li>
+  <li>getModelFileFromDB(String dbInfoFile) - connect to database and convert DB Schema to XSD Model XSDs </li>
+  <li>getModelFileFromSchemaFile(String schemaFileName, String SDOModelFileName) - no DB Connection needed, but need Apache Torque output of DB schema file </li>
+  <li>getSchemaFileFromDB(String dbInfoFile) - connect to database and use Apache Torque to get DB Schema xml file </li>
+  <li>getModelFileFromDB(ModelXSDGenOption mo) - connect to database and convert DB Schema to XSD Model XSDs </li>
+  <li>getModelFileFromSchemaFile(ModelXSDGenOption mo) - no DB Connection needed, but need Apache Torque output of DB schema file </li>
+  <li>ModelXSDGenOption holds - schemaFile, modelFile, driverClass, databaseURL, schemaName, userName, password</li>
 </ul>
   
 To build the Tuscany DAS DBToXSDGenerator tool, perform the following steps <br>
@@ -52,7 +55,7 @@ To build the Tuscany DAS DBToXSDGenerator tool, perform the following steps <br>
 <li> --->To run as a standalone tool, call the above listed methods from DBToXSDGenerator </li>
 </ul>
 
-<b>Assumption</b> Database exists and contains required tables, constraints.<br>
+<b>Assumption</b> Database exists and contains required tables, constraints. Required Driver jar is in classpath<br>
 
 <ul  style="border-right-style: solid; border-left-style: solid; border-top-style: solid; border-bottom-style: solid">
  <b>Example dbInfoFile</b><br>

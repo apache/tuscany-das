@@ -63,6 +63,12 @@
           <artifactId>tuscany-das-sample-transaction</artifactId>
           <version>${das.version}</version>
       </dependency>
+      
+       <dependency>
+          <groupId>org.apache.tuscany.das</groupId>
+          <artifactId>tuscany-das-tools</artifactId>
+          <version>${das.version}</version>
+      </dependency>      
     </dependencies>
 
     <build>

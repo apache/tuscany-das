@@ -130,7 +130,7 @@ public class SchemaFileToXSD {
 		String startLine = "<xsd:schema xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:this=\"http:///org.apache.tuscany.das.rdb.test/schemaModel.xsd\" targetNamespace=\"http:///org.apache.tuscany.das.rdb.test/schemaModel.xsd\">\n";
 		String endLine = "</xsd:schema>"; 
 			
-		if(xsdModelFileName != null) {
+		if(xsdModelFileName != null && !xsdModelFileName.trim().equals("")) {
 			writeFilesToDir = true;
 		}
 		

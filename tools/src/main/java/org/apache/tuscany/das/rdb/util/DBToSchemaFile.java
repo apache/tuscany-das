@@ -30,32 +30,25 @@ import org.apache.tools.ant.Project;
 
 public class DBToSchemaFile {
 	private static final Logger logger = Logger.getLogger(DBToSchemaFile.class);
-	
-	private static String driverClass = null;
-	private static String url = null;
-	private static String schemaName = null;
-	private static String userName = null;
-	private static String password = null;
-	private static String schemaFileName = null;//should not be null
-	private static String modelFileName = null;//if null STDOUT
+	private static ModelXSDGenOption mo = null;//schemaFileName should not be null. id modelFileName null STDOUT
 	
 	protected static void schemaFileFromDB() throws Exception {
 		Project p = new Project();
 	    p.setBaseDir(new File("."));
 		TorqueJDBCTransformTask tsk = new TorqueJDBCTransformTask();
 		tsk.setProject(p);
-		tsk.setDbDriver(driverClass);
-		tsk.setDbUrl(url);
+		tsk.setDbDriver(mo.getDriverClass());
+		tsk.setDbUrl(mo.getDatabaseURL());
 		tsk.setSameJavaName(true);
-		tsk.setDbSchema(schemaName);
+		tsk.setDbSchema(mo.getSchemaName());
 		tsk.setTaskName("jdbc");
-		tsk.setDbUser(userName);
-		tsk.setDbPassword(password);
-		if(!schemaFileName.equals("")) {
-			File schemaFile = new File( schemaFileName);
+		tsk.setDbUser(mo.getUserName());
+		tsk.setDbPassword(mo.getPassword());
+		if(!mo.getSchemaFile().trim().equals("")) {
+			File schemaFile = new File( mo.getSchemaFile());
 			schemaFile.createNewFile();
 		}
-		tsk.setOutputFile(schemaFileName);
+		tsk.setOutputFile(mo.getSchemaFile());
 		tsk.execute();
 	}
 	
@@ -63,7 +56,7 @@ public class DBToSchemaFile {
 		XMLInputFactory xmlFactory = XMLInputFactory.newInstance();
 		
 		XMLStreamReader reader = xmlFactory.createXMLStreamReader(new InputStreamReader(DBToXSDGenerator.getStream(dbInfoFileName)));
-
+		mo = new ModelXSDGenOption();
         while (true) {
             int event = reader.next();
             if(javax.xml.stream.XMLStreamConstants.END_DOCUMENT == event) {
@@ -73,22 +66,22 @@ public class DBToSchemaFile {
             switch (event) {            
 	            case javax.xml.stream.XMLStreamConstants.START_ELEMENT: {
 	               if (reader.getName().getLocalPart().equals("ConnectionProperties")) {
-	                	driverClass = reader.getAttributeValue(null, "driverClass");
-	                	url = reader.getAttributeValue(null, "databaseURL");
-	                	schemaName = reader.getAttributeValue(null, "schemaName");
-	                	userName = reader.getAttributeValue(null, "userName");
-	                	if(userName == null)
-	                		userName = "";
-	                	password = reader.getAttributeValue(null, "password");
-	                	if(password == null)
-	                		password = "";
+	            	   mo.setDriverClass(reader.getAttributeValue(null, "driverClass"));
+	                   mo.setDatabaseURL(reader.getAttributeValue(null, "databaseURL"));
+	                   mo.setSchemaName(reader.getAttributeValue(null, "schemaName"));
+	                   mo.setUserName(reader.getAttributeValue(null, "userName"));
+	                	if(mo.getUserName() == null)
+	                		mo.setUserName("");
+	                	mo.setPassword(reader.getAttributeValue(null, "password"));
+	                	if(mo.getPassword() == null)
+	                		mo.setPassword("");
 	                } else if (reader.getName().getLocalPart().equals("ConnectionInfo")) {	                
 	                	//ignore
 	                } else if (reader.getName().getLocalPart().equals("Config")) {
 	                	//ignore
 	                } else if (reader.getName().getLocalPart().equals("OutFiles")) {	                
-	                	schemaFileName = reader.getAttributeValue(null, "schemaFile");
-	                	modelFileName = reader.getAttributeValue(null, "modelFile");
+	                	mo.setSchemaFile(reader.getAttributeValue(null, "schemaFile"));
+	                	mo.setModelFile(reader.getAttributeValue(null, "modelFile"));
 	                } else {
 	                	throw new RuntimeException("not got dbInfo  - tableNames List or connectionInfo:"+reader.getName()+":");
 	                }
@@ -98,36 +91,29 @@ public class DBToSchemaFile {
         }
         
         if (logger.isDebugEnabled()) {
-			logger.debug("driverClass:"+driverClass);
-			logger.debug("url:"+url);
-			logger.debug("schemaName:"+schemaName);
-			logger.debug("schemaFileName:"+schemaFileName);
-			logger.debug("modelFileName:"+modelFileName);
-			logger.debug("userName:"+userName);
-			logger.debug("password:"+password);
+			logger.debug("driverClass:"+mo.getDriverClass());
+			logger.debug("url:"+mo.getDatabaseURL());
+			logger.debug("schemaName:"+mo.getSchemaName());
+			logger.debug("schemaFileName:"+mo.getSchemaFile());
+			logger.debug("modelFileName:"+mo.getModelFile());
+			logger.debug("userName:"+mo.getUserName());
+			logger.debug("password:"+mo.getPassword());
 		}            
 
-        if(driverClass == null || url == null || schemaName == null || schemaFileName == null || modelFileName == null) {
+        if(mo.getDriverClass() == null || mo.getDatabaseURL() == null || mo.getSchemaName() == null || mo.getSchemaFile() == null 
+        		|| mo.getModelFile() == null) {
      	   throw new RuntimeException("Required inputs missing - check driverClass, url, schemaName, schemaFile, modelFile!");
         }
 
         return;
     }
 
-	protected static String getSchemaFileName() {
-		return schemaFileName;
+	public static ModelXSDGenOption getMo() {
+		return mo;
 	}
 
-	protected static void setSchemaFileName(String schemaFileName) {
-		DBToSchemaFile.schemaFileName = schemaFileName;
-	}
-
-	protected static String getModelFileName() {
-		return modelFileName;
-	}
-
-	protected static void setModelFileName(String modelFileName) {
-		DBToSchemaFile.modelFileName = modelFileName;
+	public static void setMo(ModelXSDGenOption mo) {
+		DBToSchemaFile.mo = mo;
 	}
 	
 }
