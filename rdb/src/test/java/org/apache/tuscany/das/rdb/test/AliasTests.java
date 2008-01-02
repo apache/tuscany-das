@@ -161,4 +161,26 @@ public class AliasTests extends DasTest {
         assertEquals("Williams", customer.getString("lastname"));
 
     }
+    
+    /**
+     * Test modify PK value
+     */
+    public void testModifyPK() throws Exception {
+
+        DAS das = DAS.FACTORY.createDAS(getConfig("customerMapping.xml"), getConnection());
+        // Read a customer
+        Command select = das.createCommand("SELECT * FROM CUSTOMER WHERE CUSTOMER.ID = 1");
+
+        DataObject root = select.executeQuery();
+        DataObject customer = root.getDataObject("Customer[1]");
+        assertEquals(1, customer.getInt("id"));
+
+        customer.setInt("id", 100);
+        das.applyChanges(root);
+        
+        select = das.createCommand("SELECT * FROM CUSTOMER WHERE CUSTOMER.ID = 100");
+        root = select.executeQuery();
+        customer = root.getDataObject("Customer[1]");
+        assertEquals(100, customer.getInt("id"));
+    }    
 }

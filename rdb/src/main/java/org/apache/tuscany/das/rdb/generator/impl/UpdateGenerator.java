@@ -54,6 +54,18 @@ public final class UpdateGenerator extends BaseGenerator {
         super();
     }
 
+    /*Utility to check if the given HashSet of Properties contains a property with certain name*/
+    private boolean isContained(HashSet changedFields, String propertyName) {
+    	Iterator itr = changedFields.iterator();
+    	while(itr.hasNext()) {
+    		Property changedProperty = (Property)itr.next();
+    		if(changedProperty.getName().equals(propertyName)) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
     public UpdateCommandImpl getUpdateCommand(MappingWrapper mapping, DataObject changedObject, Table table) {      
         List parameters = new ArrayList();
         Type type = changedObject.getType();
@@ -98,18 +110,23 @@ public final class UpdateGenerator extends BaseGenerator {
         while (pkColumnNames.hasNext() && pkPropertyNames.hasNext()) {
             String columnName = (String) pkColumnNames.next();
             String propertyName = (String) pkPropertyNames.next();
-            statement.append(columnName);
-            statement.append(" = ?");
-            if (pkColumnNames.hasNext() && pkPropertyNames.hasNext()) {
-                statement.append(" and ");
+            
+            if(!isContained(changedFields, propertyName)) {//if PK itself is changed, don't add here, will get added below as collision parameter
+	            statement.append(columnName);
+	            statement.append(" = ?");
+	            if (pkColumnNames.hasNext() && pkPropertyNames.hasNext()) {
+	                statement.append(" and ");
+	            }
+	            parameters.add(createParameter(tableWrapper, type.getProperty(propertyName), idx++));
             }
-            parameters.add(createParameter(tableWrapper, type.getProperty(propertyName), idx++));
         }
 
         if (tableWrapper.getCollisionColumn() == null) {
             Iterator iter = changedFields.iterator();
             while (iter.hasNext()) {
-                statement.append(" and ");
+            	if(statement.lastIndexOf(" where ") != statement.length()-7)
+            		statement.append(" and ");
+            	
                 Property changedProperty = (Property) iter.next();
                 Column column = tableWrapper.getColumnByPropertyName(changedProperty.getName()); 
                 statement.append(column == null ? changedProperty.getName() : column.getColumnName());
@@ -136,8 +153,10 @@ public final class UpdateGenerator extends BaseGenerator {
             }
            
         } else {
-            statement.append(" and ");
-            statement.append(tableWrapper.getCollisionColumn().getColumnName());
+        	if(statement.lastIndexOf(" where ") != statement.length()-7)
+        		statement.append(" and ");
+
+        	statement.append(tableWrapper.getCollisionColumn().getColumnName());
             statement.append(" = ?");
             parameters.add(createParameter(tableWrapper, 
                     type.getProperty(tableWrapper.getCollisionColumnPropertyName()), idx++));                       
@@ -146,8 +165,9 @@ public final class UpdateGenerator extends BaseGenerator {
         UpdateCommandImpl updateCommand = new OptimisticWriteCommandImpl(statement.toString());
         
         Iterator params = parameters.iterator();
-        while (params.hasNext()) {           
-        	updateCommand.addParameter((ParameterExtendedImpl) params.next());
+        while (params.hasNext()) {     
+        	ParameterExtendedImpl ptemp = (ParameterExtendedImpl) params.next();
+        	updateCommand.addParameter(ptemp);
         }
            
         if (this.logger.isDebugEnabled()) {
