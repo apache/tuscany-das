@@ -22,9 +22,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -51,6 +53,12 @@ public class MappingWrapper {
     private final Logger logger = Logger.getLogger(MappingWrapper.class);
 
     private Config config;
+    
+	// TUSCANY-2288
+	private List insertOrder;
+	private List deleteOrder;
+	// --
+
 
     public MappingWrapper() {
         config = FACTORY.createConfig();
@@ -600,57 +608,143 @@ public class MappingWrapper {
         return results;
     }
 
-    // TODO optimize
-    public List getInsertOrder() {
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug("Getting insert order");
-        }
+	// TUSCANY-2288
+	public List getInsertOrder() {
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Getting insert order");
+		}
+		if (insertOrder == null) {
+			insertOrder = new ArrayList();
+			if (config == null) return insertOrder;
+			// correct insert order: tables sorted by ascending depth
+			// parse all relationships
+			Set allParents = new HashSet();
+			Set allChildren = new HashSet();
+			Map parentToChild = new HashMap();
+			Iterator i = getConfig().getRelationship().iterator();
+			while (i.hasNext()) {
+				Relationship r = (Relationship) i.next();
+				String parent = r.getPrimaryKeyTable();
+				String child = r.getForeignKeyTable();
+				if (parent.equals(child)) {
+					// self-relationship
+					// do not add to parent to child map to avoid loops
+					// do not add to all children list to allow root detection
+					allParents.add(parent);
+				} else {
+					allParents.add(parent);
+					allChildren.add(child);
+					Set children = (Set) parentToChild.get(parent);
+					if (children == null) {
+						children = new HashSet();
+						parentToChild.put(parent, children);
+					}
+					children.add(child);
+				}
+			}
+			// build list of tables ordered by depth
+			List depthList = new ArrayList();
+			// find roots (depth 0)
+			// roots are tables that are present in the parents set, but not in the children set
+			Set roots = new HashSet();
+			for (Iterator itParents = allParents.iterator(); itParents.hasNext(); ) {
+				String parent = (String) itParents.next();
+				if (!allChildren.contains(parent)) {
+					roots.add(parent);
+				}
+			}
+			// traverse table graph to populate depth list
+			traverseTableGraph(roots, 0, parentToChild, depthList, new ArrayList());
+			// build insert order from depth list
+			for (Iterator itDepths = depthList.iterator(); itDepths.hasNext(); ) {
+				Set tables = (Set) itDepths.next();
+				insertOrder.addAll(tables);
+			}
+		}
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug(insertOrder);
+		}
+		return insertOrder;
+	}
 
-        List inserts = new ArrayList();
-        Map parentToChild = new HashMap();
+	private void traverseTableGraph(Set parents, int parentDepth, Map parentToChild, List depthList, List branch) {
+		int childDepth = parentDepth + 1;
+		// expand depth list if necessary
+		for (int i = depthList.size() - 1; i < parentDepth; i++) {
+			Set tables = new HashSet();
+			depthList.add(tables);
+		}
+		// loop thru parents
+		for (Iterator itParents = parents.iterator(); itParents.hasNext(); ) {
+			String parent = (String) itParents.next();
+			if (branch.contains(parent)) {
+				// we found a cycle
+				// we don't handle cycles
+				// stop traversing branch to avoid infinite loop
+				break;
+			}
+			// add parent to depth list
+			addTableToDepthList(parent, parentDepth, depthList);
+			// make recursive call on children
+			Set children = (Set) parentToChild.get(parent);
+			if (children != null && children.size() > 0) {
+				List parentBranch = new ArrayList();
+				parentBranch.addAll(branch);
+				parentBranch.add(parent);
+				traverseTableGraph(children, childDepth, parentToChild, depthList, parentBranch);
+			}
+		}
+	}
 
-        List parents = new ArrayList();
-        List children = new ArrayList();
-        if (config != null) {
-            Iterator i = getConfig().getRelationship().iterator();
-            while (i.hasNext()) {
-                Relationship r = (Relationship) i.next();
-                parents.add(r.getPrimaryKeyTable());
-                children.add(r.getForeignKeyTable());
-                parentToChild.put(r.getPrimaryKeyTable(), r.getForeignKeyTable());
-            }
-            while (parents.size() > 0) {
-                String parent = (String) parents.get(0);
-                if (!children.contains(parent)) {
-                    if (!inserts.contains(parent)) {
-                        inserts.add(parent);
-                    }
-                    String child = (String) parentToChild.get(parent);
-                    if (!inserts.contains(child)) {
-                        inserts.add(child);
-                    }
-                    parents.remove(parent);
-                    children.remove(child);
-                } else {
-                    parents.add(parents.remove(0));
-                }
-            }
-            inserts.addAll(children);
-        }
+	private void addTableToDepthList(String table, int depth, List depthList) {
+		// in this method, keep in mind that the same table can appear multiple times at multiple depths inside the table graph
+		// check if table is already somewhere in depth list
+		int currentDepth = getTableDepth(table, depthList);
+		if (currentDepth == -1) {
+			// table not in depth list
+			// add it
+			Set tables = (Set) depthList.get(depth);
+			tables.add(table);
+		} else if (currentDepth < depth) {
+			// table already in depth list, at a lower depth
+			// the table should only be present once, at the greatest possible depth
+			// replace table at the new depth
+			Set tables = (Set) depthList.get(currentDepth);
+			tables.remove(table);
+			tables = (Set) depthList.get(depth);
+			tables.add(table);
+		} else {
+			// table already in depth list, at a greater or same depth
+			// nothing to do, since the table should only be present once, at the greatest possible depth
+		}
+	}
 
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug(inserts);
-        }
+	private int getTableDepth(String table, List depthList) {
+		int depth = -1;
+		// loop thru depth list
+		int count = depthList.size();
+		for (int i = 0; i < count; i++) {
+			Set tables = (Set) depthList.get(i);
+			if (tables != null && tables.contains(table)) {
+				depth = i;
+				break;
+			}
+		}
+		return depth;
+	}
 
-        return inserts;
-    }
 
-    public List getDeleteOrder() {
-        List deleteOrder = new ArrayList();
-        deleteOrder.addAll(getInsertOrder());
-        Collections.reverse(deleteOrder);
-        return deleteOrder;
-    }
+	public List getDeleteOrder() {
+		if (deleteOrder == null) {
+			deleteOrder = new ArrayList();
+			deleteOrder.addAll(getInsertOrder());
+			Collections.reverse(deleteOrder);
+		}
+		return deleteOrder;
+	}
+
+	// --
+
 
     //JIRA-952
     public void addConverter(String name, String converter) {
