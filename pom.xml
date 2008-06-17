@@ -31,9 +31,9 @@
     <name>Apache Tuscany DAS Implementation project</name>
     
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/incubator/tuscany/java/das</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/incubator/tuscany/java/das</developerConnection>
-        <url>http://svn.apache.org/repos/asf/incubator/tuscany/java/das/</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/tuscany/java/das</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/tuscany/java/das</developerConnection>
+        <url>http://svn.apache.org/repos/asf/tuscany/java/das/</url>
     </scm>
     
     <properties>
