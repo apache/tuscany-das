@@ -38,7 +38,7 @@
     
     <properties>
         <das.version>1.0-SNAPSHOT</das.version>
-        <sdo.version>1.0-incubating-SNAPSHOT</sdo.version>
+        <sdo.version>1.0-SNAPSHOT</sdo.version>
     </properties>
     
     <!-- definition of repositories where the parent pom can be found -->
