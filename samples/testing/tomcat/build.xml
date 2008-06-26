@@ -178,7 +178,7 @@
                         <!-- lresende - using the right name on the build now, don't need to clean up -->
                         <!-- chainedmapper>
                                 <flattenmapper/>
-                                <globmapper from="*-1.0-incubating-SNAPSHOT.war" to="*.war"/>
+                                <globmapper from="*-1.0-SNAPSHOT.war" to="*.war"/>
                         </chainedmapper -->
                 </copy>
 

@@ -36,7 +36,7 @@
 		<pathelement location="geronimo-jta_1.1_spec-1.1.jar"/>
 		<pathelement location="geronimo-transaction-2.0.1.jar"/>
 		<pathelement location="geronimo-j2ee-connector_1.5_spec-1.1.1.jar"/>
-		<pathelement location="tuscany-das-sample-dbconfig-1.0-incubating-SNAPSHOT.jar"/>
+		<pathelement location="tuscany-das-sample-dbconfig-1.0-SNAPSHOT.jar"/>
 		<pathelement path="${test.jar}"/>
 	    </classpath>        
         </java>    	

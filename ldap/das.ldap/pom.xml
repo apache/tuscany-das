@@ -2,7 +2,7 @@
   <parent>
     <groupId>org.apache.tuscany.das</groupId>
     <artifactId>tuscany-das-ldap</artifactId>
-    <version>1.0-incubating-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>das.ldap</artifactId>
@@ -25,13 +25,13 @@
     <dependency>
 	  <groupId>org.apache.tuscany.das</groupId>
 	  <artifactId>das.ldap.configuration.model.v100</artifactId>
-	  <version>1.0-incubating-SNAPSHOT</version>
+	  <version>1.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>
   <groupId>org.apache.tuscany.das</groupId>
   <artifactId>das.ldap.constants</artifactId>
-  <version>1.0-incubating-SNAPSHOT</version>
+  <version>1.0-SNAPSHOT</version>
     </dependency>
 
 
