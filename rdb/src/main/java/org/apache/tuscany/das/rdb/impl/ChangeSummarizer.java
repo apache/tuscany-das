@@ -112,7 +112,15 @@ public class ChangeSummarizer {
                     this.logger.debug("Attribute Change for " + changedObject.getType().getName());
                 }
                 String propagatedID = (String) generatedKeys.get(changedObject.getType().getName());
-                changes.addUpdate(factory.createUpdateOperation(changedObject, propagatedID));
+                ChangeOperation op = factory.createUpdateOperation(changedObject, propagatedID);
+                if (op != null) {
+                	changes.addUpdate(op);
+                } else {
+                	if(this.logger.isDebugEnabled()) {
+                		this.logger.debug("Update Operation is NULL");
+                	}
+                }
+
             } else {
                 List values = changeSummary.getOldValues(changedObject);
                 Iterator i = values.iterator();
@@ -128,7 +136,15 @@ public class ChangeSummarizer {
                         }
                         if (hasState(ref, changedObject)) {
                             ChangeFactory factory = getRegistry().getFactory(changedObject.getType());
-                            changes.addUpdate(factory.createUpdateOperation(changedObject));
+                            ChangeOperation op = factory.createUpdateOperation(changedObject);
+                            if (op != null) {
+                            	changes.addUpdate(op);
+                            } else {
+                            	if(this.logger.isDebugEnabled()) {
+                            		this.logger.debug("Update Operation is NULL");
+                            	}                            	
+                            }
+
                         }
                     }
                 }

@@ -70,17 +70,23 @@ public final class UpdateGenerator extends BaseGenerator {
         List parameters = new ArrayList();
         Type type = changedObject.getType();
         TableWrapper tableWrapper = new TableWrapper(table);
+        // get changed fields 
+        ChangeSummary summary = changedObject.getDataGraph().getChangeSummary();
+        HashSet changedFields = getChangedFields(mapping, summary, changedObject, tableWrapper); 
+        // if there are no changed fields return null
+        if (changedFields.size() == 0) {
+        	return null; 
+        }
+        // compose statement 
         StringBuffer statement = new StringBuffer("update ");
         if(mapping.getConfig().isDatabaseSchemaNameSupported()){
         	statement.append(table.getSchemaName()+"."+table.getTableName());
         }
         else{
-        statement.append(table.getTableName());
+        	statement.append(table.getTableName());
         }
         statement.append(" set ");
 
-        ChangeSummary summary = changedObject.getDataGraph().getChangeSummary();
-        HashSet changedFields = getChangedFields(mapping, summary, changedObject, tableWrapper);
         Iterator i = changedFields.iterator();
       
         int idx = 1;

@@ -65,9 +65,14 @@ public class ChangeFactory {
         deleteCommand = cmd;
     }
 
-    ChangeOperation createUpdateOperation(DataObject changedObject, String propagatedID) {
-        return new UpdateOperation(getUpdateCommand(changedObject), changedObject, propagatedID);
-    }
+    ChangeOperation createUpdateOperation(DataObject changedObject,	String propagatedID) {
+		UpdateCommandImpl cmd = getUpdateCommand(changedObject);
+		if (cmd == null) {
+			return null;
+		} else {
+			return new UpdateOperation(cmd, changedObject, propagatedID);
+		}
+	}
 
     ChangeOperation createUpdateOperation(DataObject changedObject) {
         return createUpdateOperation(changedObject, null);
@@ -160,9 +165,16 @@ public class ChangeFactory {
                 updateCommand = new UpdateCommandImpl(update);
             }
         }
-        updateCommand.setConnection(connection);
-        updateCommand.configWrapper = mapping;
 
+        if (updateCommand != null) {
+	        updateCommand.setConnection(connection);
+	        updateCommand.configWrapper = mapping;
+        } else {
+        	if(this.logger.isDebugEnabled()) {
+        		this.logger.debug("Update command is NULL");
+        	}
+        }
+        
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Returning updateCommand: " + updateCommand);
         }
