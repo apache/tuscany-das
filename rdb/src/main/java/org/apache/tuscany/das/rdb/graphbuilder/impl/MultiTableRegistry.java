@@ -33,7 +33,7 @@ import commonj.sdo.DataObject;
  * efficient if we could use LinkedHashMap from JDK 1.4
  */
 public class MultiTableRegistry implements TableRegistry {
-    private final Logger logger = Logger.getLogger(MultiTableRegistry.class);
+    private static final Logger logger = Logger.getLogger(MultiTableRegistry.class);
 
     private Map tableNameMap;
 

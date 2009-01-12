@@ -25,12 +25,12 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-public class TableData {
-    private final Logger logger = Logger.getLogger(TableData.class);
+public final class TableData {
+    private static final Logger logger = Logger.getLogger(TableData.class);
 
-    private Map columnData = new HashMap();
+    private Map columnData;
 
-    private List primaryKey = new ArrayList();
+    private List primaryKey;;
 
     private final String name;
 
@@ -44,6 +44,15 @@ public class TableData {
         }
 
         this.name = tableName;
+        this.columnData = new HashMap();
+        this.primaryKey = new ArrayList();
+    }
+    
+    public void clear() {
+    	columnData.clear();
+    	primaryKey.clear();
+    	hasValidPrimaryKey = true;
+    	hasNullPrimaryKey = false;
     }
 
     public void addData(String columnName, boolean isPrimaryKeyColumn, Object data) {
@@ -58,13 +67,10 @@ public class TableData {
                 if (this.logger.isDebugEnabled()) {
                     this.logger.debug("Column " + columnName + " is a primary key column and is null");
                 }
-                //hasValidPrimaryKey = false; - if uncommented and JIRA-1464, RecursiveTests.testReadEngineParts() will fail
-            }
-            if(data != null){
-            	primaryKey.add(data);
-            }
-            else{
             	hasNullPrimaryKey = true;
+                //hasValidPrimaryKey = false; - if uncommented and JIRA-1464, RecursiveTests.testReadEngineParts() will fail
+            } else {
+            	primaryKey.add(data);
             }
         }
     }

@@ -31,13 +31,15 @@ import commonj.sdo.DataObject;
  * A ResultSetProcessor is used to transform the data in a ResultSet into a set of inter-related EDataObjects.
  */
 public class ResultSetProcessor {
-    private final Logger logger = Logger.getLogger(ResultSetProcessor.class);
+    private static final Logger logger = Logger.getLogger(ResultSetProcessor.class);
 
     private TableRegistry registry;
 
     private GraphBuilderMetadata metadata;
 
     private final DataObjectMaker doMaker;
+    
+    private final RowObjects tableObjects;
 
     public ResultSetProcessor(DataObject g, GraphBuilderMetadata gbmd) {
 
@@ -49,6 +51,8 @@ public class ResultSetProcessor {
         }
 
         doMaker = new DataObjectMaker(g);
+        
+        tableObjects = new RowObjects(metadata, registry);
 
         if (this.logger.isDebugEnabled()) {
             this.logger.debug(metadata);
@@ -80,20 +84,19 @@ public class ResultSetProcessor {
             // results.getStatement().close();
             results.close();
         }
-
     }
 
     private void processResultSet(ResultSet rs, ResultMetadata rsMetadata, int start, int end) throws SQLException {
-
+        ResultSetRow rsr = new ResultSetRow(rsMetadata);
         if (rs.getType() == ResultSet.TYPE_FORWARD_ONLY) {
             while (rs.next() && start < end) {
-                ResultSetRow rsr = new ResultSetRow(rs, rsMetadata);
+            	rsr.processRow(rs);
                 addRowToGraph(rsr, rsMetadata);
                 ++start;
             }
         } else {
             while (rs.absolute(start) && start < end) {
-                ResultSetRow rsr = new ResultSetRow(rs, rsMetadata);
+            	rsr.processRow(rs);
                 addRowToGraph(rsr, rsMetadata);
                 ++start;
             }
@@ -105,8 +108,8 @@ public class ResultSetProcessor {
      * @param resultMetadata
      */
     private void addRowToGraph(ResultSetRow row, ResultMetadata resultMetadata) {
-        RowObjects tableObjects = new RowObjects(metadata, registry);
-        Iterator tables = row.getAllTableData().iterator();
+        tableObjects.clear();
+    	Iterator tables = row.getAllTableData().iterator();
         while (tables.hasNext()) {
             TableData rawDataFromRow = (TableData) tables.next();
 
@@ -120,7 +123,8 @@ public class ResultSetProcessor {
 
             String tableName = rawDataFromRow.getTableName();
             DataObject tableObject = registry.get(tableName, rawDataFromRow.getPrimaryKeyValues());
-            if (tableObject == null
+            boolean newlyCreated = (tableObject == null);
+            if (newlyCreated
             		&& !rawDataFromRow.hasNullPrimaryKey()) {//2nd check for null data in PK,
             	//as TableData.addData() - hasValidPrimaryKey=false is commented for a reason
             	//with this, DataObjs with null PK will not be added to registry and tableObjects
@@ -143,7 +147,7 @@ public class ResultSetProcessor {
             	if (this.logger.isDebugEnabled()) {
                     this.logger.debug("Do not allow any Null tableObject in tableObjects");
                 }
-            	tableObjects.put(tableName, tableObject);
+            	tableObjects.put(tableName, tableObject, newlyCreated);
             }
         }
 

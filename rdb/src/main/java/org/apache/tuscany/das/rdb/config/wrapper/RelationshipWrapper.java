@@ -29,19 +29,22 @@ import org.apache.tuscany.das.rdb.config.Relationship;
 public class RelationshipWrapper {
 
     private Relationship relationship;
+    private List foreignKeys;
 
     public RelationshipWrapper(Relationship r) {
         this.relationship = r;
     }
 
     public Collection getForeignKeys() {
-        List keys = new ArrayList();
-        Iterator i = this.relationship.getKeyPair().iterator();
-        while (i.hasNext()) {
-            KeyPair pair = (KeyPair) i.next();
-            keys.add(pair.getForeignKeyColumn());
-        }
-        return keys;
+    	if (foreignKeys == null) {
+    		foreignKeys = new ArrayList();
+            Iterator i = this.relationship.getKeyPair().iterator();
+            while (i.hasNext()) {
+                KeyPair pair = (KeyPair) i.next();
+                foreignKeys.add(pair.getForeignKeyColumn());
+            }
+    	}
+        return foreignKeys;
     }
-
+    
 }

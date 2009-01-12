@@ -20,9 +20,11 @@ package org.apache.tuscany.das.rdb.graphbuilder.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.tuscany.das.rdb.config.KeyPair;
@@ -33,36 +35,63 @@ import commonj.sdo.DataObject;
 import commonj.sdo.Property;
 
 public class RowObjects {
-    private final Logger logger = Logger.getLogger(RowObjects.class);
+    private static final Logger logger = Logger.getLogger(RowObjects.class);
 
     private Map objectsByTableName;
 
     private List tableObjects;
+    
+    private Set newTableObjectNames;
+
+    private Map tableTypeNames;
 
     private final GraphBuilderMetadata metadata;
 
     private final TableRegistry registry;
+    
+    private final MappingWrapper configWrapper;
+    
+    private final boolean hasRecursiveRelationships;
 
     public RowObjects(GraphBuilderMetadata metadata, TableRegistry registry) {
         objectsByTableName = new HashMap();
         tableObjects = new ArrayList();
+        newTableObjectNames = new HashSet();
+        tableTypeNames = new HashMap();
         this.metadata = metadata;
         this.registry = registry;
+        this.configWrapper = metadata.getConfigWrapper();
+        this.hasRecursiveRelationships = configWrapper.hasRecursiveRelationships();
+    }
+    
+    public void clear() {
+    	objectsByTableName.clear();
+    	tableObjects.clear();
+    	newTableObjectNames.clear();
     }
 
-    public void put(String key, DataObject value) {
+    public void put(String key, DataObject value, boolean newlyCreated) {
         objectsByTableName.put(key, value);
         tableObjects.add(value);
+        if (newlyCreated) newTableObjectNames.add(key);
     }
 
     public DataObject get(String tablePropertyName) {
         return (DataObject) objectsByTableName.get(tablePropertyName);
     }
+    
+    private String getTableTypeName(String tableName) {
+    	String typeName = (String) tableTypeNames.get(tableName);
+    	if (typeName == null) {
+    		typeName = configWrapper.getTableTypeName(tableName);
+    		tableTypeNames.put(tableName, typeName);
+    	}
+    	return typeName;
+    }
 
-    void processRelationships() {
-        MappingWrapper wrapper = metadata.getConfigWrapper();
-        if (wrapper.hasRecursiveRelationships()) {
-            processRecursiveRelationships(wrapper);
+    public void processRelationships() {
+        if (hasRecursiveRelationships) {
+            processRecursiveRelationships(configWrapper);
             return;
         }
 
@@ -70,20 +99,22 @@ public class RowObjects {
         while (i.hasNext()) {
             Relationship r = (Relationship) i.next();
 
-            DataObject parentTable = get(wrapper.getTableTypeName(r.getPrimaryKeyTable()));
-            DataObject childTable = get(wrapper.getTableTypeName(r.getForeignKeyTable()));
+            String parentTypeName = getTableTypeName(r.getPrimaryKeyTable());
+            String childTypeName = getTableTypeName(r.getForeignKeyTable());
 
-            if (this.logger.isDebugEnabled()) {
-                this.logger.debug("Parent table: " + parentTable);
-                this.logger.debug("Child table: " + childTable);
+            // the relationship needs to be set only if the parent or the child is newly created
+            // otherwise the relationship has already been set
+            if (newTableObjectNames.contains(parentTypeName) || newTableObjectNames.contains(childTypeName)) {
+                DataObject parent = get(parentTypeName);
+                DataObject child = get(childTypeName);
+
+                if (this.logger.isDebugEnabled()) {
+                    this.logger.debug("Parent table: " + parent);
+                    this.logger.debug("Child table: " + child);
+                }
+
+                setOrAdd(parent, child, r.getName());
             }
-            if ((parentTable == null) || (childTable == null)) {
-                continue;
-            }
-
-            Property p = parentTable.getType().getProperty(r.getName());
-            setOrAdd(parentTable, childTable, p);
-
         }
     }
 
@@ -98,18 +129,16 @@ public class RowObjects {
 
                 DataObject parentTable = findParentTable(table, r, wrapper);
 
-                if (parentTable == null) {
-                    continue;
-                }
 
-                Property p = parentTable.getType().getProperty(r.getName());
-                setOrAdd(parentTable, table, p);
+                setOrAdd(parentTable, table, r.getName());
             }
 
         }
     }
 
-    private void setOrAdd(DataObject parent, DataObject child, Property p) {
+    private void setOrAdd(DataObject parent, DataObject child, String propertyName) {
+        if (parent == null || child == null) return;
+        Property p = parent.getType().getProperty(propertyName);
         if (p.isMany()) {
             parent.getList(p).add(child);
         } else {

@@ -27,89 +27,117 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 /**
  * 
- * A ResultSetRow is used to transform a single row of a ResultSet into a set of EDataObjects.
+ * A ResultSetRow is used to transform a row of a ResultSet into a set of EDataObjects.
  */
 public class ResultSetRow {
-    private final Logger logger = Logger.getLogger(ResultSetRow.class);
+    private static final Logger logger = Logger.getLogger(ResultSetRow.class);
 
     private final ResultMetadata metadata;
-
+    private final boolean recursive;
+    private final int resultSetSize;
+    private Collection allTableNames;
+    private Set tablesWithNoPK = new HashSet();
+    private String[] tablePropertyNames;
+    private String[] columnPropertyNames;
+    private boolean[] isPKColumn;
     private Map tableMap = new HashMap();
-
     private List allTableData;
 
     /**
      * Method ResultSetRow.
      * 
+     * @param m
+     *            the result metadata
+     */
+    public ResultSetRow(ResultMetadata m) throws SQLException {
+        this.metadata = m;
+        this.recursive = m.isRecursive();
+        this.resultSetSize = m.getResultSetSize();
+        cacheMetadata();
+        getAllTableNamesForRS();
+        getTablesWithNoPK();
+    }
+    
+    /**
+     * Processes a single row in the ResultSet.
+     * 
      * @param rs
      *            A ResultSet positioned on the desired row
-     * @param ePackage
-     *            The package used to create EDataObjects
      */
-    public ResultSetRow(ResultSet rs, ResultMetadata m) throws SQLException {
-        this.metadata = m;
-        if (m.isRecursive()) {
+    public void processRow(ResultSet rs)  throws SQLException {
+    	// clear previous data 
+    	for (Iterator itTableData = tableMap.values().iterator(); itTableData.hasNext(); ) {
+    		TableData tableData = (TableData) itTableData.next();
+    		tableData.clear();
+    	}
+        allTableData = null;
+
+        // process row
+        if (recursive) {
             processRecursiveRow(rs);
         } else {
-            processRow(rs);
+        	processNonRecursiveRow(rs);
         }
     }
 
-    /**
-     * Processes a single row in the ResultSet Method processRow.
-     * 
-     * @param rs
-     */
-    private void processRow(ResultSet rs) throws SQLException {
+    private void processNonRecursiveRow(ResultSet rs) throws SQLException {
 
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("");
         }
-        for (int i = 1; i <= metadata.getResultSetSize(); i++) {
-            Object data = getObject(rs, i);
-
-            TableData table = getRawData(metadata.getTablePropertyName(i));
+        for (int i = 1; i <= resultSetSize; i++) {
+        	Object data = getObject(rs, i);
+			TableData table = getRawData(tablePropertyNames[i]);
             if (this.logger.isDebugEnabled()) {
-                this.logger.debug("Adding column: " + metadata.getColumnPropertyName(i) + "\tValue: " 
+                this.logger.debug("Adding column: " + columnPropertyNames[i] + "\tValue: " 
                         + data + "\tTable: "
-                        + metadata.getTablePropertyName(i));
+                        + tablePropertyNames[i]);
             }
-            table.addData(metadata.getColumnPropertyName(i), metadata.isPKColumn(i), data);
-        }
-        
+            table.addData(columnPropertyNames[i], isPKColumn[i], data);
+		}
         checkResultSetMissesPK();
-    }
+        }
 
     //get all table names involved in current result set
     //can not use metadata.getAllTablePropertyNames()
     //as it gives table names for all tables from Config
-    public Collection getAllTableNamesForRS(){
-    	Collection allTableNamesForRS = new HashSet();
-    	for (int i = 1; i <= metadata.getResultSetSize(); i++) {
-    		allTableNamesForRS.add(metadata.getTablePropertyName(i));
+    private void getAllTableNamesForRS(){
+    	allTableNames = new HashSet(resultSetSize);
+    	for (int i = 1; i <= resultSetSize; i++) {
+    		allTableNames.add(tablePropertyNames[i]);
     	}
-    	return allTableNamesForRS;
+    }
+    
+    private void cacheMetadata() {
+    	tablePropertyNames = new String[resultSetSize + 1];
+    	columnPropertyNames = new String[resultSetSize + 1];
+    	isPKColumn = new boolean[resultSetSize + 1];
+        for (int i = 1; i <= resultSetSize; i++) {
+        	tablePropertyNames[i] = metadata.getTablePropertyName(i);
+        	columnPropertyNames[i] = metadata.getColumnPropertyName(i);
+        	isPKColumn[i] = metadata.isPKColumn(i);
+        }
     }
     	
-    //case when result set omits PK column, take care of compound PKs too
-    public void checkResultSetMissesPK(){
+    private void getTablesWithNoPK(){
+        //case when result set omits PK column, take care of compound PKs too
         boolean tableRSHasPK;
-        Collection allTableNames = getAllTableNamesForRS();
         Iterator itr = allTableNames.iterator();
         while(itr.hasNext()){
         	tableRSHasPK = false;
         	String currentTableName = (String)itr.next();
         	HashSet pks = metadata.getAllPKsForTable(currentTableName);
         	HashSet pksInRS = new HashSet();
-        	for(int j=1; j<=metadata.getResultSetSize(); j++){
-            	if(currentTableName.equals(metadata.getTablePropertyName(j)) &&
-            			metadata.isPKColumn(j) ){
-            		pksInRS.add(metadata.getColumnPropertyName(j));
+        	for(int j=1; j<=resultSetSize; j++){
+            	if(currentTableName.equals(tablePropertyNames[j]) &&
+            			isPKColumn[j] ){
+            		pksInRS.add(columnPropertyNames[j]);
             	}
             }
         	
@@ -148,49 +176,51 @@ public class ResultSetRow {
         		}
         	}        	
         	
-        	//Default is TRUE(from TableData), so consider only FALSE case
-            if(!tableRSHasPK){
-            	TableData table = getRawData(currentTableName);
-            	table.setValidPrimaryKey(tableRSHasPK);
-            }
+        	if (!tableRSHasPK) tablesWithNoPK.add(currentTableName);
+
+    		if (this.logger.isDebugEnabled()) {
+            	this.logger.debug("table "+currentTableName+" hasValidPK "+tableRSHasPK);
+    		}
         }
-        
-        //for testing
-		if (this.logger.isDebugEnabled()) {
-	        for (int i = 1; i <= metadata.getResultSetSize(); i++) {
-	        	TableData table = getRawData(metadata.getTablePropertyName(i));
-	        	this.logger.debug("table "+table.getTableName()+" hasValidPK "+table.hasValidPrimaryKey());
-	        }			
-		}
+    }
+
+    private void checkResultSetMissesPK(){
+    	//Default is TRUE(from TableData), so consider only FALSE case
+        Iterator itr = tablesWithNoPK.iterator();
+        while(itr.hasNext()){
+        	String currentTableName = (String)itr.next();
+           	TableData table = getRawData(currentTableName);
+           	table.setValidPrimaryKey(false);
+        }
     }
     
-    public void processRecursiveRow(ResultSet rs) throws SQLException {
+    private void processRecursiveRow(ResultSet rs) throws SQLException {
         this.allTableData = new ArrayList();
         int i = 1;
 
-        while (i <= metadata.getResultSetSize()) {
-            TableData table = new TableData(metadata.getTablePropertyName(i));
+        while (i <= resultSetSize) {
+            TableData table = new TableData(tablePropertyNames[i]);
             this.allTableData.add(table);
 
-            while ((i <= metadata.getResultSetSize()) && (metadata.isPKColumn(i))) {
+            while ((i <= resultSetSize) && (isPKColumn[i])) {
                 Object data = getObject(rs, i);
                 if (this.logger.isDebugEnabled()) {
-                    this.logger.debug("Adding column: " + metadata.getColumnPropertyName(i) 
+                    this.logger.debug("Adding column: " + columnPropertyNames[i]
                             + "\tValue: " + data + "\tTable: "
-                            + metadata.getTablePropertyName(i));
+                            + tablePropertyNames[i]);
                 }
-                table.addData(metadata.getColumnPropertyName(i), true, data);
+                table.addData(columnPropertyNames[i], true, data);
                 i++;
             }
 
-            while ((i <= metadata.getResultSetSize()) && (!metadata.isPKColumn(i))) {
+            while ((i <= resultSetSize) && (!isPKColumn[i])) {
                 Object data = getObject(rs, i);
                 if (this.logger.isDebugEnabled()) {
-                    this.logger.debug("Adding column: " + metadata.getColumnPropertyName(i) 
+                    this.logger.debug("Adding column: " + columnPropertyNames[i] 
                             + "\tValue: " + data + "\tTable: "
-                            + metadata.getTablePropertyName(i));
+                            + tablePropertyNames[i]);
                 }
-                table.addData(metadata.getColumnPropertyName(i), false, data);
+                table.addData(columnPropertyNames[i], false, data);
                 i++;
             }
         }
@@ -247,7 +277,7 @@ public class ResultSetRow {
 
         return table;
     }
-
+    
     public List getAllTableData() {
         if (this.allTableData == null) {
             this.allTableData = new ArrayList();

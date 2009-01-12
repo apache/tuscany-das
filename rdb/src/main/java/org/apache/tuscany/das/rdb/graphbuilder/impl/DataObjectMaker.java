@@ -27,11 +27,11 @@ import commonj.sdo.Property;
 import commonj.sdo.Type;
 import commonj.sdo.helper.DataFactory;
 
-public class DataObjectMaker {
+public final class DataObjectMaker {
 
     private final DataObject rootObject;
 
-    private final Logger logger = Logger.getLogger(DataObjectMaker.class);
+    private static final Logger logger = Logger.getLogger(DataObjectMaker.class);
 
     public DataObjectMaker(DataObject root) {
         this.rootObject = root;

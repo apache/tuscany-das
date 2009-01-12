@@ -41,15 +41,17 @@ import commonj.sdo.impl.HelperProvider;
 
 /**
  */
-public class GraphBuilderMetadata {
+public final class GraphBuilderMetadata {
 
-	private final Logger logger = Logger.getLogger(GraphBuilderMetadata.class);
+	private static final Logger logger = Logger.getLogger(GraphBuilderMetadata.class);
 	
     private MappingWrapper configWrapper;
 
     private final Collection resultSets = new ArrayList();
-
+    
     private String typeURI;
+    
+    private List definedTypes;
 
     private Type rootType;
 
@@ -57,7 +59,7 @@ public class GraphBuilderMetadata {
     private HelperContext helperContext = HelperProvider.getInstance().getDefaultContext(); 
  
 
-    public GraphBuilderMetadata(Collection results, Config model, ResultSetShape shape) throws SQLException {
+    public GraphBuilderMetadata(List results, Config model, ResultSetShape shape) throws SQLException {
         this.configWrapper = new MappingWrapper(model);
         if (model != null) {
             this.typeURI = model.getDataObjectModel();
@@ -70,7 +72,7 @@ public class GraphBuilderMetadata {
             resultSets.add(resultMetadata);
         }
 
-    }
+     }
 
     /**
      * Returns the collection of ResultMetadata objects
@@ -78,7 +80,7 @@ public class GraphBuilderMetadata {
     public Collection getResultMetadata() {
         return this.resultSets;
     }
-
+    
     /**
      * Returns the set of defined relationships
      */
@@ -122,55 +124,55 @@ public class GraphBuilderMetadata {
 
             ResultMetadata resultMetadata = (ResultMetadata) iter.next();
 
-            // Create a Type for each Table represented in the ResultSet
-            Iterator names = resultMetadata.getAllTablePropertyNames().iterator();
-            while (names.hasNext()) {
-                String tableName = (String) names.next();
-                if (root.getProperty(tableName) == null) {
-                    Type tableType = SDOUtil.createType(helperContext, getDefaultURI(), tableName, false);
-                    Property property = SDOUtil.createProperty(root, tableName, tableType);
-                    SDOUtil.setMany(property, true);
-                    SDOUtil.setContainment(property, true);
-                    if (this.logger.isDebugEnabled()) {
-               			this.logger.debug("GBMD.createDynamicTypes():CREATING NEW TABLE TYPE & PROPERTY :"+tableName);
-               		}                    
-                }
-            }
+			// Create a Type for each Table represented in the ResultSet
+			Iterator names = resultMetadata.getAllTablePropertyNames().iterator();
+			while (names.hasNext()) {
+				String tableName = (String) names.next();
+				if (root.getProperty(tableName) == null) {
+					Type tableType = SDOUtil.createType(helperContext, getDefaultURI(), tableName, false);
+					Property property = SDOUtil.createProperty(root, tableName, tableType);
+					SDOUtil.setMany(property, true);
+					SDOUtil.setContainment(property, true);
+					if (this.logger.isDebugEnabled()) {
+						this.logger.debug("GBMD.createDynamicTypes():CREATING NEW TABLE TYPE & PROPERTY :"+tableName);
+					}                    
+				}
+			}
 
-            // TODO tablePropertyMap is temporary until Tuscany-203 is fixed
-            Map tablePropertyMap = new HashMap();
+			// TODO tablePropertyMap is temporary until Tuscany-203 is fixed
+			Map tablePropertyMap = new HashMap();
 
-            for (int i = 1; i <= resultMetadata.getResultSetSize(); i++) {
+			for (int i = 1; i <= resultMetadata.getResultSetSize(); i++) {
 
-                Property ref = root.getProperty(resultMetadata.getTablePropertyName(i));
+				Property ref = root.getProperty(resultMetadata.getTablePropertyName(i));
 
-                if (ref == null) {
-                    throw new RuntimeException("Could not find table " + resultMetadata.getTablePropertyName(i) 
-                            + " in the SDO model");
-                }
-                
-                // TODO Temporary code to check to see if a property has already been added.
-                // Replace when Tuscany-203 is fixed
-                List addedProperties = (List) tablePropertyMap.get(ref.getName());
-                if (addedProperties == null) {
-                    addedProperties = new ArrayList();
-                    tablePropertyMap.put(ref.getName(), addedProperties);
-                }
+				if (ref == null) {
+					throw new RuntimeException("Could not find table " + resultMetadata.getTablePropertyName(i) 
+							+ " in the SDO model");
+				}
 
- 
+				// TODO Temporary code to check to see if a property has already been added.
+				// Replace when Tuscany-203 is fixed
+				List addedProperties = (List) tablePropertyMap.get(ref.getName());
+				if (addedProperties == null) {
+					addedProperties = new ArrayList();
+					tablePropertyMap.put(ref.getName(), addedProperties);
+				}
 
-                String columnName = resultMetadata.getColumnPropertyName(i);
 
-                // TODO temporary check until Tuscany-203 is fixed
-                if (!addedProperties.contains(columnName)) {
-                    addedProperties.add(columnName);
-                    Type atype = resultMetadata.getDataType(i);
 
-                    SDOUtil.createProperty(ref.getType(), columnName, atype);
+				String columnName = resultMetadata.getColumnPropertyName(i);
 
-                }
+				// TODO temporary check until Tuscany-203 is fixed
+				if (!addedProperties.contains(columnName)) {
+					addedProperties.add(columnName);
+					Type atype = resultMetadata.getDataType(i);
 
-            }
+					SDOUtil.createProperty(ref.getType(), columnName, atype);
+
+				}
+
+			}
         }
 
         MappingWrapper wrapper = getConfigWrapper();
@@ -243,37 +245,39 @@ public class GraphBuilderMetadata {
     }
 
     public List getDefinedTypes() {
-    	List types = null;
-    	List defaultTypes = null;
-        if (this.typeURI == null) {
-        	types = SDOUtil.getTypes(helperContext, getDefaultURI());
-        	defaultTypes = SDOUtil.getTypes(defaultHelperContext, getDefaultURI());
-        	if(defaultTypes != null){
-	            if(types == null) {
-	            	types = defaultTypes;
-	            }
-	            else {
-	            	types.addAll(defaultTypes);	
-	            }
-        	}
-            return types;
-        } 
-            
-        types = SDOUtil.getTypes(helperContext, typeURI);        
-        defaultTypes = SDOUtil.getTypes(defaultHelperContext, typeURI);
-        if(defaultTypes != null){
-	        if(types == null) {
-	        	types = defaultTypes;
-	        }
-	        else {
-	        	types.addAll(defaultTypes);	
-	        }   
-        }
-        
-        if(rootType != null)
-        	types.add(rootType);
-        return types;
-        
+    	if (this.definedTypes == null) {
+        	List types = null;
+        	List defaultTypes = null;
+            if (this.typeURI == null) {
+            	types = SDOUtil.getTypes(helperContext, getDefaultURI());
+            	defaultTypes = SDOUtil.getTypes(defaultHelperContext, getDefaultURI());
+            	if(defaultTypes != null){
+    	            if(types == null) {
+    	            	types = defaultTypes;
+    	            }
+    	            else {
+    	            	types.addAll(defaultTypes);	
+    	            }
+            	}
+            	this.definedTypes = types;
+            } else {
+                types = SDOUtil.getTypes(helperContext, typeURI);        
+                defaultTypes = SDOUtil.getTypes(defaultHelperContext, typeURI);
+                if(defaultTypes != null){
+        	        if(types == null) {
+        	        	types = defaultTypes;
+        	        }
+        	        else {
+        	        	types.addAll(defaultTypes);	
+        	        }   
+                }
+                
+                if(rootType != null)
+                	types.add(rootType);
+                this.definedTypes = types;
+            }
+    	}
+    	return this.definedTypes;
     }
 
 }

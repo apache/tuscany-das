@@ -39,7 +39,7 @@ import org.apache.tuscany.das.rdb.impl.ResultSetShape;
 
 import commonj.sdo.Type;
 
-public class ResultMetadata {
+public final class ResultMetadata {
 
     private Map tableToPropertyMap = new HashMap();
 
