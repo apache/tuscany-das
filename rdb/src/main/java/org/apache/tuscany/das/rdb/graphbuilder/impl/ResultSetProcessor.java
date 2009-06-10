@@ -21,6 +21,7 @@ package org.apache.tuscany.das.rdb.graphbuilder.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -91,14 +92,16 @@ public class ResultSetProcessor {
         if (rs.getType() == ResultSet.TYPE_FORWARD_ONLY) {
             while (rs.next() && start < end) {
             	rsr.processRow(rs);
-                addRowToGraph(rsr, rsMetadata);
-                ++start;
+                int rootRowsCreated = addRowToGraph(rsr, rsMetadata);
+                start += rootRowsCreated;
             }
         } else {
-            while (rs.absolute(start) && start < end) {
+        	int position = start;
+            while (rs.absolute(position) && start < end) {
             	rsr.processRow(rs);
-                addRowToGraph(rsr, rsMetadata);
-                ++start;
+            	int rootRowsCreated = addRowToGraph(rsr, rsMetadata);
+                start += rootRowsCreated;
+                ++position;
             }
         }
     }
@@ -106,8 +109,11 @@ public class ResultSetProcessor {
     /**
      * @param row
      * @param resultMetadata
+     * @return the number of root rows created
      */
-    private void addRowToGraph(ResultSetRow row, ResultMetadata resultMetadata) {
+    private int addRowToGraph(ResultSetRow row, ResultMetadata resultMetadata) throws SQLException {
+    	int rootRowsCreated = 0;
+    	Set rootTableNames = metadata.getConfigWrapper().getRootTableNames();
         tableObjects.clear();
     	Iterator tables = row.getAllTableData().iterator();
         while (tables.hasNext()) {
@@ -124,12 +130,13 @@ public class ResultSetProcessor {
             String tableName = rawDataFromRow.getTableName();
             DataObject tableObject = registry.get(tableName, rawDataFromRow.getPrimaryKeyValues());
             boolean newlyCreated = (tableObject == null);
+            // check whether row is a new root row
+            if (newlyCreated && rootTableNames.contains(tableName)) rootRowsCreated++;
             if (newlyCreated
             		&& !rawDataFromRow.hasNullPrimaryKey()) {//2nd check for null data in PK,
             	//as TableData.addData() - hasValidPrimaryKey=false is commented for a reason
             	//with this, DataObjs with null PK will not be added to registry and tableObjects
-                tableObject = doMaker.createAndAddDataObject(rawDataFromRow, resultMetadata);
-
+            	tableObject = doMaker.createAndAddDataObject(rawDataFromRow, resultMetadata);
                 if (this.logger.isDebugEnabled()) {
                     this.logger.debug("Putting table " + tableName + " with PK "
                             + rawDataFromRow.getPrimaryKeyValues() + " into registry");
@@ -152,6 +159,8 @@ public class ResultSetProcessor {
         }
 
         tableObjects.processRelationships();
+        
+        return rootRowsCreated;
 
     }
 

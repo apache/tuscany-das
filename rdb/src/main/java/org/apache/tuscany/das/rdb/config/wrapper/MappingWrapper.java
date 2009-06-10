@@ -57,6 +57,7 @@ public class MappingWrapper {
 	// TUSCANY-2288
 	private List insertOrder;
 	private List deleteOrder;
+	private Set rootTableNames;
 	// --
 
 
@@ -608,6 +609,45 @@ public class MappingWrapper {
         return results;
     }
 
+	public Set getRootTableNames() {
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Getting root tables");
+		}
+		if (rootTableNames == null) {
+			rootTableNames = new HashSet();
+			if (config == null) return rootTableNames;
+			// parse all relationships
+			Set allParents = new HashSet();
+			Set allChildren = new HashSet();
+			Iterator i = getConfig().getRelationship().iterator();
+			while (i.hasNext()) {
+				Relationship r = (Relationship) i.next();
+				String parent = r.getPrimaryKeyTable();
+				String child = r.getForeignKeyTable();
+				if (parent.equals(child)) {
+					// self-relationship
+					// do not add to all children list to allow root detection
+					allParents.add(parent);
+				} else {
+					allParents.add(parent);
+					allChildren.add(child);
+				}
+			}
+			// find roots (depth 0)
+			// roots are tables that are present in the parents set, but not in the children set
+			for (Iterator itParents = allParents.iterator(); itParents.hasNext(); ) {
+				String parent = (String) itParents.next();
+				if (!allChildren.contains(parent)) {
+					rootTableNames.add(parent);
+				}
+			}
+		}
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug(rootTableNames);
+		}
+		return rootTableNames;
+	}
+    
 	// TUSCANY-2288
 	public List getInsertOrder() {
 		if (this.logger.isDebugEnabled()) {
