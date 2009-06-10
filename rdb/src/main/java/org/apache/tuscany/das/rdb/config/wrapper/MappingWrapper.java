@@ -150,7 +150,7 @@ public class MappingWrapper {
         Iterator i = config.getRelationship().iterator();
         while (i.hasNext()) {
             Relationship r = (Relationship) i.next();
-            if (r.getPrimaryKeyTable().equals(parentTableName) && r.getForeignKeyTable().equals(childTableName)) {
+            if (r.getPrimaryKeyTable().equalsIgnoreCase(parentTableName) && r.getForeignKeyTable().equalsIgnoreCase(childTableName)) {
                 return;
             }
         }
@@ -825,8 +825,10 @@ public class MappingWrapper {
         Iterator i = config.getRelationship().iterator();
         while (i.hasNext()) {
             Relationship r = (Relationship) i.next();
-            if (ref.getName().equals(r.getName()) || ref.getOpposite().getName().equals(r.getName())) {
-                return r;
+            if (ref.getName().equals(r.getName())) {
+            	if (getTableTypeName(r.getPrimaryKeyTable()).equals(ref.getContainingType().getName())) return r;
+            } else if(ref.getOpposite().getName().equals(r.getName())) {
+            	if (getTableTypeName(r.getForeignKeyTable()).equals(ref.getContainingType().getName())) return r;
             }
         }
         throw new RuntimeException("Could not find relationship " + ref.getName() + " in the configuration");

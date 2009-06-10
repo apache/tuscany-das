@@ -144,7 +144,7 @@ public final class ResultMetadata {
             String columnName = (String) i.next();
             String pkTableName = columnName.substring(0, columnName.indexOf(idSpell));//_id, _Id, _iD, _ID anything
             String fkTableName = (String) impliedRelationships.get(columnName);
-            List pkTableProperties = (List) tableToPropertyMap.get(pkTableName);
+            List pkTableProperties = (List) tableToPropertyMap.get(configWrapper.getTableTypeName(pkTableName));
             if ((pkTableProperties != null) && (pkTableProperties.contains("ID"))) {
                 configWrapper.addImpliedRelationship(pkTableName, fkTableName, columnName);
             }
