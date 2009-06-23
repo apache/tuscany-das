@@ -42,12 +42,16 @@ public class ResultSetRow {
     private final boolean recursive;
     private final int resultSetSize;
     private Collection allTableNames;
+    private Set recursiveTablePropertyNames;
     private Set tablesWithNoPK = new HashSet();
     private String[] tablePropertyNames;
     private String[] columnPropertyNames;
     private boolean[] isPKColumn;
+    private int[] indexesForPKs;
+    private Map indexesByTablePropertyName = new HashMap();
     private Map tableMap = new HashMap();
-    private List allTableData;
+    private List allTableData = new ArrayList();
+    private ResultSet currentResultSet;
 
     /**
      * Method ResultSetRow.
@@ -57,7 +61,8 @@ public class ResultSetRow {
      */
     public ResultSetRow(ResultMetadata m) throws SQLException {
         this.metadata = m;
-        this.recursive = m.isRecursive();
+        this.recursiveTablePropertyNames = m.getRecursiveTypeNames();
+        this.recursive = (recursiveTablePropertyNames.size() > 0);
         this.resultSetSize = m.getResultSetSize();
         cacheMetadata();
         getAllTableNamesForRS();
@@ -70,36 +75,74 @@ public class ResultSetRow {
      * @param rs
      *            A ResultSet positioned on the desired row
      */
-    public void processRow(ResultSet rs)  throws SQLException {
-    	// clear previous data 
-    	for (Iterator itTableData = tableMap.values().iterator(); itTableData.hasNext(); ) {
+    public final void processRow(ResultSet rs)  throws SQLException {
+    	// clear previous data
+    	for (Iterator itTableData = allTableData.iterator(); itTableData.hasNext(); ) {
     		TableData tableData = (TableData) itTableData.next();
     		tableData.clear();
     	}
-        allTableData = null;
-
+        allTableData = new ArrayList();
+        // set current resultSet
+        currentResultSet = rs;
         // process row
         if (recursive) {
-            processRecursiveRow(rs);
+            processRecursiveRow();
         } else {
-        	processNonRecursiveRow(rs);
+        	processNonRecursiveRow();
         }
     }
+    
+    public final TableData processRowForTable(String tablePropertyName) throws SQLException {
+        int[] indexes = (int[]) indexesByTablePropertyName.get(tablePropertyName);
+		TableData table = getRawData(tablePropertyName);
+        int count = indexes.length;
+        for (int j = 0; j < count; j++) {
+        	int i = indexes[j];
+        	if (!isPKColumn[i]) {
+        		// skipping primary key columns since they've already been processed by processRow()
+	        	Object data = getObject(currentResultSet, i);
+	            if (this.logger.isDebugEnabled()) {
+	                this.logger.debug("Adding column: " + columnPropertyNames[i] + "\tValue: " 
+	                        + data + "\tTable: "
+	                        + tablePropertyNames[i]);
+	            }
+	            table.addData(columnPropertyNames[i], false, data);
+        	}
+		}
+        return table;
+    }
 
-    private void processNonRecursiveRow(ResultSet rs) throws SQLException {
-
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug("");
-        }
-        for (int i = 1; i <= resultSetSize; i++) {
-        	Object data = getObject(rs, i);
-			TableData table = getRawData(tablePropertyNames[i]);
-            if (this.logger.isDebugEnabled()) {
-                this.logger.debug("Adding column: " + columnPropertyNames[i] + "\tValue: " 
-                        + data + "\tTable: "
-                        + tablePropertyNames[i]);
-            }
-            table.addData(columnPropertyNames[i], isPKColumn[i], data);
+    private void processNonRecursiveRow() throws SQLException {
+        // parse primary keys only
+        // the rest will be parsed as needed
+        int count = indexesForPKs.length;
+        for (int j = 0; j < count; j++) {
+        	int i = indexesForPKs[j];
+        	Object data = getObject(currentResultSet, i);
+        	if (data == null) {
+        		// primary key is null, check other columns
+        		String tablePropertyName = tablePropertyNames[i];
+        		// if table data already exists then this has already been done
+        		if (!tableMap.containsKey(tablePropertyName)) {
+        			TableData table = getRawData(tablePropertyName);
+        			processRowForTable(tablePropertyName);
+        			// add table data only if not empty
+        			if (!table.isTableEmpty()) {
+        	            table.addData(columnPropertyNames[i], true, data);
+        				allTableData.add(table);
+        			}
+        		}
+        	} else {
+        		// add table data
+				TableData table = getRawData(tablePropertyNames[i]);
+				if (!allTableData.contains(table)) allTableData.add(table);
+	            if (this.logger.isDebugEnabled()) {
+	                this.logger.debug("Adding column: " + columnPropertyNames[i] + "\tValue: " 
+	                        + data + "\tTable: "
+	                        + tablePropertyNames[i]);
+	            }
+	            table.addData(columnPropertyNames[i], true, data);
+        	}
 		}
         checkResultSetMissesPK();
         }
@@ -118,10 +161,42 @@ public class ResultSetRow {
     	tablePropertyNames = new String[resultSetSize + 1];
     	columnPropertyNames = new String[resultSetSize + 1];
     	isPKColumn = new boolean[resultSetSize + 1];
+    	String tablePropertyName = null;
+    	boolean isPK;
+    	List pkColumnList = new ArrayList();
+    	// loop thru indexes
         for (int i = 1; i <= resultSetSize; i++) {
-        	tablePropertyNames[i] = metadata.getTablePropertyName(i);
         	columnPropertyNames[i] = metadata.getColumnPropertyName(i);
-        	isPKColumn[i] = metadata.isPKColumn(i);
+        	tablePropertyName = metadata.getTablePropertyName(i);
+        	tablePropertyNames[i] = tablePropertyName;
+        	List indexes = (List) indexesByTablePropertyName.get(tablePropertyName);
+        	if (indexes == null) {
+        		indexes = new ArrayList();
+        		indexesByTablePropertyName.put(tablePropertyName, indexes);
+        	}
+        	indexes.add(new Integer(i));
+        	isPK = metadata.isPKColumn(i);
+        	isPKColumn[i] = isPK;
+        	if (isPK) {
+        		pkColumnList.add(new Integer(i));
+        	}
+        }
+        // reorganize indexes by table property name
+        for (Iterator itTablePropertyNames = indexesByTablePropertyName.keySet().iterator(); itTablePropertyNames.hasNext(); ) {
+        	tablePropertyName = (String) itTablePropertyNames.next();
+        	List indexes = (List) indexesByTablePropertyName.get(tablePropertyName);
+        	int count = indexes.size();
+        	int[] indexArray = new int[count];
+        	for (int i = 0; i < count; i++) {
+        		indexArray[i] = ((Integer) indexes.get(i)).intValue();
+        	}
+        	indexesByTablePropertyName.put(tablePropertyName, indexArray);
+        }
+        // reorganize indexes for PKs
+        int count = pkColumnList.size();
+        indexesForPKs = new int[count];
+        for (int i = 0; i < count; i++) {
+        	indexesForPKs[i] = ((Integer) pkColumnList.get(i)).intValue();
         }
     }
     	
@@ -191,19 +266,36 @@ public class ResultSetRow {
         	String currentTableName = (String)itr.next();
            	TableData table = getRawData(currentTableName);
            	table.setValidPrimaryKey(false);
+			allTableData.add(table);
         }
     }
     
-    private void processRecursiveRow(ResultSet rs) throws SQLException {
-        this.allTableData = new ArrayList();
+    private void processRecursiveRow() throws SQLException {
         int i = 1;
-
+        // create map to keep track of recursive indexes
+        // each recursive table contains a 0-based index to keep track of the sequence
+        Map recursiveIndexes = new HashMap();
+        for (Iterator itTablePropertyNames = recursiveTablePropertyNames.iterator(); itTablePropertyNames.hasNext(); ) {
+        	recursiveIndexes.put(itTablePropertyNames.next(), new Integer(-1));
+        }
+        
+        // loop thru result set columns
+        // assuming that the columns of each recursive table are grouped together (metadata do not allow for further granularity)
         while (i <= resultSetSize) {
-            TableData table = new TableData(tablePropertyNames[i]);
-            this.allTableData.add(table);
-
+        	TableData table;
+        	String tablePropertyName = tablePropertyNames[i];
+        	if (recursiveTablePropertyNames.contains(tablePropertyName)) {
+        		// increment current recursive index for table
+        		int recursiveIndex = ((Integer) recursiveIndexes.get(tablePropertyName)).intValue() + 1;
+        		recursiveIndexes.put(tablePropertyName, new Integer(recursiveIndex));
+        		// get table data
+                table = getRecursiveRawData(tablePropertyName, recursiveIndex);
+        	} else {
+                table = getRawData(tablePropertyNames[i]);
+        	}
+ 
             while ((i <= resultSetSize) && (isPKColumn[i])) {
-                Object data = getObject(rs, i);
+                Object data = getObject(currentResultSet, i);
                 if (this.logger.isDebugEnabled()) {
                     this.logger.debug("Adding column: " + columnPropertyNames[i]
                             + "\tValue: " + data + "\tTable: "
@@ -214,7 +306,7 @@ public class ResultSetRow {
             }
 
             while ((i <= resultSetSize) && (!isPKColumn[i])) {
-                Object data = getObject(rs, i);
+                Object data = getObject(currentResultSet, i);
                 if (this.logger.isDebugEnabled()) {
                     this.logger.debug("Adding column: " + columnPropertyNames[i] 
                             + "\tValue: " + data + "\tTable: "
@@ -223,6 +315,14 @@ public class ResultSetRow {
                 table.addData(columnPropertyNames[i], false, data);
                 i++;
             }
+            
+            // skip table if empty
+            if (table.isTableEmpty()) {
+            	table.clear();
+            } else {
+            	this.allTableData.add(table);
+            }
+
         }
         
         checkResultSetMissesPK();        
@@ -242,19 +342,8 @@ public class ResultSetRow {
             return null;
         } 
             
-        return metadata.getConverter(i).getPropertyValue(data);
+        return metadata.convert(i, data);
         
-    }
-
-    /**
-     * Returns a HashMap that holds data for the specified table
-     * 
-     * @param tableName
-     *            The name of the table
-     * @return HashMap
-     */
-    public TableData getTable(String tableName) {
-        return (TableData) tableMap.get(tableName);
     }
 
     /**
@@ -278,17 +367,24 @@ public class ResultSetRow {
         return table;
     }
     
-    public List getAllTableData() {
-        if (this.allTableData == null) {
-            this.allTableData = new ArrayList();
-            this.allTableData.addAll(tableMap.values());
+    private TableData getRecursiveRawData(String tableName, int recursiveIndex) {
+    	String key = tableName + ":" + recursiveIndex;
+        TableData table = (TableData) tableMap.get(key);
+
+        if (table == null) {
+            table = new TableData(tableName, recursiveIndex);
+            tableMap.put(key, table);
         }
 
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug(allTableData);
-        }
-
-        return this.allTableData;
+        return table;
     }
 
+    public List getAllTableData() {
+        return this.allTableData;
+    }
+    
+    public boolean isRecursive() {
+    	return recursive;
+    }
+    
 }

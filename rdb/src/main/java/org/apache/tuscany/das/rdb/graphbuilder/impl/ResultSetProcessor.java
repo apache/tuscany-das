@@ -113,6 +113,8 @@ public class ResultSetProcessor {
      */
     private int addRowToGraph(ResultSetRow row, ResultMetadata resultMetadata) throws SQLException {
     	int rootRowsCreated = 0;
+    	int objectsCreated = 0;
+    	boolean recursive = row.isRecursive();
     	Set rootTableNames = metadata.getConfigWrapper().getRootTableNames();
         tableObjects.clear();
     	Iterator tables = row.getAllTableData().iterator();
@@ -131,11 +133,15 @@ public class ResultSetProcessor {
             DataObject tableObject = registry.get(tableName, rawDataFromRow.getPrimaryKeyValues());
             boolean newlyCreated = (tableObject == null);
             // check whether row is a new root row
-            if (newlyCreated && rootTableNames.contains(tableName)) rootRowsCreated++;
-            if (newlyCreated
-            		&& !rawDataFromRow.hasNullPrimaryKey()) {//2nd check for null data in PK,
-            	//as TableData.addData() - hasValidPrimaryKey=false is commented for a reason
-            	//with this, DataObjs with null PK will not be added to registry and tableObjects
+            if (newlyCreated) {
+            	objectsCreated++;
+            	// increment root row count
+            	// in case of recursive table, assuming that first table occurrence is the root
+                if (rootTableNames.contains(tableName) && rawDataFromRow.getIndex() == 0) rootRowsCreated++;
+                // get whole table data 
+                // (only for non-recursive statements; recursive statements already have the whole table data)
+                if (!recursive) rawDataFromRow = row.processRowForTable(tableName);
+            	// create data object
             	tableObject = doMaker.createAndAddDataObject(rawDataFromRow, resultMetadata);
                 if (this.logger.isDebugEnabled()) {
                     this.logger.debug("Putting table " + tableName + " with PK "
@@ -146,7 +152,7 @@ public class ResultSetProcessor {
             }
             else{
                 if (this.logger.isDebugEnabled()) {
-                    this.logger.debug("Not Null tableObject or NULL PK");
+                    this.logger.debug("Not Null tableObject");
                 }
             }
 
@@ -157,8 +163,15 @@ public class ResultSetProcessor {
             	tableObjects.put(tableName, tableObject, newlyCreated);
             }
         }
-
-        tableObjects.processRelationships();
+        
+        if (objectsCreated == 0) {
+            // duplicated row
+        	if (this.logger.isDebugEnabled()) {
+        		this.logger.debug("Found duplicated row");
+        	}
+        } else {
+        	tableObjects.processRelationships();
+        }
         
         return rootRowsCreated;
 

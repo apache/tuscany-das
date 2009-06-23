@@ -44,6 +44,8 @@ public class RowObjects {
     private Set newTableObjectNames;
 
     private Map tableTypeNames;
+    
+    private Map relationshipMap;
 
     private final GraphBuilderMetadata metadata;
 
@@ -62,6 +64,31 @@ public class RowObjects {
         this.registry = registry;
         this.configWrapper = metadata.getConfigWrapper();
         this.hasRecursiveRelationships = configWrapper.hasRecursiveRelationships();
+        if (!hasRecursiveRelationships) buildRelationshipMap();
+    }
+    
+    private void buildRelationshipMap() {
+    	relationshipMap = new HashMap();
+        Iterator i = metadata.getRelationships().iterator();
+        while (i.hasNext()) {
+            Relationship r = (Relationship) i.next();
+            String parentTypeName = getTableTypeName(r.getPrimaryKeyTable());
+            String childTypeName = getTableTypeName(r.getForeignKeyTable());
+            // Add relationship under child type name
+            List relationships = (List) relationshipMap.get(childTypeName);
+            if (relationships == null) {
+            	relationships = new ArrayList();
+            	relationshipMap.put(childTypeName, relationships);
+            }
+            relationships.add(r);
+            // Add relationship under parent type name
+            relationships = (List) relationshipMap.get(parentTypeName);
+            if (relationships == null) {
+            	relationships = new ArrayList();
+            	relationshipMap.put(parentTypeName, relationships);
+            }
+            relationships.add(r);
+        }
     }
     
     public void clear() {
@@ -94,27 +121,31 @@ public class RowObjects {
             processRecursiveRelationships(configWrapper);
             return;
         }
-
-        Iterator i = metadata.getRelationships().iterator();
+        
+        // the relationship needs to be set only if the parent or the child is newly created
+        // otherwise the relationship has already been set
+        Set relationshipsToSet = new HashSet();
+        Iterator itNewTableObjectNames = newTableObjectNames.iterator();
+        while (itNewTableObjectNames.hasNext()) {
+        	List relationships = (List) relationshipMap.get((String) itNewTableObjectNames.next());
+        	if (relationships != null) relationshipsToSet.addAll(relationships);
+        }
+        
+        Iterator i = relationshipsToSet.iterator();
         while (i.hasNext()) {
             Relationship r = (Relationship) i.next();
 
             String parentTypeName = getTableTypeName(r.getPrimaryKeyTable());
             String childTypeName = getTableTypeName(r.getForeignKeyTable());
+            DataObject parent = get(parentTypeName);
+            DataObject child = get(childTypeName);
 
-            // the relationship needs to be set only if the parent or the child is newly created
-            // otherwise the relationship has already been set
-            if (newTableObjectNames.contains(parentTypeName) || newTableObjectNames.contains(childTypeName)) {
-                DataObject parent = get(parentTypeName);
-                DataObject child = get(childTypeName);
-
-                if (this.logger.isDebugEnabled()) {
-                    this.logger.debug("Parent table: " + parent);
-                    this.logger.debug("Child table: " + child);
-                }
-
-                setOrAdd(parent, child, r.getName());
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("Parent table: " + parent);
+                this.logger.debug("Child table: " + child);
             }
+
+            setOrAdd(parent, child, r.getName());
         }
     }
 

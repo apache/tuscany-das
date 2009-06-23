@@ -33,6 +33,8 @@ public final class TableData {
     private List primaryKey;;
 
     private final String name;
+    
+    private int index = 0;
 
     private boolean hasValidPrimaryKey = true;
 
@@ -46,6 +48,11 @@ public final class TableData {
         this.name = tableName;
         this.columnData = new HashMap();
         this.primaryKey = new ArrayList();
+    }
+    
+    public TableData(String tableName, int index) {
+    	this(tableName);
+    	this.index = index;
     }
     
     public void clear() {
@@ -81,6 +88,10 @@ public final class TableData {
 
     public String getTableName() {
         return this.name;
+    }
+    
+    public int getIndex() {
+    	return index;
     }
 
     /**

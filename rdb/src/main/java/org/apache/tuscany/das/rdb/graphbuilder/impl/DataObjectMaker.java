@@ -18,7 +18,9 @@
  */
 package org.apache.tuscany.das.rdb.graphbuilder.impl;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -30,11 +32,25 @@ import commonj.sdo.helper.DataFactory;
 public final class DataObjectMaker {
 
     private final DataObject rootObject;
+    private final Map containmentPropertyMap;
+    private final Map typeMap;
 
     private static final Logger logger = Logger.getLogger(DataObjectMaker.class);
 
     public DataObjectMaker(DataObject root) {
         this.rootObject = root;
+        containmentPropertyMap = new HashMap();
+        typeMap = new HashMap();
+        Iterator i = this.rootObject.getType().getProperties().iterator();
+        while (i.hasNext()) {
+            Property p = (Property) i.next();
+            Type type = p.getType();
+            String typeName = type.getName();
+            typeMap.put(typeName, type);
+            if (p.isContainment()) {
+            	containmentPropertyMap.put(typeName, p);
+            }
+        }
     }
 
     /**
@@ -48,7 +64,8 @@ public final class DataObjectMaker {
             this.logger.debug("Looking for Type for " + tableData.getTableName());
         }
 
-        Type tableClass = findTableTypeByPropertyName(tableData.getTableName());
+        String tableName = tableData.getTableName();
+        Type tableClass = (Type) typeMap.get(tableName);
 
         if (tableClass == null) {
             throw new RuntimeException("An SDO Type with name " + tableData.getTableName() + " was not found");
@@ -58,31 +75,29 @@ public final class DataObjectMaker {
 
         // Now, check to see if the root data object has a containment reference
         // to this EClass. If so, add it to the graph. If not, it will be taken
-        // care
-        // of when we process relationships
-
-        Iterator i = this.rootObject.getType().getProperties().iterator();
-        while (i.hasNext()) {
-            Property p = (Property) i.next();
-
-            if (p.isContainment() && p.getType().equals(tableClass)) {
-                if (p.isMany()) {
-                    rootObject.getList(p).add(obj);
-                } else {
-                    this.rootObject.set(p, obj);
-                }
+        // care of when we process relationships
+        Property containmentProp = (Property) containmentPropertyMap.get(tableName);
+        if (containmentProp != null) {
+            if (containmentProp.isMany()) {
+                rootObject.getList(containmentProp).add(obj);
+            } else {
+                this.rootObject.set(containmentProp, obj);
             }
-
         }
 
+        // Set the column values
         Iterator columnNames = resultMetadata.getPropertyNames(tableData.getTableName()).iterator();
+        Type objType = obj.getType();
         while (columnNames.hasNext()) {
             String propertyName = (String) columnNames.next();
-
-            Property p = findProperty(obj.getType(), propertyName);
+            Property p = objType.getProperty(propertyName);
             if (p == null) {
-                throw new RuntimeException("Type " + obj.getType().getName() 
-                        + " does not contain a property named " + propertyName);
+            	// Try again, ignoring case
+            	p = findProperty(objType, propertyName);
+                if (p == null) {
+                    throw new RuntimeException("Type " + obj.getType().getName() 
+                            + " does not contain a property named " + propertyName);
+                }
             }
 
             Object value = tableData.getColumnData(propertyName);
@@ -102,18 +117,6 @@ public final class DataObjectMaker {
                 return p;
             }
         }
-        return null;
-    }
-
-    private Type findTableTypeByPropertyName(String tableName) {
-        Iterator i = rootObject.getType().getProperties().iterator();
-        while (i.hasNext()) {
-            Property p = (Property) i.next();
-            if (tableName.equals(p.getType().getName())) {
-                return p.getType();
-            }
-        }
-
         return null;
     }
 

@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.tuscany.das.rdb.Converter;
 import org.apache.tuscany.das.rdb.config.Column;
@@ -36,6 +37,7 @@ import org.apache.tuscany.das.rdb.config.Table;
 import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
 import org.apache.tuscany.das.rdb.config.wrapper.TableWrapper;
 import org.apache.tuscany.das.rdb.impl.ResultSetShape;
+import org.apache.tuscany.das.rdb.impl.SDODataTypes;
 
 import commonj.sdo.Type;
 
@@ -122,7 +124,7 @@ public final class ResultMetadata {
             	converterName = configWrapper.getConverter(tableName, resultSetShape.getColumnName(i));	
             }
 
-            converters[i - 1] = loadConverter(converterName);
+            converters[i - 1] = loadConverter(converterName, resultSetShape.getColumnType(i));
 
             typeNames.add(typeName);
             propertyNames.add(propertyName);
@@ -226,7 +228,7 @@ public final class ResultMetadata {
 	    }
     }
     
-    private Converter loadConverter(String converterName) {
+    private Converter loadConverter(String converterName, Type type) {
         if (converterName != null) {
 
             try {
@@ -248,7 +250,11 @@ public final class ResultMetadata {
                 throw new RuntimeException(ex);
             }
         }
-        return new DefaultConverter();
+        if (SDODataTypes.BYTES.getName().equals(type.getName()) && SDODataTypes.BYTES.getURI().equals(type.getURI())) {
+            return new DefaultConverter();
+        } else {
+        	return null;
+        }
     }
 
     public String getColumnPropertyName(int i) {
@@ -393,9 +399,13 @@ public final class ResultMetadata {
     public boolean isRecursive() {
         return configWrapper.hasRecursiveRelationships();
     }
+    
+    public Set getRecursiveTypeNames() {
+    	return configWrapper.getRecursiveTypeNames();
+    }
 
-    public Converter getConverter(int i) {
-        return converters[i - 1];
+    public Object convert(int i, Object data) {
+    	return (converters[i - 1] == null) ? data : converters[i - 1].getPropertyValue(data);
     }
 
 }

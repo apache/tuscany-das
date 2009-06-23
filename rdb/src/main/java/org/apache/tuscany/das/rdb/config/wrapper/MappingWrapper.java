@@ -582,6 +582,21 @@ public class MappingWrapper {
         }
         return false;
     }
+    
+    public Set getRecursiveTypeNames() {
+    	Set typeNames = new HashSet();
+        if (config != null) {
+            Iterator i = getConfig().getRelationship().iterator();
+            while (i.hasNext()) {
+                Relationship r = (Relationship) i.next();
+                if (r.getPrimaryKeyTable().equals(r.getForeignKeyTable())) {
+                	typeNames.add(getTableTypeName(r.getPrimaryKeyTable()));
+                }
+            }
+        }
+        return typeNames;
+    	
+    }
 
     /*Parameter name is SDO Type name and so requires mapping in table<->type, if one is available in Config*/
     public Collection getRelationshipsByChildTable(String name) {
