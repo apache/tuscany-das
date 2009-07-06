@@ -20,6 +20,7 @@ package org.apache.tuscany.das.rdb.impl;
 
 import org.apache.tuscany.das.rdb.Converter;
 import org.apache.tuscany.das.rdb.config.impl.ParameterImpl;
+
 import commonj.sdo.Type;
 
 public class ParameterExtendedImpl extends ParameterImpl{

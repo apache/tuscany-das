@@ -18,10 +18,10 @@
  */
 package org.apache.tuscany.samples.das.tx.sample;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.io.InputStream;
 
 import org.apache.tuscany.das.rdb.Command;
 import org.apache.tuscany.das.rdb.DAS;

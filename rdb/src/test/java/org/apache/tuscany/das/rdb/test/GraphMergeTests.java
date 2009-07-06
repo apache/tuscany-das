@@ -30,12 +30,12 @@ import org.apache.tuscany.das.rdb.test.customer.AnOrder;
 import org.apache.tuscany.das.rdb.test.customer.Customer;
 import org.apache.tuscany.das.rdb.test.customer.CustomerFactory;
 import org.apache.tuscany.das.rdb.test.customer.impl.CustomerFactoryImpl;
-import org.apache.tuscany.das.rdb.test.singer.impl.SingerFactoryImpl;
-import org.apache.tuscany.das.rdb.test.singer.SINGER;
 import org.apache.tuscany.das.rdb.test.data.CustomerData;
-import org.apache.tuscany.das.rdb.test.data.SingerData;
 import org.apache.tuscany.das.rdb.test.data.OrderData;
+import org.apache.tuscany.das.rdb.test.data.SingerData;
 import org.apache.tuscany.das.rdb.test.framework.DasTest;
+import org.apache.tuscany.das.rdb.test.singer.SINGER;
+import org.apache.tuscany.das.rdb.test.singer.impl.SingerFactoryImpl;
 import org.apache.tuscany.sdo.api.SDOUtil;
 
 import commonj.sdo.DataObject;

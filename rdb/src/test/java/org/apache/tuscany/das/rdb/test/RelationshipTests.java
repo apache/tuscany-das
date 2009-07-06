@@ -46,7 +46,6 @@ import org.apache.tuscany.das.rdb.test.data.ProductSpecData;
 import org.apache.tuscany.das.rdb.test.framework.DasTest;
 
 import commonj.sdo.DataObject;
-import commonj.sdo.helper.XMLHelper;
 
 public class RelationshipTests extends DasTest {
 

@@ -25,8 +25,8 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 
 import org.apache.log4j.Logger;
-import org.apache.torque.task.TorqueJDBCTransformTask;
 import org.apache.tools.ant.Project;
+import org.apache.torque.task.TorqueJDBCTransformTask;
 
 public class DBToSchemaFile {
 	private static final Logger logger = Logger.getLogger(DBToSchemaFile.class);

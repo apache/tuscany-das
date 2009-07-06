@@ -22,9 +22,7 @@ import java.io.InputStream;
 import java.util.Collection;
 
 import org.apache.tuscany.das.rdb.Command;
-import org.apache.tuscany.das.rdb.ConfigHelper;
 import org.apache.tuscany.das.rdb.DAS;
-import org.apache.tuscany.das.rdb.merge.impl.GraphMerger;
 import org.apache.tuscany.das.rdb.test.customer.CustomerFactory;
 import org.apache.tuscany.das.rdb.test.data.CustomerData;
 import org.apache.tuscany.das.rdb.test.framework.DasTest;

@@ -18,7 +18,6 @@
  */
 package org.apache.tuscany.das.rdb.test;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.tuscany.das.rdb.Command;
@@ -26,13 +25,7 @@ import org.apache.tuscany.das.rdb.ConfigHelper;
 import org.apache.tuscany.das.rdb.DAS;
 import org.apache.tuscany.das.rdb.config.Config;
 import org.apache.tuscany.das.rdb.config.ConfigFactory;
-import org.apache.tuscany.das.rdb.config.Create;
-import org.apache.tuscany.das.rdb.config.Delete;
 import org.apache.tuscany.das.rdb.config.Parameter;
-import org.apache.tuscany.das.rdb.config.Parameters;
-import org.apache.tuscany.das.rdb.config.Table;
-import org.apache.tuscany.das.rdb.config.Update;
-import org.apache.tuscany.das.rdb.test.data.BookData;
 import org.apache.tuscany.das.rdb.test.data.CustomerData;
 import org.apache.tuscany.das.rdb.test.framework.DasTest;
 

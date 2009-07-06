@@ -25,9 +25,9 @@ import java.util.List;
 import java.util.TreeMap;
 
 import org.apache.tuscany.das.rdb.config.Config;
+import org.apache.tuscany.das.rdb.config.Parameters;
 import org.apache.tuscany.das.rdb.config.ResultDescriptor;
 import org.apache.tuscany.das.rdb.config.impl.ParameterImpl;
-import org.apache.tuscany.das.rdb.config.Parameters;
 
 import commonj.sdo.DataObject;
 

@@ -18,8 +18,8 @@
  */
 package org.apache.tuscany.das.rdb.test;
 
-import java.sql.Statement;
 import java.sql.Connection;
+import java.sql.Statement;
 import java.util.Properties;
 
 import org.apache.derby.jdbc.EmbeddedDataSource;

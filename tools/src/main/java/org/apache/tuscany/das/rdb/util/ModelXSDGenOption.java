@@ -19,7 +19,6 @@
  */
 package org.apache.tuscany.das.rdb.util;
 
-import java.io.File;
 
 public class ModelXSDGenOption {
 

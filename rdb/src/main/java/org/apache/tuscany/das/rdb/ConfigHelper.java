@@ -29,8 +29,8 @@ import org.apache.tuscany.das.rdb.config.Parameters;
 import org.apache.tuscany.das.rdb.config.Relationship;
 import org.apache.tuscany.das.rdb.config.Table;
 import org.apache.tuscany.das.rdb.config.wrapper.MappingWrapper;
-import org.apache.tuscany.das.rdb.util.ConfigUtil;
 import org.apache.tuscany.das.rdb.impl.ParametersExtendedImpl;
+import org.apache.tuscany.das.rdb.util.ConfigUtil;
 
 /**
  * A ConfigHelper is used as an aid in programmatic construction of Config instances.

@@ -19,11 +19,7 @@
 
 package org.apache.tuscany.samples.das;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -39,10 +35,8 @@ import java.util.Vector;
 import org.apache.tuscany.das.rdb.Command;
 import org.apache.tuscany.das.rdb.DAS;
 import org.apache.tuscany.das.rdb.exception.OptimisticConcurrencyException;
-import org.apache.tuscany.samples.das.util.XmlUtil;
 import org.apache.tuscany.samples.web.ServiceProcessor;
 
-import commonj.sdo.DataGraph;
 import commonj.sdo.DataObject;
 import commonj.sdo.helper.XMLHelper;
 

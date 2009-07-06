@@ -18,16 +18,12 @@
  */
 package org.apache.tuscany.das.rdb.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.tuscany.das.rdb.Command;
 
 import commonj.sdo.DataObject;
-import commonj.sdo.helper.XSDHelper;
 
 public abstract class CommandImpl extends BaseCommandImpl implements Command {
     

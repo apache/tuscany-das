@@ -22,8 +22,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.tuscany.das.rdb.config.ResultDescriptor;
 import org.apache.tuscany.das.rdb.config.impl.ResultDescriptorImpl;
