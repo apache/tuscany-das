@@ -98,7 +98,11 @@ public final class TableData {
      * @return
      */
     public List getPrimaryKeyValues() {
-        return primaryKey;
+    	// the primary key is kept in the table registry
+    	// so return a copy to prevent deletion
+    	List primaryKeyCopy = new ArrayList(primaryKey.size());
+    	primaryKeyCopy.addAll(primaryKey);
+        return primaryKeyCopy;
     }
 
     public boolean hasValidPrimaryKey() {
