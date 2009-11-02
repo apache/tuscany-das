@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+ -->
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Tuscany RDB DAS Database Setup Utility</title>
+
+<style>
+.code {font-size: 11px; color: #006699}
+.codebox {border: 1px solid #6699CC; background-color: #F1F7FA;padding:15px}
+.codebox2 {border: 1px solid #6699CC; background-color: #F1F7FA;padding:15px; width:85%}
+.codeboxW {border: 1px solid #6699CC; background-color: #FFFFFF;padding:15px}
+.codeboxB {background-color: #C9DBED;padding:1px 10px 10px 10px}
+</style>
+
+</head>
+
+<h1><center>Tuscany RDB DAS Database Setup Utility</center></h1>
+
+<br>
+
+<p>This utility provides a jar file to be used by RDB DAS sample
+applications (web or standalone) to do database setup. So far the
+samples provided canned pre-created Derby database with tables and data.
+There was no convenient way to refresh table data during the samples
+execution. This utility supports Derby database at present and uses a
+config file to get the setup information.</p>
+
+<h2>APIs</h2>
+
+<ul style="border-right-style: solid; border-left-style: solid; border-top-style: solid; border-bottom-style: solid">
+public DBInitializer() – uses default provided ConfigFile CannedSampleDBConfig.xml <br>
+public DBInitializer(String ConfigFileLocation) <br>
+public DBInitializer (InputStream ConfigFileStream) <br>
+public void initializeDatabase(boolean clean) - Create database tables and fill data. If clean=true, all tables will be dropped and recreated. <br> 
+public void initializeDatabaseData(boolean clean) - create database data (with clean=true, if a table has pre-existing data, it will be deleted first) <br>
+public void refreshDatabaseData() – calls initializeDatabase(clean=true) <br>
+public boolean isDatabaseReady() - will return true, if the tables exist in the database <br>
+public boolean isDatabasePopulated() - will return true, if the tables have data <br>
+</ul>
+
+<h2>Assumptions:</h2>
+<p>&lt;table&gt; element lists tables in proper sequence, i.e. parent tables
+first and then child tables. This sequence will be used in
+create,insert,delete,drop to take care of referential integrity. The
+config file required by utility supports the following features through
+different attributes and elements. Sample xml file is shown at the end.
+
+</p>
+
+<h2>&lt;ConnectionInfo&gt;</h2>
+<p>This element provides connection specific information - like vendor
+specific database URL, user name, password etc. If the DataSource is
+provided by the web container, user needs to only fill dataSource
+attribute in this. In case of standalone J2SE samples, user needs to
+fill ConnectionProperties element inside ConnectionInfo. These two ways
+of connection specification are mutually exclusive.</p>
+
+<h2>&lt;table&gt;</h2>
+<p>This element needs to specify the table names required by the
+sample. Only these tables will be considered for creation, data
+population. This gives flexibility to the user to choose the required
+set of tables based on the sample's requirement. It also needs to
+specify in the attributes, the Create SQL command used to create this
+table.&lt;table&gt; has sequence element &lt;row&gt; which is used to provide 
+the data to be populated in the table.
+</p>
+
+	<h2>Set Up</h2>
+
+	<p>To use this utility, include its jar and required database
+	driver's jar in the classpath. Provide the config file used by this
+	utility , similar to the example below, in the source folder of the
+	sample.<br>
+	</p>
+
+	<h2>DBConfig.xml example</h2>
+
+	<ul style="border-right-style: solid; border-left-style: solid; border-top-style: solid; border-bottom-style: solid">
+		&lt;?xml version="1.0" encoding="ASCII"?&gt;<br>
+	&lt;!-- Licensed to the Apache Software Foundation (ASF) under one or
+	more contributor license agreements. See the NOTICE file distributed
+	with this work for additional information regarding copyright
+	ownership. The ASF licenses this file to you under the Apache License,
+	Version 2.0 (the "License"); you may not use this file except in
+	compliance with the License. You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+	applicable law or agreed to in writing, software distributed under the
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+	CONDITIONS OF ANY KIND, either express or implied. See the License for
+	the specific language governing permissions and limitations under the
+	License. --&gt; <br><br>
+	&lt;DBConfig
+	xmlns="http:///org.apache.tuscany.das.rdb/dbconfig.xsd"&gt;<br><br>
+	&lt;ConnectionInfo&gt;<br>
+	   &lt;ConnectionProperties
+	driverClass="org.apache.derby.jdbc.EmbeddedDriver"
+	databaseURL="jdbc:derby:target/dastest; create = true"
+	loginTimeout="600000" /&gt;<br>
+	&lt;/ConnectionInfo&gt; <br><br>
+	&lt;Table
+	name="COMPANY" SQLCreate="CREATE TABLE COMPANY (ID INT PRIMARY KEY NOT
+	NULL, NAME VARCHAR(30), EOTMID INTEGER)"&gt; <br>
+	&lt;row&gt; 51, 'ACME Publishing', 0 &lt;/row&gt; <br>
+	&lt;row&gt; 52, 'Do-rite plumbing', 0 &lt;/row&gt;<br> 
+	&lt;row&gt; 53, 'MegaCorp', 0 &lt;/row&gt;<br> 
+	&lt;/Table&gt;<br><br>
+	&lt;Table name="DEPARTMENT" SQLCreate="CREATE TABLE DEPARTMENT (ID INT
+	PRIMARY KEY NOT NULL GENERATED ALWAYS AS IDENTITY, NAME
+	VARCHAR(30),LOCATION VARCHAR(30), DEPNUMBER VARCHAR(10),COMPANYID
+	INT)"&gt; <br>
+	&lt;row&gt; 'Advanced Technologies', 'NY', '123', 1	&lt;/row&gt; <br>
+	&lt;row&gt; 'Default Name', '', '', 51 &lt;/row&gt;<br>
+	&lt;row&gt; 'Default Name', '', '', 51 &lt;/row&gt; <br>
+	&lt;row&gt; 'Default Name', '', '', 51 &lt;/row&gt; <br>
+	&lt;row&gt; 'Default Name', '',	'', 51 &lt;/row&gt; <br>
+	&lt;row&gt; 'Default Name', '', '', 51 &lt;/row&gt;<br>
+	&lt;row&gt; 'Default Name', '', '', 51 &lt;/row&gt; <br>
+	&lt;/Table&gt;<br><br>
+	
+	&lt;Table name="EMPLOYEE" SQLCreate="CREATE TABLE EMPLOYEE (ID INT
+	PRIMARY KEY NOT NULL GENERATED ALWAYS AS IDENTITY,NAME VARCHAR(30),SN
+	VARCHAR(10), MANAGER SMALLINT, DEPARTMENTID INT)"&gt; <br>
+	&lt;row&gt; 'John Jones','E0001',0,12 &lt;/row&gt; <br>
+	&lt;row&gt; 'Mary Smith','E0002',1,null &lt;/row&gt; <br>
+	&lt;row&gt; 'Jane Doe','E0003',0,12	&lt;/row&gt; <br>
+	&lt;row&gt; 'Al Smith','E0004',1,12 &lt;/row&gt;<br>
+	&lt;/Table&gt; <br><br>&lt;/DBConfig&gt;<br>
+
+</ul>
+
+
+	</BODY>
+</HTML>

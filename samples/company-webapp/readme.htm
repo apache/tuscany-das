@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+ -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Tuscany DAS Sample - Company webapp</title>
+
+<style>
+.code {font-size: 11px; color: #006699}
+.codebox {border: 1px solid #6699CC; background-color: #F1F7FA;padding:15px}
+.codebox2 {border: 1px solid #6699CC; background-color: #F1F7FA;padding:15px; width:85%}
+.codeboxW {border: 1px solid #6699CC; background-color: #FFFFFF;padding:15px}
+.codeboxB {background-color: #C9DBED;padding:1px 10px 10px 10px}
+</style>
+
+</head>
+
+<body>
+
+<h1><center>DAS Company web application Sample</center></h1>
+
+<br>
+<br>
+
+<p>
+This stand-alone sample demonstrates the SDO RDB Data Access Service in the context of a simple web application<br>
+<p>
+<p>
+The application starts with a database of Companies and their related Departments.Through the web page interface, a user can:<br>
+<br>
+
+<ol start=1 type=1>
+ <li>Display all Companies in the database</li>
+ <li>Display all Companies and related Departments</li>
+ <li>Add a new Department to a Company</li>
+ <li>Delete all Departments from a Company</li>
+ <li>Change the names of Departments in a Company</li>
+</ol>
+
+<p>This simple application covers all CRUD operations as well as some relationship manipulation (adding a Department associates that
+Department with the Company).The sample runs on Tomcat 6.0 and employs a Derby database (default) accessed via a DataSource.</p>
+
+<h2>Running the sample</h2>
+
+<p>There are two options for running this sample:</p>
+
+<ol start=1 type=1>
+ <li>Run from Tomcat configured by the build</li>
+ <li>Deploying the Company-webapp WAR into a Tomcat you configure yourself</li>
+</ol>
+
+<h3>Running from Tomcat configured by the build</h3>
+
+<p>
+You need to download the Tuscany RDB DAS source distribution and run maven build to use this option.
+When you build using maven from the source root {SRC_ROOT} directory, the sample war file is created
+under {SRC_ROOT}/samples/company-webapp/target. This sample application is deployed to an instance
+of Tomcat as part of our automated sample testing. For this, follow readme.htm instructions from
+{SRC_ROOT}/samples/testing/tomcat. This will in-effect run the htmlunit tests on the sample.
+The sample deployed on Tomcat instance will be ready this way and you can just point your browser
+to <a href="http://localhost:8080/sample-company-webapp/">http://localhost:8080/sample-company-webapp/</a>
+to test further.
+</p>
+
+<h3>Deploying the Company-webapp WAR into a Tomcat you configured yourself</h3>
+
+<p>
+Alternatively, you can deploy the sample to your own configured Tomcat installation by following
+the instructions below.These instructions assume that you have either 1) downloaded the Tuscany
+binary distribution or 2) Downloaded the Tuscany source and run maven build.See the following
+link for more details steps on how to build DAS Sample applications <a
+href="http://incubator.apache.org/tuscany/das-java-developer-guide.html">
+http://incubator.apache.org/tuscany/das-java-developer-guide.html</a>.
+</p>
+
+<b>Set Up - Derby</b>
+
+<ul>
+   <li>Download and install the most recent stable version of Tomcat 5.5 or Tomcat 6.  You can find it here: http://tomcat.apache.org/download-60.cgi</li>
+   <li>Download the most recent official release of Derby from here: http://db.apache.org/derby/index.html.  The only file you'll need from this download is derby(version).jar</li>
+   <li>Stop Tomcat</li>
+   <li>Copy derby(version).jar (from the derby distribution) to {Tomcat_Home}/common/lib (for Tomcat 5.5) or to {Tomcat_Home}/lib (for Tomcat 6) - e.g. derby-10.2.2.0.jar.</li>
+   <li>Add the sample war file to {Tomcat_Home}/webapps
+      <ul>
+         <li>sample-company-webapp.war</li>
+      </ul>
+   </li>
+   <li>Define a DataSource by adding a datasource definition to {Tomcat_Home}/conf/server.xml.
+      <ul>
+         <li>Find the end-of-section marker </GlobalNamingResources> and add the following lines just above it:</li>
+      </ul>
+
+        <pre STYLE="{font-style:italic}">
+        &lt;!-- Global Datasource for Derby dastest database --&gt;
+        &lt;Resource name="jdbc/dastest"
+                  type="javax.sql.DataSource" auth="Container"
+                  description="Derby database for DAS Company sample"
+                  maxActive="100" maxIdle="30" maxWait="10000"
+                  username="" password=""
+                  driverClassName="org.apache.derby.jdbc.EmbeddedDriver"
+                  url="jdbc:derby:{absolute path}Databases/dastest;create=true"/&gt;
+        </pre>
+
+	   <b>Requirement:</b> You must include the absolute path to the <i>Databases</i> directory in the above url attribute. <br/>
+       Fore example: &lt;url="jdbc:derby:c:\apache-tomcat-6.0.13\Databases/ajaxdastest;create=true"/&gt;
+       <br><br>
+       As the new utility, dbConfig is embedded in this sample war, the Derby database "dastest" will get
+       created with required tables and data when the web application gets loaded for the first time in tomcat.
+       <br><br>
+   </li>
+   <li>Start tomcat and point your browser to: <a href="http://localhost:8080/sample-company-webapp/">http://localhost:8080/sample-company-webapp/</a></li>
+</ul>
+
+
+<b>Set Up - MySQL</b>
+
+<ul>
+   <li>Download and install the most recent stable version of Tomcat 5.5 or Tomcat 6.  You can find it here: http://tomcat.apache.org/download-60.cgi</li>
+   <li>Download the most recent official release of MySQL driver, e.g. mysql-connector-java-5.0.4.jar</li>
+   <li>Stop Tomcat</li>
+   <li>Copy mysql(version).jar (from the MySQL distribution) to {Tomcat_Home}/common/lib (for Tomcat 5.5) or to {Tomcat_Home}/lib (for Tomcat 6) - e.g. mysql-connector-java-5.0.4.jar.</li>
+   <li>Add the sample war file to {Tomcat_Home}/webapps
+      <ul>
+         <li>sample-company-webapp.war</li>
+      </ul>
+   </li>
+   <li>Define a DataSource by adding a datasource definition to {Tomcat_Home}/conf/server.xml.
+      <ul>
+         <li>Find the end-of-section marker </GlobalNamingResources> and add the following lines just above it:</li>
+      </ul>
+
+        <pre STYLE="{font-style:italic}">
+        &lt;!-- Global Datasource for MySQL dastest database --&gt;
+        &lt;Resource name="jdbc/dastest"
+                  type="javax.sql.DataSource" auth="Container"
+                  description="MySQL database for DAS Company sample"
+                  maxActive="100" maxIdle="30" maxWait="10000"
+                  username="dastest" password="dastest"
+                  driverClassName="com.mysql.jdbc.Driver"
+                  url="jdbc:mysql://localhost/dastest?createDatabaseIfNotExist=true"/&gt;
+        </pre>
+
+	   <b>Requirement:</b>MySQL service should be up with configured port open for TCPIP communication.<br/>
+       <br><br>
+       As the new utility, dbConfig is embedded in this sample war, the MySQL database "dastest" will get created with
+       required tables and data when the web application gets loaded for the first time in tomcat. Please note that,
+       in the binary distribution, WEB-INF/classes/CompanyWebDBConfig.xml has SQL Table creation syntax for Derby.
+       To make it compatible to MySQL, simply replace GENERATED ALWAYS AS IDENTITY with AUTO_INCREMENT for all
+       table creation statements. (For this unjar the .war, change CompanyWebDBConfig.xml and jar the .war
+       back with changed CompanyWebDBConfig.xml)
+       <br>
+       <br>
+   </li>
+   <li>Start tomcat and point your browser to: <a href="http://localhost:8080/sample-advanced-webapp/">http://localhost:8080/sample-advanced-webapp/</a></li>
+</ul>
+
+
+<h2>Sample Architecture</h2>
+
+<p>
+This is a simple, single-page, web application.The main components of this application are:
+</p>
+
+<ul type=disc>
+ <li>The RDB Data Access Service (DAS)</li>
+ <li>SDO</li>
+ <li>CompanyClient.java</li>
+ <li>Company.jsp</li>
+</ul>
+
+<p>The <b>CompanyClient</b> uses the <b>DAS</b> directly and provides high-level services to the jsp such as:</p>
+<p style='margin-left:.5in'>public final List getCompanies()</p>
+
+<p>This is a good place to look for how you might use the DAS in your own application.</p>
+
+<p>The <b>Company.jsp</b> responds to client interaction by invoking services of the CompanyClient.It receives data
+from the CompanyClient as SDO data graphs and manipulates SDOs directly to display data.</p>
+
+<p>The <b>DAS</b> accepts directives (commands) from the <b>CompanyClient</b> and reads and writes to the derby
+database instance appropriately.</p>
+
+</body>
+
+</html>
