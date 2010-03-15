@@ -57,6 +57,7 @@ public interface DAS {
 
     /**
      * Creates a Command based on the provided SQL statement
+     * The Command kind is determined automatically for most common cases
      * 
      * @param sql
      *            The SQL statement
@@ -64,4 +65,14 @@ public interface DAS {
      */
     Command createCommand(String sql);
 
+    /**
+     * Creates a Command of the specified kind based on the provided SQL statement
+     * 
+     * @param sql
+     *            The SQL statement
+     * @param sql
+     *            The Command kind (select, insert, update, delete or procedure), case-insensitive
+     * @return returns a Command instance
+     */
+    Command createCommand(String sql, String kind);
 }

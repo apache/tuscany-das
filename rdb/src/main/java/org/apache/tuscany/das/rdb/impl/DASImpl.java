@@ -50,7 +50,13 @@ import commonj.sdo.DataObject;
  */
 public class DASImpl implements DAS {
 
-    private MappingWrapper configWrapper;
+	private static final String KIND_SELECT = "select";
+	private static final String KIND_UPDATE = "update";
+	private static final String KIND_INSERT = "insert";
+	private static final String KIND_DELETE = "delete";
+	private static final String KIND_PROCEDURE = "procedure";
+
+	private MappingWrapper configWrapper;
 
     private Connection connection;
 
@@ -73,15 +79,15 @@ public class DASImpl implements DAS {
             org.apache.tuscany.das.rdb.config.Command commandConfig =
                 (org.apache.tuscany.das.rdb.config.Command) i.next();
             String kind = commandConfig.getKind();
-            if (kind.equalsIgnoreCase("select")) {
+            if (kind.equalsIgnoreCase(KIND_SELECT)) {
                 commands.put(commandConfig.getName(), new ReadCommandImpl(commandConfig, configWrapper, commandConfig.getResultDescriptor()));
-            } else if (kind.equalsIgnoreCase("update")) {
+            } else if (kind.equalsIgnoreCase(KIND_UPDATE)) {
                 commands.put(commandConfig.getName(), new UpdateCommandImpl(commandConfig));
-            } else if (kind.equalsIgnoreCase("insert")) {
+            } else if (kind.equalsIgnoreCase(KIND_INSERT)) {
                 commands.put(commandConfig.getName(), new InsertCommandImpl(commandConfig, new String[0]));
-            } else if (kind.equalsIgnoreCase("delete")) {
+            } else if (kind.equalsIgnoreCase(KIND_DELETE)) {
                 commands.put(commandConfig.getName(), new DeleteCommandImpl(commandConfig));
-            } else if (kind.equalsIgnoreCase("procedure")) {
+            } else if (kind.equalsIgnoreCase(KIND_PROCEDURE)) {
                 commands.put(commandConfig.getName(), new SPCommandImpl(commandConfig.getSQL(), configWrapper, commandConfig.getParameter()));
             } else {
                 throw new RuntimeException("Invalid kind of command: " + kind);
@@ -285,40 +291,61 @@ public class DASImpl implements DAS {
     }
 
     public Command createCommand(String sql) {
-        return baseCreateCommand(sql, this.configWrapper);
+        return baseCreateCommand(sql, null, this.configWrapper);
+    }
+
+    public Command createCommand(String sql, String kind) {
+        return baseCreateCommand(sql, kind, this.configWrapper);
     }
 
     public Command createCommand(String sql, Config config) {
-        return baseCreateCommand(sql, new MappingWrapper(config));
+        return baseCreateCommand(sql, null, new MappingWrapper(config));
     }
 
-    private Command baseCreateCommand(String inSql, MappingWrapper config) {
+    public Command createCommand(String sql, String kind, Config config) {
+        return baseCreateCommand(sql, kind, new MappingWrapper(config));
+    }
+
+    private Command baseCreateCommand(String inSql, String kind, MappingWrapper config) {
         CommandImpl returnCmd = null;
         String sql = inSql.trim(); // Remove leading white space
-        char firstChar = Character.toUpperCase(sql.charAt(0));
-        switch (firstChar) {
-            case 'S':
-                returnCmd = new ReadCommandImpl(sql, config, null);
-                break;
-            case 'I':
-                returnCmd = new InsertCommandImpl(sql, new String[0]);
-                break;
-            case 'U':
-                returnCmd = new UpdateCommandImpl(sql);
-                break;
-            case 'D':
-                returnCmd = new DeleteCommandImpl(sql);
-                break;
-            case '{':
-                returnCmd = new SPCommandImpl(sql, config, Collections.EMPTY_LIST);
-                break;
-            default:
-                throw new RuntimeException("SQL => " + sql + " is not valid");
+        if (kind == null || kind.trim().length() == 0) kind = getKind(sql);
+        if (kind.equalsIgnoreCase(KIND_SELECT)) {
+            returnCmd = new ReadCommandImpl(sql, config, null);
+        } else if (kind.equalsIgnoreCase(KIND_INSERT)) {
+            returnCmd = new InsertCommandImpl(sql, new String[0]);
+        } else if (kind.equalsIgnoreCase(KIND_UPDATE)) {
+            returnCmd = new UpdateCommandImpl(sql);
+        } else if (kind.equalsIgnoreCase(KIND_DELETE)) {
+            returnCmd = new DeleteCommandImpl(sql);
+        } else if (kind.equalsIgnoreCase(KIND_PROCEDURE)) {
+            returnCmd = new SPCommandImpl(sql, config, Collections.EMPTY_LIST);
+        } else {
+            throw new RuntimeException("Invalid kind of command: " + kind);
         }
 
         returnCmd.setConnection(getConnection(), config.getConfig());
         return returnCmd;
     }
+    
+    private String getKind(String sql) {
+        char firstChar = Character.toUpperCase(sql.charAt(0));
+        switch (firstChar) {
+            case 'S':
+                return KIND_SELECT;
+            case 'I':
+                return KIND_INSERT;
+            case 'U':
+                return KIND_UPDATE;
+            case 'D':
+                return KIND_DELETE;
+            case '{':
+                return KIND_PROCEDURE;
+            default:
+                throw new RuntimeException("SQL => " + sql + " does not match any command kind, pass command kind (select, insert, update, delete, procedure) explicitly");
+        }
+    }
+
 
     public void applyChanges(DataObject root) {
         getApplyChangesCommand().execute(root);
