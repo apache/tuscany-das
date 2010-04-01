@@ -87,7 +87,7 @@ public class ChangeFactory {
     }
 
     private InsertCommandImpl getCreateCommand(DataObject changedObject) {
-
+    	InsertCommandImpl command = null;
         if (createCommand == null) {
             Table table = mapping.getTableByTypeName(changedObject.getType().getName());
             if (table == null) {
@@ -104,14 +104,18 @@ public class ChangeFactory {
             Create create = table.getCreate();
 
             if (create == null) {
-                createCommand = InsertGenerator.INSTANCE.getInsertCommand(mapping, changedObject, table);
+                command = InsertGenerator.INSTANCE.getInsertCommand(mapping, changedObject, table);
             } else {
+            	// command can be cached
                 createCommand = new InsertCommandImpl(create);
+                command = createCommand;
             }
-            createCommand.setConnection(connection);
-            createCommand.configWrapper = mapping;
+            command.setConnection(connection);
+            command.configWrapper = mapping;
+        } else {
+        	command = createCommand;
         }
-        return createCommand;
+        return command;
     }
 
     private DeleteCommandImpl getDeleteCommand(DataObject changedObject) {
@@ -143,43 +147,49 @@ public class ChangeFactory {
     }
 
     private UpdateCommandImpl getUpdateCommand(DataObject changedObject) {
-
-        Table table = mapping.getTableByTypeName(changedObject.getType().getName());
-        if (table == null) {
-            if (changedObject.getType().getProperty("ID") != null) {
-                mapping.addPrimaryKey(changedObject.getType().getName() + ".ID");
-                table = mapping.getTableByTypeName(changedObject.getType().getName());
-            } else {
-                throw new RuntimeException("Table " + changedObject.getType().getName()
-                        + " was changed in the DataGraph but is not present in the Config");
-            }
-        }
-        Update update = table.getUpdate();
-        if (update == null) {
-            updateCommand = UpdateGenerator.INSTANCE.getUpdateCommand(mapping, changedObject, table);
+    	UpdateCommandImpl command = null;
+    	if (updateCommand == null) {
+	        Table table = mapping.getTableByTypeName(changedObject.getType().getName());
+	        if (table == null) {
+	            if (changedObject.getType().getProperty("ID") != null) {
+	                mapping.addPrimaryKey(changedObject.getType().getName() + ".ID");
+	                table = mapping.getTableByTypeName(changedObject.getType().getName());
+	            } else {
+	                throw new RuntimeException("Table " + changedObject.getType().getName()
+	                        + " was changed in the DataGraph but is not present in the Config");
+	            }
+	        }
+	        Update update = table.getUpdate();
+	        if (update == null) {
+	            command = UpdateGenerator.INSTANCE.getUpdateCommand(mapping, changedObject, table);
+	        } else {
+            	// command can be cached
+	            TableWrapper t = new TableWrapper(table);
+	            if (t.getCollisionColumn() != null) {
+	                updateCommand = new OptimisticWriteCommandImpl(update);
+	            } else {
+	                updateCommand = new UpdateCommandImpl(update);
+	            }
+	            command = updateCommand;
+	        }
+	
+	        if (command != null) {
+	        	command.setConnection(connection);
+	        	command.configWrapper = mapping;
+	        } else {
+	        	if(this.logger.isDebugEnabled()) {
+	        		this.logger.debug("Update command is NULL");
+	        	}
+	    	}
         } else {
-            TableWrapper t = new TableWrapper(table);
-            if (t.getCollisionColumn() != null) {
-                updateCommand = new OptimisticWriteCommandImpl(update);
-            } else {
-                updateCommand = new UpdateCommandImpl(update);
-            }
-        }
-
-        if (updateCommand != null) {
-	        updateCommand.setConnection(connection);
-	        updateCommand.configWrapper = mapping;
-        } else {
-        	if(this.logger.isDebugEnabled()) {
-        		this.logger.debug("Update command is NULL");
-        	}
+        	command = updateCommand;
         }
         
         if (this.logger.isDebugEnabled()) {
-            this.logger.debug("Returning updateCommand: " + updateCommand);
+            this.logger.debug("Returning updateCommand: " + command);
         }
 
-        return updateCommand;
+        return command;
     }
 
     public MappingWrapper getConfig() {
