@@ -683,9 +683,14 @@ public class MappingWrapper {
 				String child = r.getForeignKeyTable();
 				if (parent.equals(child)) {
 					// self-relationship
-					// do not add to parent to child map to avoid loops
 					// do not add to all children list to allow root detection
 					allParents.add(parent);
+					Set children = (Set) parentToChild.get(parent);
+					if (children == null) {
+						children = new HashSet();
+						parentToChild.put(parent, children);
+					}
+					children.add(child);
 				} else {
 					allParents.add(parent);
 					allChildren.add(child);
@@ -734,8 +739,7 @@ public class MappingWrapper {
 			String parent = (String) itParents.next();
 			if (branch.contains(parent)) {
 				// we found a cycle
-				// we don't handle cycles
-				// stop traversing branch to avoid infinite loop
+				// stop traversing branch to avoid infinite loop if depth greater than threshold
 				break;
 			}
 			// add parent to depth list
