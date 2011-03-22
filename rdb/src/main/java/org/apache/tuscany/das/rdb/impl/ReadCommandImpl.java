@@ -20,6 +20,8 @@ package org.apache.tuscany.das.rdb.impl;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -272,8 +274,21 @@ public class ReadCommandImpl extends CommandImpl {
 
         boolean success = false;
         try {
+        	// execute query
             List results = statement.executeQuery(parameters);
             success = true;
+            // if result set contains less columns than result descriptors, crop result descriptors
+            if (resultDescriptors != null && results.size() > 0) {
+            	ResultSet resultSet = (ResultSet) results.get(0);
+            	ResultSetMetaData resultSetMetadata = resultSet.getMetaData();
+            	int columnCount = resultSetMetadata.getColumnCount();
+            	int resultDescriptorCount = resultDescriptors.size();
+            	if (resultDescriptorCount > columnCount) {
+            		resultDescriptors = resultDescriptors.subList(0, columnCount);
+                	refreshResultSetShape();
+            	}
+            }
+            // build graph
             return buildGraph(results);
         } catch (SQLException e) {
             throw new RuntimeException(e);
