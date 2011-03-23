@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.apache.tuscany.sdo.util.DataObjectUtil;
 
 import commonj.sdo.DataObject;
 import commonj.sdo.Property;
@@ -101,8 +102,16 @@ public final class DataObjectMaker {
             }
 
             Object value = tableData.getColumnData(propertyName);
-
-            obj.set(p, value);
+            try {
+                obj.set(p, value);
+            } catch (ClassCastException e) {
+            	// a mismatch between the value and property types may happen in some cases
+            	// e.g. when the property is a boolean but the database doesn't have a boolean data type
+            	if (value != null) {
+            		Object convertedValue = DataObjectUtil.getSetValue(p, value.toString());
+            		obj.set(p, convertedValue);
+            	}
+            }
         }
 
         return obj;
