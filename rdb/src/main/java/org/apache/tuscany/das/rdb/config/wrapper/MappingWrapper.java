@@ -399,7 +399,7 @@ public class MappingWrapper {
         Iterator i = t.getColumn().iterator();
         while (i.hasNext()) {
             Column c = (Column) i.next();
-            if (c.getColumnName().equals(columnName)) {
+            if (c.getColumnName().equalsIgnoreCase(columnName)) {
                 return c;
             }
         }
@@ -420,7 +420,7 @@ public class MappingWrapper {
         while (i.hasNext()) {
             Column c = (Column) i.next();
             
-            if (c.getColumnName().equals(propertyName)) {
+            if (c.getColumnName().equalsIgnoreCase(propertyName)) {
                 return c;
             }
             
